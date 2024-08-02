@@ -7,9 +7,10 @@
       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd">
 
-
+	<!-- classpath의 props/value.properties 파일에 정의된 속성값을 읽어와 애플리케이션에서 사용할 수 있도록 함 -->
    <context:property-placeholder location="classpath:props/value.properties"/> 
-   <context:component-scan base-package="user" />
+   
+   <context:component-scan base-package="user" /><!-- user 패키지 밑에 있는 애들을 스캔하여 빈으로 등록 -->
      	
       <bean id="dataSource"
          class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
@@ -17,5 +18,8 @@
          <property name="url" value="${db.url}"></property>
          <property name="username" value="${db.username}"></property>
          <property name="password" value="${db.password}"></property>
-      </bean>
+      </bean><!-- 여기다 빈을 만들고 설정하면 스프링이 관리하게 된다 -->
+      
+      <bean id="userService" class="user.service.UserServiceImpl" />      
+      
 </beans>

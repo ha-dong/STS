@@ -2,41 +2,46 @@ package user.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import user.dao.UserDao;
 import user.domain.User;
 
-@Service("UserService")
+@Service("userService")
 public class UserServiceImpl implements UserService {
-
+	
+	@Autowired
+	private UserDao userDao;
+	
 	@Override
 	public int insertUser(User user) {
 		// TODO Auto-generated method stub
-		return 0;
+		return userDao.insertUser(user);
 	}
 
 	@Override
 	public List<User> getUserList() {
 		// TODO Auto-generated method stub
-		return null;
+		return userDao.getUserList();
 	}
 
 	@Override
-	public int getUser(int userNo) {
+	public User getUser(int userNo) {
 		// TODO Auto-generated method stub
-		return 0;
+		return userDao.getUser(userNo);
 	}
 
 	@Override
 	public int updateUser(User user) {
 		// TODO Auto-generated method stub
-		return 0;
+		return userDao.updateUser(user);
 	}
 
 	@Override
 	public int deleteUser(int userno) {
 		// TODO Auto-generated method stub
-		return 0;
+		return userDao.deleteUser(userno);
 	}
 
 }

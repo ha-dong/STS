@@ -12,7 +12,7 @@ public interface UserDao {
 	
 	public abstract List<User> getUserList();
 	
-	public abstract int getUser(int userNo);
+	public abstract User getUser(int userNo);
 	
 	public abstract int updateUser(User user);
 	

@@ -16,25 +16,25 @@
     </plugins>
    </build>
   <dependencies>
-	<dependency>
+	<dependency><!-- ojdbc6 -->
 	    <groupId>com.oracle.database.jdbc</groupId>
 	    <artifactId>ojdbc6</artifactId>
 	    <version>11.2.0.4</version>
 	</dependency>
 
-	<dependency>
+	<dependency><!-- spring-jdbc -->
 	    <groupId>org.springframework</groupId>
 	    <artifactId>spring-jdbc</artifactId>
 	    <version>4.3.30.RELEASE</version>
 	</dependency>
 
-	<dependency>
+	<dependency><!-- spring-context -->
 	    <groupId>org.springframework</groupId>
 	    <artifactId>spring-context</artifactId>
 	    <version>4.3.30.RELEASE</version>
 	</dependency>
 	
-	<dependency>
+	<dependency><!-- junit -->
 	    <groupId>junit</groupId>
 	    <artifactId>junit</artifactId>
 	    <version>4.13.2</version>

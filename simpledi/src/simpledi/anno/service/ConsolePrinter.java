@@ -1,7 +1,8 @@
-package simpledi.service;
+package simpledi.anno.service;
 
 import org.springframework.stereotype.Component;
 
+@Component("consolePrinter")
 public class ConsolePrinter implements Printer {
 
 	@Override
