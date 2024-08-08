@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd">
+
+
+	<context:property-placeholder location="classpath:springrestnew/prop/jdbc.properties"/>
+
+	<context:component-scan base-package="springrestnew"/><!-- springrestnew을 포함한 이름들을 다 스캔해줌 -->
+	
+		<bean id="dataSource"
+         class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+         <property name="driverClass" value="${db.driverClass}"></property>
+         <property name="url" value="${db.url}"></property>
+         <property name="username" value="${db.username}"></property>
+         <property name="password" value="${db.password}"></property>
+      </bean><!-- 여기다 빈을 만들고 설정하면 스프링이 관리하게 된다 -->
+	
+	<!-- Mybatis -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:springrest/conf/SqlMapConfig.xml" />
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:springrestnew/conf/RestBoard.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- SqlSessionTemplate -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory"/>
+	</bean>
+
+</beans>
