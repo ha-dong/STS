@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="RestBoard">
+
+   <insert id="insertRestBoard" parameterType="RestBoard">
+      INSERT INTO RESTBOARD
+      VALUES(SEQ_RESTBOARD.NEXTVAL, #{rbwriter}, #{rbtitle}, #{rbcontent}, SYSDATE)
+   </insert>
+   
+   <select id="listRestBoard" resultType="RestBoard">
+      SELECT * FROM RESTBOARD
+      ORDER BY RBID DESC
+   </select>
+
+   <select id="getRestBoard" parameterType="int" resultType="RestBoard">
+      SELECT * FROM RESTBOARD
+      WHERE RBID = #{rbid}
+   </select>
+   
+   <update id="updateRestBoard" parameterType="RestBoard">
+      UPDATE RESTBOARD
+      SET RBWRITER=#{rbwriter}, RBTITLE=#{rbtitle}, RBCONTENT=#{rbcontent}
+      WHERE RBID=#{rbid}
+   </update>
+   
+   <delete id="deleteRestBoard" parameterType="int">
+      DELETE RESTBOARD
+      WHERE RBID=#{rbid}
+   </delete>
+   
+   
+</mapper>
