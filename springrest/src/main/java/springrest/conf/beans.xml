@@ -38,17 +38,20 @@
 	</bean>
 	
 	<bean id="restBoardService" class="springrest.service.RestBoardServiceImpl" />
- 
-</beans>
-
-
-
-
-
-
-
-
-
-
-
-
+	
+	<!-- Message Converter -->
+   <!-- remove when JUnit Test -->
+   <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+       <property name="messageConverters">
+           <list>
+               <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+           </list>
+       </property>
+   </bean>
+   
+   <!-- View Resolve -->
+ 	<bean class ="org.springframework.web.servlet.view.InternalResourceViewResolver">
+ 		<property name="prefix" value="/html/ " />
+ 		<property name="suffix" value=".html/ " /> 		
+ 	</bean>
+	</beans>
