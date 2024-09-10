@@ -1,0 +1,17 @@
+[작동 순서]
+
+웹브라우져에 http://localhost:8888/springmvc1/person.do 요청 시 내부 작동 순서
+
+1. tomcat 서버 기동 > server.xml 로딩
+2. 웹어플리케이션 기동 > web.xml로딩
+3. web.xml의 설정을 따라 DispatcherServlet 로딩
+4. DispatcherServlet의 init parameter로 웹관련 스프링빈 설정파일인/WEB-INF/conf/servletContext.xml 로딩
+5. *.do 요청에 대해서는 DispatcherServlet이 작동
+6. HandlerMapping 설정에 따라 /person.do 요청이 오면 person컨트롤러를 호출
+7. PersonController는 요청을 처리하는 handleRequest 메소드를 호출
+8. handleRequest 메소드는 ModelAndView 생성하고 addObject 메소드를 통해 모델을 설정,
+   setViewName 메소드를 통해 뷰의 이름을 설정
+9. ViewResolver는 컨트롤러에서 전달받은 뷰의 이름을 해석 /jsp/person을 붙이고
+   뷰 이름 뒤에 .jsp를 붙여서 뷰 파일을 지정
+10. 결정된 /jsp/person/person.jsp 파일에 모델을 전달
+11. person.jsp에서는 EL을 사용해서 모델의 데이터를 출력
