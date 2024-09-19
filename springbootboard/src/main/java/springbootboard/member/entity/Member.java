@@ -1,8 +1,7 @@
 package springbootboard.member.entity;
 
-import org.springframework.data.annotation.Id;
-
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Data;
 
 @Data
@@ -14,6 +13,5 @@ public class Member {
 	private String password;
 	private String name;
 	private String role;
-	
-	
-}//class
+
+}
