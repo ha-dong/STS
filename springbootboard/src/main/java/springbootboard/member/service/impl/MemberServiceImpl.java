@@ -1,32 +1,40 @@
 package springbootboard.member.service.impl;
 
-import java.lang.reflect.Member;
 import java.util.Optional;
 
-import org.hibernate.metamodel.internal.MemberResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import springbootboard.member.repositpry.MemberRepository;
-import springbootboard.member.service.Memberservice;
+import springbootboard.member.entity.Member;
+import springbootboard.member.repository.MemberRepository;
+import springbootboard.member.service.MemberService;
 
 @Service
-public class MemberServiceImpl implements Memberservice{
+public class MemberServiceImpl implements MemberService {
 	
 	@Autowired
 	private MemberRepository memberRepo;
-	
+
 	@Override
 	public Member getMember(Member member) {
-		//optional은 null방지용 클래스
-		Optional<Member> findMember=
+		// Optional은 null 방지용 클래스
+		Optional<Member> findMember =
 				memberRepo.findById(member.getId());
-		if(findMember.isPresent()) {
+		if (findMember.isPresent()) {
 			return findMember.get();
-		}else {
+		} else {
 			return null;
 		}
-	}  
-	
-	
-}//class
+	}
+
+}
+
+
+
+
+
+
+
+
+
+

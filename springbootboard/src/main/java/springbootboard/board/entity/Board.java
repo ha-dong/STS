@@ -29,6 +29,9 @@ public class Board {
 	@Column(insertable=false, columnDefinition="number default 0")
 	private Long cnt;
 	
+	public Board() {
+	}
+	
 	public Board(String writer, String title, String content) {
 		this.writer = writer;
 		this.title = title;
