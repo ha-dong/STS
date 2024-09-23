@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
-
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -17,11 +16,7 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.storycraft.model.User;
@@ -32,66 +27,98 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-   
-    
+
+    // 메인 페이지 매핑
     @GetMapping("/index")
     public String index() {
         return "index";
     }
 
+    // 가입 페이지 매핑
     @GetMapping("/accession")
     public String accession() {
         return "accession";
     }
 
+    // 로그인 페이지 매핑
     @GetMapping("/login")
     public String login() {
         return "login";
     }
 
+    // 회원가입 페이지 매핑
     @GetMapping("/register")
     public String register() {
         return "register";
     }
 
+    // 메인 페이지 매핑
     @GetMapping("/main")
     public String main() {
         return "main";
     }
+    
+    // 관리자 페이지로 이동하는 매핑
+    @GetMapping("/manager")
+    public String managerPage() {
+        return "manager";  // manager.jsp로 이동
+    }
 
+    // 공지사항 페이지 매핑
     @GetMapping("/notice")
     public String notice() {
         return "notice";
     }
 
+    // 문의 페이지 매핑
     @GetMapping("/inquiry")
     public String inquiry() {
         return "inquiry";
     }
 
+    // 문의 목록 페이지 매핑
     @GetMapping("/inquiryList")
     public String inquiryList() {
         return "inquiryList";
     }
 
+    // 아이디 찾기 페이지 매핑
     @GetMapping("/find")
     public String find() {
         return "find";
     }
 
+    // 비밀번호 재설정 페이지 매핑
     @GetMapping("/resetpw")
     public String resetpw() {
         return "resetpw";
     }
 
-    @GetMapping("/mainStory")
-    public String mainStory() {
-        return "mainStory";
+    // 프로필 페이지 매핑
+    @GetMapping("/profile")
+    public String profile() {
+        return "profile";  // resources/templates/profile.jsp로 연결
     }
 
-    // /jsp/editInquiry 경로 제거됨
-    // 해당 경로는 PageController에서 담당하게 됨
+    // 내가 작성한 스토리 목록 페이지 매핑
+    @GetMapping("/mystorylist")
+    public String myStoryList() {
+        return "mystorylist";  // resources/templates/mystorylist.jsp로 연결
+    }
 
+    // 메인 스토리 페이지 매핑
+    @GetMapping("/mainstory")
+    public String mainStory() {
+        return "mainstory";  // resources/templates/mainstory.jsp로 연결
+    }
+
+    // 좋아요한 스토리 목록 페이지 매핑
+    @GetMapping("/favoritestorylist")
+    public String favoriteStoryList() {
+        return "favoritestorylist";  // resources/templates/favoritestorylist.jsp로 연결
+    }
+
+    // 회원가입 처리
     @PostMapping("/register")
     public ModelAndView registerUser(@RequestParam("userid") String userid,
                                      @RequestParam("password") String password,
@@ -131,24 +158,7 @@ public class UserController {
         return new ModelAndView("redirect:/login");
     }
 
-//    // 로그인 처리 추가 (POST 방식)
-//    @PostMapping("/login")
-//    public String loginUser(@RequestParam("userid") String userid,
-//                            @RequestParam("password") String password,
-//                            HttpSession session) {
-//        // 입력된 아이디와 비밀번호로 사용자 조회
-//        User user = userService.findByUserIdAndPassword(userid, password);
-//
-//        if (user != null) {
-//            // 유저 정보가 존재하면 세션에 사용자 정보 저장
-//            session.setAttribute("user", user);
-//            return "redirect:/mainStory";  // 스토리 페이지로 리다이렉트
-//        } else {
-//            // 로그인 실패 시 로그인 페이지로 리다이렉트
-//            return "redirect:/login?error=true";
-//        }
-//    }
-
+    // 사용자 ID 검증 API
     @PostMapping("/api/validate-id")
     @ResponseBody
     public Map<String, Boolean> validateUserId(@RequestBody Map<String, String> request) {
@@ -159,13 +169,12 @@ public class UserController {
         return response;
     }
 
+    // 아이디 찾기 API
     @PostMapping("/api/find-id")
     @ResponseBody
     public ResponseEntity<Map<String, String>> findId(@RequestBody Map<String, String> params) {
         String username = params.get("username");
         String email = params.get("email");
-
-        System.out.println("Received username: " + username);
 
         Map<String, String> response = new HashMap<>();
 
@@ -184,6 +193,7 @@ public class UserController {
         }
     }
 
+    // 비밀번호 재설정 API
     @PostMapping("/api/reset-password")
     @ResponseBody
     public ResponseEntity<Map<String, String>> resetPassword(@RequestBody Map<String, String> request) {
@@ -202,6 +212,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    // 이메일 인증 코드 전송 API
     @PostMapping("/api/send-auth-email")
     @ResponseBody
     public ResponseEntity<Map<String, String>> sendAuthEmail(@RequestBody Map<String, String> request) {
@@ -225,16 +236,18 @@ public class UserController {
         }
     }
 
+    // 인증 코드 생성
     private String generateAuthToken() {
         Random random = new Random();
         int authToken = 100000 + random.nextInt(900000);
         return String.valueOf(authToken);
     }
 
+    // 이메일 발송
     private void sendAuthEmail(String email, String authToken) throws Exception {
         String host = "smtp.gmail.com";
         String user = "suleehk@gmail.com";
-        String pass = "dujy aizq nbhw xuut"; 
+        String pass = "dujy aizq nbhw xuut";  // 실제 비밀번호는 적절한 방식으로 관리되어야 함
 
         Properties props = new Properties();
         props.put("mail.smtp.host", host);

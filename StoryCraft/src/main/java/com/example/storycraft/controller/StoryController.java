@@ -27,37 +27,36 @@ public class StoryController {
     public String showStoryAddPage() {
         return "storyadd";  // storyadd.jsp로 이동
     }
-    
-    // 스토리 추가 페이지로 이동
+
+    // 스토리 목록 페이지로 이동
     @GetMapping("/storylist")
     public String list() {
-    	return "storylist";  // storylist.jsp로 이동
+        return "storylist";  // storylist.jsp로 이동
     }
 
-    // 스토리와 씬 저장 후 storyadd.jsp로 리다이렉트
+    // 테스트용 스토리 저장 후 리다이렉트 (예시)
     @PostMapping("/testStory")
     public String testStory(@ModelAttribute Story story) {
-    	
-    	System.out.println(story);
-    	
-    	// 스토리와 씬을 저장
-//    	storyService.saveStoryAndScene(story, scene);
-    	
-    	// 스토리 추가 페이지로 이동
-    	return "redirect:/story/add";  // storyadd.jsp로 리다이렉트
+        System.out.println(story);
+
+        // 스토리와 씬을 저장하는 로직이 주석처리 되어있어 주석 해제 가능
+        // storyService.saveStoryAndScene(story, new Scene());
+
+        // 스토리 추가 페이지로 리다이렉트
+        return "redirect:/storyadd";
     }
-    
-    // 스토리와 씬 저장 후 storyadd.jsp로 리다이렉트
+
+    // 스토리와 씬을 저장 후 스토리 추가 페이지로 리다이렉트
     @PostMapping("/save")
     public String saveStory(@ModelAttribute Story story, @ModelAttribute Scene scene) {
         // 스토리와 씬을 저장
         storyService.saveStoryAndScene(story, scene);
 
-        // 스토리 추가 페이지로 이동
-        return "redirect:/story/add";  // storyadd.jsp로 리다이렉트
+        // 저장 완료 후 스토리 추가 페이지로 리다이렉트
+        return "redirect:/storyadd";
     }
 
-    // 최종 스토리 제출
+    // 최종 스토리 제출 후 처리
     @PostMapping("/submit")
     public String submitStory(@ModelAttribute Story story) {
         // 최종 스토리 제출 처리

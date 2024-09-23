@@ -4,8 +4,10 @@ import com.example.storycraft.dao.UserDao;
 import com.example.storycraft.model.User;
 
 import java.sql.Timestamp;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,13 +32,17 @@ public class UserService {
         return userDao.findUserByUsername(username);
     }
 
+    // Bcrypt를 사용한 비밀번호 비교 메서드
     public boolean authenticate(String username, String password) {
         try {
             User user = userDao.findUserByUsername(username);
             if (user == null) {
                 return false;
             }
-            return user.getuPw().equals(password);
+            
+            // Bcrypt로 비밀번호 비교
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            return passwordEncoder.matches(password, user.getuPw());
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -107,4 +113,41 @@ public class UserService {
             throw new IllegalArgumentException("유효하지 않은 토큰이거나 이메일입니다.");
         }
     }
+
+    //카카오톡
+    public void saveKakaoUser(Map<String, Object> userInfo) {
+        String kakaoId = userInfo.get("id").toString();
+
+        // 먼저 사용자가 이미 존재하는지 확인
+        User existingUser = userDao.findUserByUsername(kakaoId);
+
+        if (existingUser != null) {
+            // 사용자가 이미 존재하는 경우, 로그인을 처리합니다.
+            System.out.println("User already exists with ID: " + kakaoId);
+            // 로그인을 위한 추가 처리를 여기서 할 수 있습니다 (세션 설정 등).
+            return; // 새로운 사용자 추가 없이 로그인 처리만 함.
+        }
+
+        // 새 사용자 삽입
+        User user = new User();
+        user.setuId(kakaoId);  // 카카오 ID
+        user.setuName(userInfo.get("nickname").toString());  // 카카오 닉네임
+        user.setuCertified("CA-02");  // 카카오 회원가입 코드
+        user.setuActivate("Y");  // 활성화 상태
+        user.setMainComplete("N");  // 메인 스토리 미완료
+        user.setuCode("CU-01");  // 회원 코드
+        user.setuDstatus("N");  // 상태 N
+        user.setuCdate(new Timestamp(System.currentTimeMillis()));  // 가입 시간 설정
+
+        // 이메일 정보 저장
+        if (userInfo.get("email") != null) {
+            user.setuEmail(userInfo.get("email").toString());
+        }
+
+        // 데이터베이스에 사용자 추가
+        userDao.insertKakaoUser(user);  
+
+        // 새로운 사용자 로그인 처리 (세션 설정 등)
+    }
+
 }

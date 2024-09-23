@@ -4,6 +4,8 @@ import com.example.storycraft.model.Notice;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Repository
@@ -20,7 +22,10 @@ public class NoticeDaoImpl implements NoticeDao {
 
     @Override
     public List<Notice> findAll() {
-        return notices;
+        // 내림차순 정렬
+        List<Notice> sortedNotices = new ArrayList<>(notices);
+        sortedNotices.sort(Comparator.comparing(Notice::getCreateDate).reversed());
+        return sortedNotices;
     }
 
     @Override

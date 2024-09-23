@@ -200,4 +200,13 @@ public class UserDao {
         jdbcTemplate.update(sql, newPassword, userId);
     }
 
+    // 카카오 로그인용 insertUser 메서드
+    public void insertKakaoUser(User user) {
+        String sql = "INSERT INTO USERS (U_ID, U_NAME, U_EMAIL, U_CERTIFIED, U_CDATE, U_ACTIVATE, MAIN_COMPLETE, U_CODE, U_DSTATUS) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        jdbcTemplate.update(sql, user.getuId(), user.getuName(), user.getuEmail(), user.getuCertified(), 
+                            user.getuCdate(), user.getuActivate(), user.getMainComplete(), 
+                            user.getuCode(), user.getuDstatus());
+    }
 }
