@@ -3,20 +3,48 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 배경 이미지를 변경하는 함수
     function changeBackgroundImage() {
-        currentImageIndex = (currentImageIndex % 5) + 1;  // 1~5까지의 클래스 번호로 순환
-        console.log(`Setting background image class to: bg-image-${currentImageIndex}`);  // 현재 클래스 로그 확인
-        document.body.className = '';  // 기존 모든 클래스를 제거
-        document.body.classList.add(`bg-image-${currentImageIndex}`);  // 새로운 클래스 추가
+        currentImageIndex = (currentImageIndex % 5) + 1;
+        console.log(`Setting background image class to: bg-image-${currentImageIndex}`);
+        document.body.className = '';
+        document.body.classList.add(`bg-image-${currentImageIndex}`);
     }
 
     // 두 번 클릭 이벤트 추가
     let clickCount = 0;
     document.body.addEventListener('click', function () {
         clickCount++;
-        console.log(`Click count: ${clickCount}`);  // 클릭 카운트 로그 추가
+        console.log(`Click count: ${clickCount}`);
         if (clickCount === 2) {
             changeBackgroundImage();
-            clickCount = 0; // 클릭 카운터 초기화
+            clickCount = 0;
         }
     });
+    
+    // Kakao SDK 초기화
+    if (typeof Kakao !== 'undefined') {
+        Kakao.init('745300ecc56521bf5042a97731296db5');  // JavaScript 키 사용
+        console.log(Kakao.isInitialized());  // SDK 초기화 여부 확인
+    } else {
+        console.error('Kakao SDK가 로드되지 않았습니다.');
+    }
+
+    // 카카오 로그인 함수
+    function kakaoLogin() {
+        Kakao.Auth.authorize({
+            redirectUri: 'https://0b98-123-142-55-115.ngrok-free.app/StoryCraft/callback'  // 새로운 ngrok URL로 수정
+        });
+    }
+
+    // 카카오 로그인 버튼 클릭 이벤트
+	document.getElementById('kakao-login-btn').addEventListener('click', function(event) {
+   	 if (!event.target.disabled) {
+       	 event.target.disabled = true;
+       	 kakaoLogin();  // 로그인 요청
+        	
+       	 // 인증 실패 시 버튼을 다시 활성화하는 로직
+        	setTimeout(function() {
+           	 event.target.disabled = false;
+       	 }, 5000);  // 예시로 5초 후 버튼을 다시 활성화
+    	}
+	});
 });

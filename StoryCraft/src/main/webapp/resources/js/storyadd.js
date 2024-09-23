@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
+    let choiceCount = 1;  // 기본 선택지 1개 제공
+
     // 이미지 미리보기 기능
     document.getElementById('file-input').addEventListener('change', function (event) {
         const file = event.target.files[0];
@@ -22,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // 선택지 추가 기능 (최대 3개의 선택지까지 추가 가능)
-    let choiceCount = 1;  // 기본으로 하나의 선택지 제공
     document.getElementById('add-choice').addEventListener('click', function () {
         if (choiceCount < 3) {
             choiceCount++;
@@ -31,8 +32,6 @@ document.addEventListener('DOMContentLoaded', function () {
             // 새로운 선택지 요소를 생성
             const newChoice = document.createElement('div');
             newChoice.className = 'choice';
-
-            // 새로운 textarea와 돈/체력 입력칸 추가
             newChoice.innerHTML = `
                 <input type="text" name="choice${choiceCount}-name" maxlength="5" placeholder="선택지 이름 (최대 5글자)" required>
                 <textarea name="choice${choiceCount}" placeholder="선택지 ${choiceCount}" required></textarea>
@@ -42,10 +41,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 <input type="number" name="choice${choiceCount}-hp" min="-100" max="100" value="0">
             `;
 
-            // 새로운 선택지를 버튼 위에 삽입
+            // 선택지를 추가
             choiceContainer.insertBefore(newChoice, this);
 
-            // 드롭다운에도 새로운 선택지 추가
+            // 드롭다운에 새로운 선택지 이름 추가
             const dropdown = document.getElementById('choices-dropdown');
             const option = document.createElement('option');
             option.value = `choice${choiceCount}`;
@@ -56,26 +55,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // 선택지 제거 기능 (최소 1개의 선택지는 남겨야 함)
-    document.getElementById('remove-choice').addEventListener('click', function () {
-        if (choiceCount > 1) {
-            const choiceContainer = document.querySelector('.additional-content');
-            choiceContainer.removeChild(choiceContainer.children[choiceCount - 1]);
-
-            // 드롭다운에서 선택지 제거
-            const dropdown = document.getElementById('choices-dropdown');
-            dropdown.remove(choiceCount);
-
-            choiceCount--;
-        } else {
-            alert('선택지는 최소 1개 이상 있어야 합니다.');
-        }
-    });
-
-    // 저장 버튼 기능
+    // 선택지 이름 저장 및 드롭다운 업데이트
     document.querySelector('.save-button').addEventListener('click', function (event) {
-        event.preventDefault();  // 기본 폼 제출 방지
-        alert('스토리가 저장되었습니다.');
+        event.preventDefault();  // 폼 제출 방지
+        alert('선택지가 저장되었습니다.');
 
         // 선택지별 스토리 작성 버튼이 이미 있으면 다시 추가하지 않음
         if (document.querySelector('.story-buttons')) {
@@ -92,7 +75,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // 클릭 시 storyadd.jsp로 이동
             storyButton.addEventListener('click', function () {
-                // storyadd.jsp로 이동
                 location.href = `/storyadd?choice=${index + 1}`;
             });
 
@@ -101,17 +83,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // 제출 버튼 기능
-    document.querySelector('.submit-button').addEventListener('click', function (event) {
-        event.preventDefault();  // 기본 폼 제출 방지
-
-        const confirmSubmit = confirm('내용을 제출하시겠습니까?');
-        if (confirmSubmit) {
-            // 폼 데이터를 전송하고 storylist.jsp로 이동
-            const form = document.getElementById('storyForm');
-            form.submit();  // 폼 제출 트리거
-        } else {
-            alert('제출이 취소되었습니다.');
+    // 드롭다운 메뉴에서 선택된 항목을 클릭하면 선택지 제작 페이지로 이동
+    document.getElementById('choices-dropdown').addEventListener('change', function () {
+        const selectedChoice = this.value;
+        if (selectedChoice) {
+            // 선택된 선택지에 맞는 스토리 제작 페이지로 이동
+            location.href = `/storyadd?choice=${selectedChoice}`;
         }
     });
 
