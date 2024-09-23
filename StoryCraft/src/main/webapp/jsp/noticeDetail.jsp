@@ -9,7 +9,7 @@
     <h2>${notice.title}</h2>
     <p>${notice.content}</p>
     
-    <form action="/notices/update" method="post">
+    <form action="<%=request.getContextPath()%>/notices/update" method="post">
         <input type="hidden" name="id" value="${notice.id}">
         <label for="title">제목</label>
         <input type="text" id="title" name="title" value="${notice.title}" required>

@@ -10,6 +10,7 @@
     <title>회원가입</title>
     <link rel="stylesheet" href="/StoryCraft/resources/css/accession.css">
     <script src="/StoryCraft/resources/js/accession.js"></script> <!-- 분리된 JS 파일 불러오기 -->
+     <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
 </head>
 <body class="bg-image-1">
     <div class="container">
@@ -23,9 +24,9 @@
             <button onclick="location.href='register'">
                 <img src="/StoryCraft/resources/img/logo.png" alt="일반 회원가입 아이콘"> 일반 회원가입
             </button>
-            <button onclick="location.href='kakaoLogin'">
-                <img src="/StoryCraft/resources/img/KICON.png" alt="카카오 회원가입 아이콘"> 카카오 회원가입
-            </button>
+            <button id="kakao-login-btn">
+    			<img src="/StoryCraft/resources/img/KICON.png" alt="카카오 회원가입 아이콘"> 카카오 회원가입
+			</button>
         </div>
     </div>
 </body>

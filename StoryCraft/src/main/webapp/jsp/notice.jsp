@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>공지사항</title>
-    <link rel="stylesheet" href="/StoryCraft/resources/css/notice.css">
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/css/notice.css">
 </head>
 <body>
     <h2>공지사항</h2>
@@ -24,8 +24,9 @@
             <tbody id="noticeList">
                 <c:forEach var="notice" items="${notices}" varStatus="status">
                     <tr>
-                        <td>${status.index + 1}</td>
-                        <td><a href="/notices/${notice.id}">${notice.title}</a></td>
+                        <!-- 번호를 내림차순으로 표시 -->
+                        <td>${notices.size() - status.index}</td>
+                        <td><a href="<%=request.getContextPath()%>/notices/${notice.id}">${notice.title}</a></td>
                         <td><fmt:formatDate value="${notice.createDate}" pattern="yyyy-MM-dd" /></td>
                     </tr>
                 </c:forEach>
