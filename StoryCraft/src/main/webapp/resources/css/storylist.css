@@ -69,6 +69,17 @@ main h1 {
     border-radius: 5px;
     text-align: center;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.genre-tab:hover {
+    background-color: #d0d0d0;
+}
+
+.genre-tab.active {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
 }
 
 .story-list {
@@ -119,12 +130,16 @@ main h1 {
 .heart-icon {
     width: 20px;
     height: 20px;
-    background-image: url('../images/heart.png');
+    background-image: url('/resources/img/binheart.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+    cursor: pointer;
 }
 
+.heart-icon.liked {
+    background-image: url('/resources/img/heart.jpg'); /* 눌렀을 때 변화 */
+}
 
 .sort-dropdown {
     margin-bottom: 20px;
@@ -136,6 +151,12 @@ main h1 {
     border: 1px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
+    background-color: #f0f0f0;
+}
+
+.sort-dropdown select:focus {
+    outline: none;
+    border-color: #4CAF50;
 }
 
 .customize-button {
@@ -149,4 +170,113 @@ main h1 {
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.customize-button:hover {
+    background-color: #45a049;
+}
+
+/* 스토리 상세 모달창 스타일 */
+.modal {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 600px;
+    background-color: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    z-index: 1000;
+    border-radius: 10px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.modal-close {
+    cursor: pointer;
+    font-size: 18px;
+    background-color: #f44336;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+.modal-body {
+    margin-top: 20px;
+}
+
+.modal-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.modal-info {
+    font-size: 16px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-footer button {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.modal-footer .edit-button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.modal-footer .delete-button {
+    background-color: #f44336;
+    color: white;
+}
+
+.modal-footer .start-button {
+    background-color: #2196F3;
+    color: white;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .story-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .story-info {
+        margin-bottom: 10px;
+    }
+
+    .modal {
+        width: 90%;
+    }
 }
