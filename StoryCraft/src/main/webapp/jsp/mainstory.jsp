@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>완벽한 살인 스토리</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mainStory.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mainstory.css">
 </head>
 <body>
 <div class="story-container">

@@ -23,21 +23,21 @@
         <c:choose>
             <c:when test="${profile.profilePicture != null}">
                 <img id="profileImage"
-                     src="${pageContext.request.contextPath}/profile-images/${profile.profilePicture}"
-                     style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; cursor: pointer; display: none; z-index: 10;"
-                     onclick="window.location.href='${pageContext.request.contextPath}/profile';">
+             src="${contextPath}/resources/img/default_profile.png"
+             style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; cursor: pointer; display: none;"
+                     onclick="window.location.href='${contextPath}/StoryCraft/profile/${profile.username}';">
             </c:when>
             <c:otherwise>
                 <img id="profileImage"
                      src="${pageContext.request.contextPath}/resources/img/default_profile.png"
                      style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; cursor: pointer;"
-                     onclick="window.location.href='${pageContext.request.contextPath}/profile';">
+                     onclick="window.location.href='${contextPath}/StoryCraft/profile/${profile.username}';">
             </c:otherwise>
         </c:choose>
         
         <button id="logoutButton" style="display: none;" onclick="logout()">로그아웃</button>
-        <button id="signupButton" onclick="location.href='accession'">회원가입</button>
-        <button id="loginButton" onclick="location.href='login'">로그인</button>
+        <button id="signupButton" onclick="location.href='${contextPath}/StoryCraft/accession'">회원가입</button>
+        <button id="loginButton" onclick="location.href='${contextPath}/StoryCraft/login'">로그인</button>
     </div>
 
     <!-- 배경음악 오디오 태그 -->
@@ -63,10 +63,37 @@
         </div>
     </div>
 
+    <!-- 공지사항 모달 -->
+    <div id="noticeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeNoticeModal">&times;</span>
+            <h2>공지사항</h2>
+            <table id="noticeTable">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>분류</th>
+                        <th>제목</th>
+                        <th>작성일</th>
+                        <th>작성자</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Notices will be inserted here via JavaScript -->
+                </tbody>
+            </table>
+            <!-- 공지사항 내용 표시 영역 추가 -->
+            <div id="noticeContent" class="notice-content">
+                <h3>공지사항 내용</h3>
+                <p id="noticeText">제목을 클릭하면 내용이 표시됩니다.</p>
+            </div>
+        </div>
+    </div>
+
     <!-- 설정 모달 -->
     <div id="settingsModal" class="modal">
         <div class="modal-content">
-            <span class="close" id="closeSettingsButton" onclick="closeSettingsModal()">&times;</span>
+            <span class="close" id="closeSettingsButton">&times;</span>
             <h2>설정</h2>
             <div class="volume-controls">
                 <div class="control-box">

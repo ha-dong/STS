@@ -25,7 +25,7 @@
                 <li><a href="manager">대시보드</a></li> 
                 <li><a href="#">스토리 관리</a></li>
                 <li><a href="#">유저 관리</a></li>
-                <li><a href="notices">공지 관리</a></li>
+                <li><a href="${pageContext.request.contextPath}/notice">공지 관리</a></li>
                 <li><a href="inquiryList">문의 관리</a></li>
             </ul>
         </nav>
@@ -51,31 +51,6 @@
                         <li>사용자 신고</li>
                         <li>문의 처리</li>
                     </ul>
-                </div>
-                <div class="visitor-summary">
-                    <h2>입자별 요약</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>일자</th>
-                                <th>신규 회원 수</th>
-                                <th>방문자수</th>
-                                <th>가입</th>
-                                <th>신고</th>
-                                <th>문의</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><%= currentDate %></td>
-                                <td>0명</td>
-                                <td>0명</td>
-                                <td>0명</td>
-                                <td>0건</td>
-                                <td>0건</td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             </div>
             
