@@ -1,90 +1,68 @@
 package com.example.storycraft.model;
 
-import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 
 public class Scene {
 
-	private Long scNum; // 씬 번호
-    private Long stNum; // 스토리 번호
-    private Long parentScNum; // 부모 씬 번호
-    private Long scLevel; // 씬 레벨
-    private MultipartFile scImg; // 이미지 등록
-    private Long playerNum; // 플레이어 번호
-    private String scText; // 씬 내용
-    private String scChoices; // 선택지
-    private String scIllus; // 일러스트 경로
-    private Long money; // 게임에서의 금액
-    private Long hp; // 플레이어의 체력
-    private String endCode; // 엔딩 코드
-    private String soundCode; // 배경음악 코드
-
+	private int scNum;
+    private int stNum;
+    private int parentScNum;
+    private int scLevel;
+    private String scText;
+    private String scIllus;
+    private String scChoices;
+    private int money;
+    private int hp;
+    private List<Choice> choices;
+    
     public Scene() {
     }
 
-	public Scene(Long scNum, Long stNum, Long parentScNum, Long scLevel, MultipartFile scImg, Long playerNum,
-			String scText, String scChoices, String scIllus, Long money, Long hp, String endCode, String soundCode) {
+	public Scene(int scNum, int stNum, int parentScNum, int scLevel, String scText, String scIllus, String scChoices,
+			int money, int hp, List<Choice> choices) {
 		super();
 		this.scNum = scNum;
 		this.stNum = stNum;
 		this.parentScNum = parentScNum;
 		this.scLevel = scLevel;
-		this.scImg = scImg;
-		this.playerNum = playerNum;
 		this.scText = scText;
-		this.scChoices = scChoices;
 		this.scIllus = scIllus;
+		this.scChoices = scChoices;
 		this.money = money;
 		this.hp = hp;
-		this.endCode = endCode;
-		this.soundCode = soundCode;
+		this.choices = choices;
 	}
 
-	public Long getScNum() {
+	public int getScNum() {
 		return scNum;
 	}
 
-	public void setScNum(Long scNum) {
+	public void setScNum(int scNum) {
 		this.scNum = scNum;
 	}
 
-	public Long getStNum() {
+	public int getStNum() {
 		return stNum;
 	}
 
-	public void setStNum(Long stNum) {
+	public void setStNum(int stNum) {
 		this.stNum = stNum;
 	}
 
-	public Long getParentScNum() {
+	public int getParentScNum() {
 		return parentScNum;
 	}
 
-	public void setParentScNum(Long parentScNum) {
+	public void setParentScNum(int parentScNum) {
 		this.parentScNum = parentScNum;
 	}
 
-	public Long getScLevel() {
+	public int getScLevel() {
 		return scLevel;
 	}
 
-	public void setScLevel(Long scLevel) {
+	public void setScLevel(int scLevel) {
 		this.scLevel = scLevel;
-	}
-
-	public MultipartFile getScImg() {
-		return scImg;
-	}
-
-	public void setScImg(MultipartFile scImg) {
-		this.scImg = scImg;
-	}
-
-	public Long getPlayerNum() {
-		return playerNum;
-	}
-
-	public void setPlayerNum(Long playerNum) {
-		this.playerNum = playerNum;
 	}
 
 	public String getScText() {
@@ -95,14 +73,6 @@ public class Scene {
 		this.scText = scText;
 	}
 
-	public String getScChoices() {
-		return scChoices;
-	}
-
-	public void setScChoices(String scChoices) {
-		this.scChoices = scChoices;
-	}
-
 	public String getScIllus() {
 		return scIllus;
 	}
@@ -111,44 +81,43 @@ public class Scene {
 		this.scIllus = scIllus;
 	}
 
-	public Long getMoney() {
+	public String getScChoices() {
+		return scChoices;
+	}
+
+	public void setScChoices(String scChoices) {
+		this.scChoices = scChoices;
+	}
+
+	public int getMoney() {
 		return money;
 	}
 
-	public void setMoney(Long money) {
+	public void setMoney(int money) {
 		this.money = money;
 	}
 
-	public Long getHp() {
+	public int getHp() {
 		return hp;
 	}
 
-	public void setHp(Long hp) {
+	public void setHp(int hp) {
 		this.hp = hp;
 	}
 
-	public String getEndCode() {
-		return endCode;
+	public List<Choice> getChoices() {
+		return choices;
 	}
 
-	public void setEndCode(String endCode) {
-		this.endCode = endCode;
-	}
-
-	public String getSoundCode() {
-		return soundCode;
-	}
-
-	public void setSoundCode(String soundCode) {
-		this.soundCode = soundCode;
+	public void setChoices(List<Choice> choices) {
+		this.choices = choices;
 	}
 
 	@Override
 	public String toString() {
 		return "Scene [scNum=" + scNum + ", stNum=" + stNum + ", parentScNum=" + parentScNum + ", scLevel=" + scLevel
-				+ ", scImg=" + scImg + ", playerNum=" + playerNum + ", scText=" + scText + ", scChoices=" + scChoices
-				+ ", scIllus=" + scIllus + ", money=" + money + ", hp=" + hp + ", endCode=" + endCode + ", soundCode="
-				+ soundCode + "]";
+				+ ", scText=" + scText + ", scIllus=" + scIllus + ", scChoices=" + scChoices + ", money=" + money
+				+ ", hp=" + hp + ", choices=" + choices + "]";
 	}
     
 }

@@ -1,3 +1,4 @@
+// Profile.java
 package com.example.storycraft.model;
 
 import java.util.Date;
@@ -5,7 +6,9 @@ import java.util.List;
 
 public class Profile {
 
+    private Long id;
     private String username;        // 사용자 이름 (고유 ID)
+    private String email;           // 사용자 이메일
     private String nickname;        // 사용자 닉네임
     private String profilePicture;  // 프로필 사진 경로 또는 URL
     private String bio;             // 사용자 자기소개
@@ -18,6 +21,14 @@ public class Profile {
     public Profile() {}
 
     // Getter 및 Setter 메서드
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -26,10 +37,18 @@ public class Profile {
         this.username = username;
     }
 
+    public String getEmail() {
+        return email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getNickname() {
         return nickname;
     }
-
+    
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
@@ -37,7 +56,7 @@ public class Profile {
     public String getProfilePicture() {
         return profilePicture;
     }
-
+    
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
     }
@@ -45,29 +64,23 @@ public class Profile {
     public String getBio() {
         return bio;
     }
-
+    
     public void setBio(String bio) {
         this.bio = bio;
-    }
-
-    // setIntro 메서드 추가
-    public void setIntro(String intro) {
-        this.bio = intro;
     }
 
     public String getGender() {
         return gender;
     }
-
+    
     public void setGender(String gender) {
         this.gender = gender;
     }
 
-    // birthday 필드의 Getter 및 Setter
     public Date getBirthday() {
         return birthday;
     }
-
+    
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
@@ -91,13 +104,8 @@ public class Profile {
     // toString 메서드 (디버깅 용도)
     @Override
     public String toString() {
-        return "Profile{" +
-                "username='" + username + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", profilePicture='" + profilePicture + '\'' +
-                ", bio='" + bio + '\'' +
-                ", gender='" + gender + '\'' +
-                ", birthday=" + birthday +
-                '}';
+        return "Profile [id=" + id + ", username=" + username + ", email=" + email + ", nickname=" + nickname
+                + ", profilePicture=" + profilePicture + ", bio=" + bio + ", gender=" + gender + ", birthday="
+                + birthday + ", createdStories=" + createdStories + ", likedStories=" + likedStories + "]";
     }
 }

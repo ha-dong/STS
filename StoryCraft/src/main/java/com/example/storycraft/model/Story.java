@@ -1,32 +1,30 @@
 package com.example.storycraft.model;
 
 import java.sql.Timestamp;
-import org.springframework.web.multipart.MultipartFile;
 
 public class Story {
 
-	private Long stNum; // 스토리 번호
-    private String stTitle; // 스토리 제목
-    private Timestamp stCrdate; // 생성 날짜
-    private Timestamp stEddate; // 수정 날짜
-    private Long stViewnum; // 조회수
-    private String stTypecode; // 스토리 유형 코드
-    private String stGenrecode; // 장르 코드
-    private Long stSugnum; // 추천수
-    private String stCover; // 커버 이미지 경로
-    private String stDstatus; // 삭제 상태
-    private String stDreason; // 삭제 사유
-    private Timestamp stDdate; // 삭제 날짜
-    private String uId; // 작성자 (회원 ID)
-    private String stContent; // 스토리 내용
-    private MultipartFile stImg; // 이미지 등록
-
+	private int stNum;
+    private String stTitle;
+    private Timestamp stCrdate;
+    private Timestamp stEddate;
+    private int stViewnum;
+    private String stTypecode;
+    private String stGenrecode;
+    private int stSugnum;
+    private String stCover;
+    private String stDstatus;
+    private String stDreason;
+    private Timestamp stDdate;
+    private String uId;
+    private String endCode;
+    
     public Story() {
     }
 
-	public Story(Long stNum, String stTitle, Timestamp stCrdate, Timestamp stEddate, Long stViewnum, String stTypecode,
-			String stGenrecode, Long stSugnum, String stCover, String stDstatus, String stDreason, Timestamp stDdate,
-			String uId, String stContent, MultipartFile stImg) {
+	public Story(int stNum, String stTitle, Timestamp stCrdate, Timestamp stEddate, int stViewnum, String stTypecode,
+			String stGenrecode, int stSugnum, String stCover, String stDstatus, String stDreason, Timestamp stDdate,
+			String uId, String endCode) {
 		super();
 		this.stNum = stNum;
 		this.stTitle = stTitle;
@@ -41,15 +39,14 @@ public class Story {
 		this.stDreason = stDreason;
 		this.stDdate = stDdate;
 		this.uId = uId;
-		this.stContent = stContent;
-		this.stImg = stImg;
+		this.endCode = endCode;
 	}
 
-	public Long getStNum() {
+	public int getStNum() {
 		return stNum;
 	}
 
-	public void setStNum(Long stNum) {
+	public void setStNum(int stNum) {
 		this.stNum = stNum;
 	}
 
@@ -77,11 +74,11 @@ public class Story {
 		this.stEddate = stEddate;
 	}
 
-	public Long getStViewnum() {
+	public int getStViewnum() {
 		return stViewnum;
 	}
 
-	public void setStViewnum(Long stViewnum) {
+	public void setStViewnum(int stViewnum) {
 		this.stViewnum = stViewnum;
 	}
 
@@ -101,11 +98,11 @@ public class Story {
 		this.stGenrecode = stGenrecode;
 	}
 
-	public Long getStSugnum() {
+	public int getStSugnum() {
 		return stSugnum;
 	}
 
-	public void setStSugnum(Long stSugnum) {
+	public void setStSugnum(int stSugnum) {
 		this.stSugnum = stSugnum;
 	}
 
@@ -149,20 +146,12 @@ public class Story {
 		this.uId = uId;
 	}
 
-	public String getStContent() {
-		return stContent;
+	public String getEndCode() {
+		return endCode;
 	}
 
-	public void setStContent(String stContent) {
-		this.stContent = stContent;
-	}
-
-	public MultipartFile getStImg() {
-		return stImg;
-	}
-
-	public void setStImg(MultipartFile stImg) {
-		this.stImg = stImg;
+	public void setEndCode(String endCode) {
+		this.endCode = endCode;
 	}
 
 	@Override
@@ -170,8 +159,7 @@ public class Story {
 		return "Story [stNum=" + stNum + ", stTitle=" + stTitle + ", stCrdate=" + stCrdate + ", stEddate=" + stEddate
 				+ ", stViewnum=" + stViewnum + ", stTypecode=" + stTypecode + ", stGenrecode=" + stGenrecode
 				+ ", stSugnum=" + stSugnum + ", stCover=" + stCover + ", stDstatus=" + stDstatus + ", stDreason="
-				+ stDreason + ", stDdate=" + stDdate + ", uId=" + uId + ", stContent=" + stContent + ", stImg=" + stImg
-				+ "]";
+				+ stDreason + ", stDdate=" + stDdate + ", uId=" + uId + ", endCode=" + endCode + "]";
 	}
     
 }

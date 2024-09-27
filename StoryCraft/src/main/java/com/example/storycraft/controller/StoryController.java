@@ -1,157 +1,325 @@
 package com.example.storycraft.controller;
 
+import com.example.storycraft.model.Story;
+import com.example.storycraft.service.StoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.storycraft.model.Story;
-import com.example.storycraft.service.StoryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import io.jsonwebtoken.io.IOException;
-
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/story")
 public class StoryController {
 
+    private static final Logger logger = LoggerFactory.getLogger(StoryController.class);
+
     @Autowired
     private StoryService storyService;
 
-    @GetMapping
-    public String showStoryPage() {
-        return "story";  // story.jsp로 이동
+    // 스토리 제작 페이지 이동
+    @GetMapping("/create")
+    public String showStoryCreatePage() {
+        return "storyCreate";
     }
 
-    @GetMapping("/storylist")
-    public String list(Model model) {
-        List<Story> stories = storyService.getStories(); // StoryService에 getStories() 메서드가 구현되어 있어야 합니다.
-        model.addAttribute("stories", stories);
-        return "storylist";  // storylist.jsp로 이동
-    }
-    
-    @GetMapping("/list")
-    public String listAlias(Model model) {
-        return list(model); // 이미 수정된 list 메서드를 호출합니다.
-    }
-
-
+    // 스토리 저장 처리
     @PostMapping("/save")
-    public String saveStory(@ModelAttribute Story story,
-                            @RequestParam("stImg") MultipartFile stImg,
-                            Model model) throws Exception {
-
-        // 이미지 업로드 처리
-        if (!stImg.isEmpty()) {
-            try {
-                String uploadDir = "D:/upload/"; // 실제 업로드 디렉토리로 변경 필요
-                String fileName = System.currentTimeMillis() + "_" + stImg.getOriginalFilename();
-                File dest = new File(uploadDir + fileName);
-                stImg.transferTo(dest);
-                story.setStCover("/profile-images/" + fileName); // 업로드된 파일 경로 설정
-            } catch (IOException e) {
-                e.printStackTrace();
-                model.addAttribute("errorMessage", "이미지 업로드에 실패했습니다.");
-                return "error"; // error.jsp로 리다이렉트
-            }
-        }
-
-        // 스토리 저장 (Scene은 StoryAddController에서 별도로 처리)
-        storyService.saveStoryAndScene(story, null);
-
-        // 생성된 stNum을 URL 파라미터로 전달하여 storyadd.jsp로 이동
-        return "redirect:/storyadd?stNum=" + story.getStNum();
-    }
-
-    @GetMapping("/getStoryDetail")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getStoryDetail(@RequestParam Long stNum) {
-        Story story = storyService.findStoryById(stNum);
-        if (story != null) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("stNum", story.getStNum());
-            response.put("stTitle", story.getStTitle());
-            response.put("stCrdate", story.getStCrdate());
-            response.put("stEddate", story.getStEddate());
-            response.put("stViewnum", story.getStViewnum());
-            response.put("stTypecode", story.getStTypecode());
-            response.put("stGenrecode", story.getStGenrecode());
-            response.put("stSugnum", story.getStSugnum());
-            response.put("stCover", story.getStCover());
-            response.put("stContent", story.getStContent());
-            response.put("uId", story.getuId());
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+    public Map<String, Object> saveStory(
+            @RequestParam Map<String, String> allParams,
+            @RequestParam(value = "cover", required = false) MultipartFile cover,
+            @RequestParam Map<String, MultipartFile> files,
+            HttpSession session,
+            HttpServletRequest request
+    ) {
+        Map<String, Object> response = new HashMap<>();
 
-    @GetMapping("/edit")
-    public String showEditStoryPage(@RequestParam Long stNum, Model model) {
-        Story story = storyService.findStoryById(stNum);
-        if (story != null) {
-            model.addAttribute("story", story);
-            return "editStory";  // editStory.jsp로 이동 (추가 JSP 파일 필요)
-        } else {
-            return "redirect:/story/storylist";  // 스토리가 없으면 목록 페이지로 리다이렉트
-        }
-    }
-
-    @PostMapping("/edit")
-    public String editStory(@ModelAttribute Story story,
-                            @RequestParam("stImg") MultipartFile stImg,
-                            Model model) throws Exception {
-        // 이미지 업로드 처리 (수정 시 새로운 이미지가 제공된 경우)
-        if (!stImg.isEmpty()) {
-            try {
-                String uploadDir = "D:/upload/"; // 실제 업로드 디렉토리로 변경 필요
-                String fileName = System.currentTimeMillis() + "_" + stImg.getOriginalFilename();
-                File dest = new File(uploadDir + fileName);
-                stImg.transferTo(dest);
-                story.setStCover("/profile-images/" + fileName); // 업로드된 파일 경로 설정
-            } catch (IOException e) {
-                e.printStackTrace();
-                model.addAttribute("errorMessage", "이미지 업로드에 실패했습니다.");
-                return "error"; // error.jsp로 리다이렉트
+        // 로그인된 사용자 ID 가져오기
+        String userId = (String) session.getAttribute("user"); // "userId" -> "user"
+        if (userId == null) {
+            // 쿠키에서 userId 가져오기 (선택 사항)
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("U_ID".equals(cookie.getName())) {
+                        userId = cookie.getValue();
+                        break;
+                    }
+                }
+            }
+            if (userId == null) {
+                userId = "subo"; // 쿠키에도 없으면 "subo"로 설정
             }
         }
 
-        // 스토리 업데이트
-        storyService.updateStory(story);
-        return "redirect:/story/storylist";  // 스토리 목록 페이지로 리다이렉트
+        try {
+            // 스토리 기본 정보 추출
+            String title = allParams.get("title");
+            String genre = allParams.get("genre");
+            int initialMoney = Integer.parseInt(allParams.getOrDefault("initialMoney", "0"));
+            int initialHP = Integer.parseInt(allParams.getOrDefault("initialHP", "100"));
+
+            // 필수 입력 필드 검증
+            if (title == null || title.trim().isEmpty()) {
+                response.put("success", false);
+                response.put("message", "제목은 필수 입력 사항입니다.");
+                return response;
+            }
+            if (genre == null || genre.trim().isEmpty()) {
+                response.put("success", false);
+                response.put("message", "장르는 필수 선택 사항입니다.");
+                return response;
+            }
+
+            // 파일 저장 처리
+            String coverFileName = null;
+            if (cover != null && !cover.isEmpty()) {
+                try {
+                    coverFileName = System.currentTimeMillis() + "_" + cover.getOriginalFilename();
+                    String savePath = "D:/uploads/" + coverFileName;
+                    cover.transferTo(new File(savePath));
+                } catch (IOException e) {
+                    logger.error("표지 이미지 저장 중 오류 발생", e);
+                    response.put("success", false);
+                    response.put("message", "파일 저장 중 오류 발생.");
+                    return response;
+                }
+            }
+
+            // 삽화 이미지 파일 저장 처리
+            for (String key : files.keySet()) {
+                if (key.startsWith("sceneImage_")) {
+                    MultipartFile sceneImage = files.get(key);
+                    if (sceneImage != null && !sceneImage.isEmpty()) {
+                        try {
+                            String sceneImageFileName = System.currentTimeMillis() + "_" + sceneImage.getOriginalFilename();
+                            String savePath = "D:/uploads/" + sceneImageFileName;
+                            sceneImage.transferTo(new File(savePath));
+                            // 파일명을 allParams에 추가
+                            String sceneNum = key.substring("sceneImage_".length());
+                            allParams.put("sceneImageFileName_" + sceneNum, sceneImageFileName);
+                        } catch (IOException e) {
+                            logger.error("삽화 이미지 저장 중 오류 발생", e);
+                            response.put("success", false);
+                            response.put("message", "삽화 이미지 저장 중 오류 발생.");
+                            return response;
+                        }
+                    }
+                }
+            }
+
+            // 스토리 저장 로직 호출
+            boolean isSaved = storyService.saveFullStory(title, genre, coverFileName, initialMoney, initialHP, userId, allParams);
+
+            if (isSaved) {
+                response.put("success", true);
+            } else {
+                response.put("success", false);
+                response.put("message", "스토리 저장 중 오류 발생.");
+            }
+        } catch (Exception e) {
+            logger.error("스토리 저장 중 예외 발생", e);
+            response.put("success", false);
+            response.put("message", "서버 오류 발생: " + e.getMessage());
+        }
+        return response;
     }
 
+    // 스토리 목록 페이지 이동
+    @GetMapping("/list")
+    public String showStoryListPage(Model model, HttpSession session, HttpServletRequest request) {
+        List<Story> storyList = storyService.getAllStories();
+        model.addAttribute("storyList", storyList);
+
+        // 로그인된 사용자 ID 가져오기
+        String userId = (String) session.getAttribute("user"); // "userId" -> "user"
+        if (userId == null) {
+            // 쿠키에서 userId 가져오기 (선택 사항)
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("U_ID".equals(cookie.getName())) {
+                        userId = cookie.getValue();
+                        break;
+                    }
+                }
+            }
+            if (userId == null) {
+                userId = "subo"; // 쿠키에도 없으면 "subo"로 설정
+            }
+        }
+        model.addAttribute("userId", userId);
+
+        return "storyList";
+    }
+
+    // 스토리 삭제 처리
     @PostMapping("/delete")
     @ResponseBody
-    public ResponseEntity<Map<String, Boolean>> deleteStory(@RequestBody Map<String, Long> payload) {
-        Long stNum = payload.get("stNum");
-        boolean deleted = storyService.deleteStory(stNum);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("success", deleted);
-        return ResponseEntity.ok(response);
+    public Map<String, Object> deleteStory(@RequestParam("stNum") int stNum, HttpSession session, HttpServletRequest request) {
+        Map<String, Object> response = new HashMap<>();
+
+        // 로그인된 사용자 ID 가져오기
+        String userId = (String) session.getAttribute("user"); // "userId" -> "user"
+        if (userId == null) {
+            // 쿠키에서 userId 가져오기
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("U_ID".equals(cookie.getName())) {
+                        userId = cookie.getValue();
+                        break;
+                    }
+                }
+            }
+            if (userId == null) {
+                userId = "subo"; // 쿠키에도 없으면 "subo"로 설정
+            }
+        }
+
+        Story story = storyService.getStoryById(stNum);
+
+        if (story == null) {
+            response.put("success", false);
+            response.put("message", "스토리를 찾을 수 없습니다.");
+            return response;
+        }
+
+        if (!userId.equals(story.getuId())) {
+            response.put("success", false);
+            response.put("message", "삭제 권한이 없습니다.");
+            return response;
+        }
+
+        boolean isDeleted = storyService.deleteStory(stNum);
+
+        if (isDeleted) {
+            response.put("success", true);
+        } else {
+            response.put("success", false);
+            response.put("message", "스토리 삭제에 실패했습니다.");
+        }
+        return response;
     }
 
+    // 신고 처리
     @PostMapping("/report")
     @ResponseBody
-    public ResponseEntity<Map<String, Boolean>> reportStory(@RequestBody Map<String, Object> payload) {
-        Long stNum = Long.valueOf(payload.get("stNum").toString());
-        String reason = payload.get("reason").toString();
-        boolean reported = storyService.reportStory(stNum, reason);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("success", reported);
-        return ResponseEntity.ok(response);
+    public Map<String, Object> reportStory(@RequestParam Map<String, String> params, HttpSession session, HttpServletRequest request) {
+        Map<String, Object> response = new HashMap<>();
+
+        // 로그인된 사용자 ID 가져오기
+        String userId = (String) session.getAttribute("user"); // "userId" -> "user"
+        if (userId == null) {
+            // 쿠키에서 userId 가져오기
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("U_ID".equals(cookie.getName())) {
+                        userId = cookie.getValue();
+                        break;
+                    }
+                }
+            }
+            if (userId == null) {
+                userId = "subo"; // 쿠키에도 없으면 "subo"로 설정
+            }
+        }
+
+        try {
+            int stNum = Integer.parseInt(params.get("stNum"));
+            String reTypeCode = params.get("reTypeCode");
+            String reText = params.get("reText");
+
+            boolean isReported = storyService.reportStory(stNum, reTypeCode, reText, userId);
+
+            if (isReported) {
+                response.put("success", true);
+            } else {
+                response.put("success", false);
+                response.put("message", "신고 접수에 실패했습니다.");
+            }
+        } catch (NumberFormatException e) {
+            logger.error("신고 처리 중 잘못된 스토리 번호: {}", params.get("stNum"), e);
+            response.put("success", false);
+            response.put("message", "잘못된 스토리 번호입니다.");
+        } catch (Exception e) {
+            logger.error("신고 처리 중 예외 발생", e);
+            response.put("success", false);
+            response.put("message", "신고 처리 중 오류가 발생했습니다.");
+        }
+
+        return response;
     }
 
-    @PostMapping("/submit")
-    public String submitStory(@ModelAttribute Story story) {
-        // 스토리 제출 시 필요한 추가 로직 (예: 상태 변경)
-        storyService.submitStory(story);
-        return "redirect:/story/storylist";  // 스토리 목록 페이지로 리다이렉트
+    // 추천 처리
+    @PostMapping("/recommend")
+    @ResponseBody
+    public Map<String, Object> recommendStory(@RequestParam("stNum") int stNum, HttpSession session, HttpServletRequest request) {
+        Map<String, Object> response = new HashMap<>();
+
+        // 로그인된 사용자 ID 가져오기
+        String userId = (String) session.getAttribute("user"); // "userId" -> "user"
+        if (userId == null) {
+            // 쿠키에서 userId 가져오기
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("U_ID".equals(cookie.getName())) {
+                        userId = cookie.getValue();
+                        break;
+                    }
+                }
+            }
+            if (userId == null) {
+                userId = "subo"; // 쿠키에도 없으면 "subo"로 설정
+            }
+        }
+
+        try {
+            boolean isRecommended = storyService.recommendStory(stNum, userId);
+
+            if (isRecommended) {
+                response.put("success", true);
+            } else {
+                response.put("success", false);
+                response.put("message", "이미 추천한 스토리입니다.");
+            }
+        } catch (Exception e) {
+            logger.error("추천 처리 중 예외 발생", e);
+            response.put("success", false);
+            response.put("message", "추천 처리 중 오류가 발생했습니다.");
+        }
+
+        return response;
+    }
+
+    // 스토리 플레이 페이지 이동
+    @GetMapping("/play")
+    public String playStory(@RequestParam("stNum") int stNum, Model model) {
+        // 스토리 및 첫 번째 장면 정보 로드
+        Story story = storyService.getStoryById(stNum);
+        if (story == null) {
+            // 스토리를 찾을 수 없는 경우, 에러 페이지로 이동
+            return "error/404";
+        }
+        // 첫 번째 장면 정보도 로드해야 함 (추가 구현 필요)
+        model.addAttribute("story", story);
+        // 필요한 데이터 추가
+
+        return "storyPlay";
     }
 }

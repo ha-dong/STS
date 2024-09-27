@@ -7,7 +7,6 @@ import java.sql.Timestamp;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -32,17 +31,13 @@ public class UserService {
         return userDao.findUserByUsername(username);
     }
 
-    // Bcrypt를 사용한 비밀번호 비교 메서드
     public boolean authenticate(String username, String password) {
         try {
             User user = userDao.findUserByUsername(username);
             if (user == null) {
                 return false;
             }
-            
-            // Bcrypt로 비밀번호 비교
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            return passwordEncoder.matches(password, user.getuPw());
+            return user.getuPw().equals(password);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -151,3 +146,4 @@ public class UserService {
     }
 
 }
+

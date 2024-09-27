@@ -12,10 +12,12 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -57,18 +59,7 @@ public class UserController {
     public String main() {
         return "main";
     }
-    
-    // 관리자 페이지로 이동하는 매핑
-    @GetMapping("/manager")
-    public String managerPage() {
-        return "manager";  // manager.jsp로 이동
-    }
 
-    // 공지사항 페이지 매핑
-    @GetMapping("/notice")
-    public String notice() {
-        return "notice";
-    }
 
     // 문의 페이지 매핑
     @GetMapping("/inquiry")
@@ -107,15 +98,30 @@ public class UserController {
     }
 
     // 메인 스토리 페이지 매핑
-    @GetMapping("/mainstory")
+    @GetMapping("/mainStory")
     public String mainStory() {
-        return "mainstory";  // resources/templates/mainstory.jsp로 연결
+        return "mainStory"; // resources/templates/mainStory.jsp로 연결
     }
 
     // 좋아요한 스토리 목록 페이지 매핑
     @GetMapping("/favoritestorylist")
     public String favoriteStoryList() {
         return "favoritestorylist";  // resources/templates/favoritestorylist.jsp로 연결
+    }
+    
+    /**
+     * 관리자 페이지로 이동
+     */
+    @GetMapping("/manager")
+    public String viewManagerPage(HttpSession session, Model model) {
+        String username = (String) session.getAttribute("user");
+        if (username != null) {
+            User user = userService.findUserByUsername(username);
+            if ("CU-02".equals(user.getuCode())) { // getuCode() 메서드 사용
+                return "manager"; // manager.jsp로 이동
+            }
+        }
+        return "redirect:/StoryCraft/login"; // 권한이 없으면 로그인 페이지로 리다이렉트
     }
 
     // 회원가입 처리

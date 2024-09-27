@@ -1,69 +1,78 @@
-// Choice.java
 package com.example.storycraft.model;
 
 public class Choice {
-    private Long id; // 선택지 ID
-    private String name; // 선택지 이름
-    private String content; // 선택지 내용
-    private Long moneyEffect; // 선택 시 돈에 미치는 영향
-    private Long hpEffect; // 선택 시 체력에 미치는 영향
+    private int choiceNum;
+    private int sceneNum;
+    private String choiceName;
+    private String choiceContent;
+    private int money;
+    private int hp;
 
     public Choice() {
     }
 
-	public Choice(Long id, String name, String content, Long moneyEffect, Long hpEffect) {
+	public Choice(int choiceNum, int sceneNum, String choiceName, String choiceContent, int money, int hp) {
 		super();
-		this.id = id;
-		this.name = name;
-		this.content = content;
-		this.moneyEffect = moneyEffect;
-		this.hpEffect = hpEffect;
+		this.choiceNum = choiceNum;
+		this.sceneNum = sceneNum;
+		this.choiceName = choiceName;
+		this.choiceContent = choiceContent;
+		this.money = money;
+		this.hp = hp;
 	}
 
-	public Long getId() {
-		return id;
+	public int getChoiceNum() {
+		return choiceNum;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setChoiceNum(int choiceNum) {
+		this.choiceNum = choiceNum;
 	}
 
-	public String getName() {
-		return name;
+	public int getSceneNum() {
+		return sceneNum;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setSceneNum(int sceneNum) {
+		this.sceneNum = sceneNum;
 	}
 
-	public String getContent() {
-		return content;
+	public String getChoiceName() {
+		return choiceName;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setChoiceName(String choiceName) {
+		this.choiceName = choiceName;
 	}
 
-	public Long getMoneyEffect() {
-		return moneyEffect;
+	public String getChoiceContent() {
+		return choiceContent;
 	}
 
-	public void setMoneyEffect(Long moneyEffect) {
-		this.moneyEffect = moneyEffect;
+	public void setChoiceContent(String choiceContent) {
+		this.choiceContent = choiceContent;
 	}
 
-	public Long getHpEffect() {
-		return hpEffect;
+	public int getMoney() {
+		return money;
 	}
 
-	public void setHpEffect(Long hpEffect) {
-		this.hpEffect = hpEffect;
+	public void setMoney(int money) {
+		this.money = money;
+	}
+
+	public int getHp() {
+		return hp;
+	}
+
+	public void setHp(int hp) {
+		this.hp = hp;
 	}
 
 	@Override
 	public String toString() {
-		return "Choice [id=" + id + ", name=" + name + ", content=" + content + ", moneyEffect=" + moneyEffect
-				+ ", hpEffect=" + hpEffect + "]";
+		return "Choice [choiceNum=" + choiceNum + ", sceneNum=" + sceneNum + ", choiceName=" + choiceName
+				+ ", choiceContent=" + choiceContent + ", money=" + money + ", hp=" + hp + "]";
 	}
     
 }

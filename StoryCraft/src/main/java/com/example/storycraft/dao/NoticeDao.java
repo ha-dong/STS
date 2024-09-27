@@ -8,4 +8,5 @@ public interface NoticeDao {
     List<Notice> findAll();             // 모든 공지사항 조회
     Notice findById(Long id);           // ID로 공지사항 조회
     void update(Notice notice);         // 공지사항 수정
+    void deleteById(Long id);           // 공지사항 삭제
 }
