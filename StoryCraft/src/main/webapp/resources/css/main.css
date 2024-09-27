@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
 /* 전체적인 스타일 */
 body, html {
     margin: 0;
@@ -134,7 +132,7 @@ body, html {
 .modal {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 1000; /* 모든 모달의 기본 z-index */
     left: 0;
     top: 0;
     width: 100%;
@@ -146,7 +144,7 @@ body, html {
 .modal-content {
     background-color: rgba(255, 255, 255, 0.9);
     color: #333;
-    margin: 15% auto;
+    margin: 10% auto; /* 상단에서 10%, 중앙 정렬 */
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
@@ -279,4 +277,35 @@ body, html {
 
 #confirmDeleteButton.enabled:hover {
     background-color: #ff0000;
+}
+
+/* 공지사항 테이블 스타일 */
+#noticeTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#noticeTable th, #noticeTable td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+#noticeTable th {
+    background-color: #f4f4f4;
+}
+
+/* 공지사항 내용 표시 영역 스타일링 */
+.notice-content {
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+}
+
+.notice-content h3 {
+    margin-bottom: 10px;
+}
+
+.notice-content p {
+    white-space: pre-wrap; /* 줄바꿈을 유지 */
 }

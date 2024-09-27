@@ -1,6 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); 
-/* 구글 폰트 'Press Start 2P'를 불러옴 */
-
 /* 전체적인 스타일 */
 body, html {
     margin: 0; /* 기본 여백 제거 */
@@ -47,6 +44,9 @@ body {
 }
 
 .logo {
+	position: absolute;
+    top: 10px;
+    left: 30px;
     height: 70px; /* 로고의 높이를 70px로 설정 */
     cursor: pointer; /* 마우스 커서를 포인터로 변경 (클릭 가능) */
     margin-right: auto; /* 오른쪽에 자동 여백을 추가하여 로고를 왼쪽에 정렬 */
@@ -501,3 +501,89 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 그림자를 줄여 눌린 효과 */
     transform: scale(0.98); /* 버튼이 살짝 작아지도록 */
 }
+
+/* 모달 기본 스타일 */
+.modal {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.5); /* 반투명 배경 */
+}
+
+/* 모달 콘텐츠 스타일 */
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* 화면 중앙에 위치 */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* 너비 설정 */
+    border-radius: 8px;
+}
+
+/* 닫기 버튼 스타일 */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 폼 그룹 스타일 */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+/* 버튼 스타일 */
+.save-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.save-btn:hover {
+    background-color: #45a049;
+}
+
+.edit-btn {
+    background-color: #008CBA;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 20px;
+}
+
+.edit-btn:hover {
+    background-color: #007bb5;
+}
+
