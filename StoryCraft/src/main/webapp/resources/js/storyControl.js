@@ -1,3 +1,5 @@
+// storyControl.js
+
 // 사운드 효과 파일 목록
 const soundEffectFiles = [
     '/StoryCraft/resources/audio/Can.mp3',
@@ -15,7 +17,7 @@ let audioContext = null;
 // 오디오 버퍼 캐시 생성
 const audioBuffers = {}; // 오디오 버퍼 캐시
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
     const nicknameElement = document.getElementById('nickname');
     const profileImageElement = document.getElementById('profileImage'); // 'profileImage' 추가
     const urlParams = new URLSearchParams(window.location.search);
@@ -87,23 +89,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 로그인 확인 로직
     if (storedToken) {
-        fetch(`${contextPath}/api/check-login`, {
+        fetch('/StoryCraft/api/check-login', {
             method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + storedToken
-            }
+            credentials: 'same-origin' // 세션 쿠키를 포함시키기 위해 추가
         })
         .then(response => {
-            if (!response.ok && response.status === 401) {
+            if (response.ok) {
+                return response.json();
+            } else if (response.status === 401) {
                 throw new Error('Unauthorized');
+            } else {
+                throw new Error('로그인 상태 확인 실패');
             }
-            return response.json();
         })
         .then(data => {
             if (data.loggedIn) {
                 const loginButton = document.getElementById('loginButton');
                 const signupButton = document.getElementById('signupButton');
                 const logoutButton = document.getElementById('logoutButton');
+                const nicknameElement = document.getElementById('nickname'); // 닉네임 요소 ID 확인
+                const profileImageElement = document.getElementById('profileImage'); // 프로필 이미지 요소 ID 확인
 
                 if (loginButton) loginButton.style.display = 'none';
                 if (signupButton) signupButton.style.display = 'none';
@@ -116,20 +121,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 // 프로필 이미지 업데이트
-                if (profileImageElement && data.profileImage) {
-                    profileImageElement.src = `${contextPath}/profile-images/${data.profileImage}?t=${new Date().getTime()}`;
-                    profileImageElement.style.display = 'inline-block'; // 이미지 표시
+                if (profileImageElement) {
+                    if (data.profileImage) {
+                        profileImageElement.src = `${contextPath}${data.profileImage}?t=${new Date().getTime()}`;
+                    } else {
+                        profileImageElement.src = `${contextPath}/resources/img/default_profile.png`;
+                    }
+                    profileImageElement.style.display = 'inline-block';
                 }
 
                 // 사용자 스토리 버튼 활성화
                 enableUserStoryButton();
+            } else {
+                // 로그인 페이지로 리다이렉트
+                window.location.href = '/StoryCraft/login';
             }
         })
         .catch(error => {
             if (error.message === 'Unauthorized') {
-                alert('토큰이 만료되었습니다. 다시 로그인 해주세요.');
-                localStorage.removeItem('token'); // 만료된 토큰 제거
-                window.location.href = `${contextPath}/login`; // 로그인 페이지로 이동
+                alert('로그인 상태가 아닙니다. 다시 로그인 해주세요.');
+                window.location.href = '/StoryCraft/login'; // 로그인 페이지로 이동
             } else {
                 console.error('로그인 상태 확인 중 오류:', error);
             }
@@ -178,6 +189,166 @@ document.addEventListener('DOMContentLoaded', function () {
             toggleMute('sfxSlider');
         });
     }
+
+    // 공지사항 모달 관련 코드
+    var noticeModal = document.getElementById("noticeModal");
+    var closeNoticeModalButton = document.getElementById("closeNoticeModal");
+    var noticeIcon = document.querySelector(".notice-icon");
+
+    // 모달 열기
+    if (noticeIcon) {
+        noticeIcon.addEventListener("click", function() {
+            openNoticeModal();
+        });
+    }
+
+    // 모달 닫기 버튼
+    if (closeNoticeModalButton) {
+        closeNoticeModalButton.addEventListener("click", function() {
+            closeNoticeModalFunction();
+        });
+    }
+
+    // 모달 외부 클릭 시 닫기
+    window.addEventListener("click", function(event) {
+        if (event.target == noticeModal) {
+            closeNoticeModalFunction();
+        }
+    });
+
+    function openNoticeModal() {
+        // 공지사항 데이터 가져오기
+        fetch(contextPath + '/notice/api/list')
+            .then(response => response.json())
+            .then(data => {
+                populateNoticeTable(data);
+                noticeModal.style.display = "block";
+            })
+            .catch(error => {
+                console.error('Error fetching notices:', error);
+                alert('공지사항을 불러오는 중 오류가 발생했습니다.');
+            });
+    }
+
+    function closeNoticeModalFunction() {
+        noticeModal.style.display = "none";
+        clearNoticeTable();
+        // 공지사항 내용 초기화
+        document.getElementById('noticeText').textContent = '제목을 클릭하면 내용이 표시됩니다.';
+    }
+
+    function populateNoticeTable(notices) {
+        var tbody = document.querySelector("#noticeTable tbody");
+        tbody.innerHTML = ''; // 기존 내용 삭제
+
+        notices.forEach(function(notice) {
+            var tr = document.createElement('tr');
+
+            var tdNum = document.createElement('td');
+            tdNum.textContent = notice.ntNum;
+            tr.appendChild(tdNum);
+
+            var tdType = document.createElement('td');
+            switch(notice.ntTypeCode) {
+                case 'CN-01':
+                    tdType.textContent = '업데이트';
+                    break;
+                case 'CN-02':
+                    tdType.textContent = '일반';
+                    break;
+                case 'CN-03':
+                    tdType.textContent = '버그수정';
+                    break;
+                default:
+                    tdType.textContent = '알 수 없음';
+            }
+            tr.appendChild(tdType);
+
+            var tdTitle = document.createElement('td');
+            // 제목을 클릭 가능하게 하기 위해 <a> 태그로 감싸기
+            var titleLink = document.createElement('a');
+            titleLink.href = "#";
+            titleLink.textContent = notice.ntTitle;
+            titleLink.dataset.ntText = notice.ntText; // ntText를 data 속성으로 저장
+            titleLink.style.color = '#333'; // 링크 색상 조정
+            titleLink.style.textDecoration = 'underline'; // 링크 밑줄 추가
+            titleLink.style.cursor = 'pointer';
+
+            // 클릭 이벤트 리스너 추가
+            titleLink.addEventListener('click', function(event) {
+                event.preventDefault(); // 기본 링크 동작 방지
+                var ntText = this.dataset.ntText;
+                displayNoticeContent(ntText);
+            });
+
+            tdTitle.appendChild(titleLink);
+            tr.appendChild(tdTitle);
+
+            var tdCrdate = document.createElement('td');
+            var date = new Date(notice.ntCrdate);
+            var formattedDate = date.getFullYear() + '-' +
+                                String(date.getMonth()+1).padStart(2, '0') + '-' +
+                                String(date.getDate()).padStart(2, '0') + ' ' +
+                                String(date.getHours()).padStart(2, '0') + ':' +
+                                String(date.getMinutes()).padStart(2, '0') + ':' +
+                                String(date.getSeconds()).padStart(2, '0');
+            tdCrdate.textContent = formattedDate;
+            tr.appendChild(tdCrdate);
+
+            var tdUid = document.createElement('td');
+            tdUid.textContent = notice.uid;
+            tr.appendChild(tdUid);
+
+            tbody.appendChild(tr);
+        });
+    }
+
+    function clearNoticeTable() {
+        var tbody = document.querySelector("#noticeTable tbody");
+        tbody.innerHTML = '';
+    }
+
+    // 공지사항 내용 표시 함수
+    function displayNoticeContent(ntText) {
+        var noticeTextElement = document.getElementById('noticeText');
+        if (noticeTextElement) {
+            noticeTextElement.textContent = ntText;
+        }
+    }
+
+    // 설정 모달 관련 코드 (기존 코드 유지)
+    var settingsModal = document.getElementById("settingsModal");
+    var closeSettingsButton = document.getElementById("closeSettingsButton");
+    var settingsIcon = document.getElementById("settingsIcon");
+
+    if (settingsIcon) {
+        settingsIcon.addEventListener("click", function() {
+            openSettingsModal();
+        });
+    }
+
+    if (closeSettingsButton) {
+        closeSettingsButton.addEventListener("click", function() {
+            closeSettingsModal();
+        });
+    }
+
+    window.addEventListener("click", function(event) {
+        if (event.target == settingsModal) {
+            settingsModal.style.display = "none";
+        }
+    });
+
+    function openSettingsModal() {
+        settingsModal.style.display = "block";
+    }
+
+    function closeSettingsModal() {
+        settingsModal.style.display = "none";
+    }
+
+    // 기타 기존 함수들...
+
 });
 
 // 페이지 이동을 0.5초 지연시키는 함수
@@ -282,14 +453,6 @@ function addSoundEffectListeners() {
         });
     }
 
-    // 공지사항 아이콘에 이벤트 리스너 추가
-    const noticeIcon = document.querySelector('.notice-icon');
-    if (noticeIcon) {
-        noticeIcon.addEventListener('click', function () {
-            navigateWithDelay(`${contextPath}/notice`);
-        });
-    }
-
     // 설정 아이콘에 이벤트 리스너 추가
     const settingIcon = document.querySelector('.setting-icon');
     if (settingIcon) {
@@ -344,6 +507,27 @@ function kakaoLogin() {
     Kakao.Auth.authorize({
         redirectUri: 'https://1f23-123-142-55-115.ngrok-free.app/StoryCraft/callback'  // 실제 배포 시점에 맞게 수정
     });
+}
+
+// 프로필 이미지 업데이트 함수
+function updateProfileImage(url) {
+    const profileImageElement = document.getElementById('profileImage');
+    if (profileImageElement) {
+        profileImageElement.src = `${url}?t=${new Date().getTime()}`;
+    }
+
+    const profileImagePlaceholder = document.getElementById('profileImagePlaceholder');
+    if (profileImagePlaceholder) {
+        profileImagePlaceholder.style.backgroundImage = `url(${url})`;
+        profileImagePlaceholder.style.backgroundSize = 'cover';
+        profileImagePlaceholder.style.backgroundPosition = 'center';
+        profileImagePlaceholder.classList.add('image-uploaded');
+
+        const span = profileImagePlaceholder.querySelector('span');
+        if (span) {
+            span.style.display = 'none';
+        }
+    }
 }
 
 // 메인 스토리 시작 함수
@@ -456,13 +640,13 @@ function openUserStoryModal() {
 
     if (createStoryButton) {
         createStoryButton.addEventListener('click', function () {
-            navigateWithDelay(`${contextPath}/story`);
+            navigateWithDelay(`${contextPath}/story/create`);
         });
     }
 
     if (storyListButton) {
         storyListButton.addEventListener('click', function () {
-            navigateWithDelay(`${contextPath}/storylist`);
+            navigateWithDelay(`${contextPath}/story/list`);
         });
     }
 }
@@ -532,4 +716,12 @@ function confirmDeleteAccount() {
         }
     })
     .catch(error => console.error('탈퇴 처리 중 오류 발생:', error));
+}
+
+// 공지사항 내용 표시 함수
+function displayNoticeContent(ntText) {
+    var noticeTextElement = document.getElementById('noticeText');
+    if (noticeTextElement) {
+        noticeTextElement.textContent = ntText;
+    }
 }
