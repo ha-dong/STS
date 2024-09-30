@@ -1,47 +1,57 @@
 package com.example.storycraft.controller;
 
+import com.example.storycraft.model.Comment;
 import com.example.storycraft.model.Inquiry;
-import com.example.storycraft.model.SimpleResponse;
 import com.example.storycraft.service.InquiryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@RestController
-@RequestMapping("/api")
+@Controller
 public class InquiryController {
 
     @Autowired
     private InquiryService inquiryService;
 
-    // 문의 등록 API
+    // 문의 등록 페이지로 이동
+    @GetMapping("/inquiryForm")
+    public String inquiryForm() {
+        return "inquiryForm";
+    }
+
+    // 문의 등록 처리
     @PostMapping("/inquiry")
-    public ResponseEntity<?> submitInquiry(
-        @RequestParam("inquiryTitle") String inquiryTitle,
-        @RequestParam("inquiryType") String inquiryType,
-        @RequestParam("inquiryText") String inquiryText,
-        @RequestParam(value = "inquiryFile", required = false) MultipartFile inquiryFile,
-        HttpSession session) {
+    public String submitInquiry(
+            @RequestParam("inquiryTitle") String inquiryTitle,
+            @RequestParam("inquiryType") String inquiryType,
+            @RequestParam("inquiryText") String inquiryText,
+            @RequestParam(value = "inquiryFile", required = false) MultipartFile inquiryFile,
+            HttpSession session,
+            Model model) {
 
         String userId = (String) session.getAttribute("user");
 
         if (userId == null) {
-            return ResponseEntity.status(401).body("로그인이 필요합니다.");
+            model.addAttribute("errorMessage", "로그인이 필요합니다.");
+            return "login"; // 로그인 페이지로 이동
         }
 
         Inquiry inquiry = new Inquiry();
         inquiry.setInqTitle(inquiryTitle);
         inquiry.setInqText(inquiryText);
         inquiry.setInqTypecode(inquiryType);
-        inquiry.setInqGenrecode("접수 완료");  // 기본 설정
+        inquiry.setInqGenrecode("접수 완료");
         inquiry.setInqCrdate(new Timestamp(System.currentTimeMillis()));
         inquiry.setInqDstatus("Active");
-        inquiry.setUId(userId);
+        inquiry.setUserId(userId); // 수정된 부분
 
         if (inquiryFile != null && !inquiryFile.isEmpty()) {
             String fileName = inquiryService.saveFile(inquiryFile);
@@ -49,75 +59,253 @@ public class InquiryController {
         }
 
         inquiryService.saveInquiry(inquiry);
-        return ResponseEntity.ok(new SimpleResponse(true, "문의가 성공적으로 등록되었습니다."));
+
+        return "redirect:/inquiry"; // 문의 목록 페이지로 리디렉션
     }
 
-    // 문의 목록 조회 API
-    @GetMapping("/inquiryList")
-    public ResponseEntity<?> getInquiryList(HttpSession session) {
+    // 문의 목록 페이지
+    @GetMapping("/inquiry")
+    public String getInquiryList(Model model, HttpSession session) {
         String userId = (String) session.getAttribute("user");
 
-        if (userId == null) {
-            return ResponseEntity.status(401).body("로그인이 필요합니다.");
-        }
+        List<Inquiry> inquiryList = inquiryService.getAllInquiries();
 
-        List<Inquiry> inquiryList = inquiryService.getInquiryListByUserId(userId);
-        return ResponseEntity.ok(inquiryList);
+        model.addAttribute("currentUserId", userId);
+        model.addAttribute("inquiryList", inquiryList);
+
+        return "inquiry"; // inquiry.jsp 뷰 렌더링
     }
 
-    // 문의 상세 정보 조회 API
-    @GetMapping("/inquiry/{inqNum}")
-    public ResponseEntity<?> getInquiryDetail(@PathVariable("inqNum") int inqNum, HttpSession session) {
+    // 문의 상세 페이지
+    @GetMapping("/inquiryDetail")
+    public String inquiryDetail(@RequestParam("inqNum") int inqNum, Model model, HttpSession session) {
         String userId = (String) session.getAttribute("user");
-        if (userId == null) {
-            return ResponseEntity.status(401).body("로그인이 필요합니다.");
-        }
 
-        Inquiry inquiry = inquiryService.getInquiryDetail(inqNum, userId);
+        Inquiry inquiry = inquiryService.getInquiryDetail(inqNum);
+        List<Comment> comments = inquiryService.getCommentsForInquiry(inqNum);  // 댓글 목록 가져오기
+
         if (inquiry == null) {
-            return ResponseEntity.status(404).body("해당 문의를 찾을 수 없습니다.");
+            return "error/404"; // 문의를 찾을 수 없는 경우 404 페이지로 이동
         }
-        return ResponseEntity.ok(inquiry);
+
+        String statusName = mapStatusCodeToName(inquiry.getInqGenrecode());
+        model.addAttribute("statusName", statusName);
+        model.addAttribute("inquiry", inquiry);
+        model.addAttribute("comments", comments);  // 댓글 리스트 모델에 추가
+        model.addAttribute("currentUserId", userId);
+
+        return "inquiryDetail"; // inquiryDetail.jsp 뷰 렌더링
     }
 
-    // 문의 삭제 API (하드 삭제, 복구 불가)
-    @DeleteMapping("/inquiry/{inqNum}")
-    public ResponseEntity<?> deleteInquiry(@PathVariable("inqNum") int inqNum, HttpSession session) {
+    // 문의 수정 페이지로 이동
+    @GetMapping("/editInquiry")
+    public String editInquiryForm(@RequestParam("inqNum") int inqNum, Model model, HttpSession session) {
         String userId = (String) session.getAttribute("user");
+
         if (userId == null) {
-            return ResponseEntity.status(401).body("로그인이 필요합니다.");
+            return "redirect:/login";
         }
 
-        inquiryService.hardDeleteInquiry(inqNum, userId); // 하드 삭제 처리
-        return ResponseEntity.ok(new SimpleResponse(true, "문의가 성공적으로 삭제되었습니다."));
+        Inquiry inquiry = inquiryService.getInquiryDetail(inqNum);
+
+        if (inquiry == null || !inquiry.getUserId().equals(userId)) { // 수정된 부분
+            model.addAttribute("errorMessage", "수정 권한이 없습니다.");
+            return "error/403"; // 권한 없음 페이지로 이동
+        }
+
+        model.addAttribute("inquiry", inquiry);
+
+        return "editInquiry"; // editInquiry.jsp 뷰 렌더링
     }
 
-    // 문의 수정 API
-    @PostMapping("/inquiry/{inqNum}")
-    public ResponseEntity<?> editInquiry(
-        @PathVariable("inqNum") int inqNum, 
-        @RequestParam("inquiryTitle") String inquiryTitle,
-        @RequestParam("inquiryType") String inquiryType,
-        @RequestParam("inquiryText") String inquiryText,
-        @RequestParam(value = "inquiryFile", required = false) MultipartFile inquiryFile,
-        HttpSession session) {
+    // 문의 수정 처리
+    @PostMapping("/editInquiry")
+    public String editInquiry(
+            @RequestParam("inqNum") int inqNum,
+            @RequestParam("inquiryTitle") String inquiryTitle,
+            @RequestParam("inquiryType") String inquiryType,
+            @RequestParam("inquiryText") String inquiryText,
+            @RequestParam(value = "inquiryFile", required = false) MultipartFile inquiryFile,
+            HttpSession session,
+            Model model) {
 
         String userId = (String) session.getAttribute("user");
         if (userId == null) {
-            return ResponseEntity.status(401).body("로그인이 필요합니다.");
+            return "redirect:/login";
         }
 
-        Inquiry inquiryDetails = new Inquiry();
-        inquiryDetails.setInqTitle(inquiryTitle);
-        inquiryDetails.setInqText(inquiryText);
-        inquiryDetails.setInqTypecode(inquiryType);
+        // 문의 조회
+        Inquiry existingInquiry = inquiryService.getInquiryDetail(inqNum);
+        if (existingInquiry == null || !existingInquiry.getUserId().equals(userId)) { // 수정된 부분
+            model.addAttribute("errorMessage", "수정 권한이 없습니다.");
+            return "error/403";
+        }
+
+        existingInquiry.setInqTitle(inquiryTitle);
+        existingInquiry.setInqText(inquiryText);
+        existingInquiry.setInqTypecode(inquiryType);
+        existingInquiry.setInqCrdate(new Timestamp(System.currentTimeMillis()));
 
         if (inquiryFile != null && !inquiryFile.isEmpty()) {
             String fileName = inquiryService.saveFile(inquiryFile);
-            inquiryDetails.setInqFile(fileName);
+            existingInquiry.setInqFile(fileName);
         }
 
-        inquiryService.updateInquiry(inqNum, inquiryDetails, userId);
-        return ResponseEntity.ok(new SimpleResponse(true, "수정되었습니다."));
+        inquiryService.updateInquiry(inqNum, existingInquiry);
+
+        return "redirect:/inquiryDetail?inqNum=" + inqNum; // 수정 후 상세 페이지로 리디렉션
     }
+
+    // 문의 삭제 처리
+    @PostMapping("/deleteInquiry")
+    @ResponseBody
+    public Map<String, Object> deleteInquiry(@RequestParam("inqNum") int inqNum, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+
+        String userId = (String) session.getAttribute("user");
+        if (userId == null) {
+            response.put("success", false);
+            response.put("message", "로그인이 필요합니다.");
+            return response;
+        }
+
+        Inquiry inquiry = inquiryService.getInquiryDetail(inqNum);
+        if (inquiry == null || !inquiry.getUserId().equals(userId)) { // 수정된 부분
+            response.put("success", false);
+            response.put("message", "삭제 권한이 없습니다.");
+            return response;
+        }
+
+        inquiryService.hardDeleteInquiry(inqNum);
+
+        response.put("success", true);
+        response.put("message", "삭제되었습니다.");
+        return response;
+    }
+
+    // 문의 목록 API
+    @GetMapping("/api/inquiryList")
+    @ResponseBody
+    public Map<String, Object> getInquiryListApi(HttpSession session) {
+        String userId = (String) session.getAttribute("user");
+
+        List<Inquiry> inquiryList = inquiryService.getAllInquiries();
+        
+        // 상태 코드 변환
+        for (Inquiry inquiry : inquiryList) {
+            inquiry.setInqGenrecode(mapStatusCodeToName(inquiry.getInqGenrecode()));
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("currentUserId", userId);
+        response.put("inquiryList", inquiryList);
+
+        return response;
+    }
+
+    // 문의 등록 API (JSON 형식으로 반환)
+    @PostMapping("/api/inquiry")
+    @ResponseBody
+    public Map<String, Object> submitInquiryApi(
+            @RequestParam("inquiryTitle") String inquiryTitle,
+            @RequestParam("inquiryType") String inquiryType,
+            @RequestParam("inquiryText") String inquiryText,
+            @RequestParam(value = "inquiryFile", required = false) MultipartFile inquiryFile,
+            HttpSession session) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        String userId = (String) session.getAttribute("user");
+
+        if (userId == null) {
+            response.put("success", false);
+            response.put("message", "로그인이 필요합니다.");
+            return response;
+        }
+
+        Inquiry inquiry = new Inquiry();
+        inquiry.setInqTitle(inquiryTitle);
+        inquiry.setInqText(inquiryText);
+        inquiry.setInqTypecode(inquiryType);
+        inquiry.setInqGenrecode("접수 완료");
+        inquiry.setInqCrdate(new Timestamp(System.currentTimeMillis()));
+        inquiry.setInqDstatus("Active");
+        inquiry.setUserId(userId); // 수정된 부분
+
+        if (inquiryFile != null && !inquiryFile.isEmpty()) {
+            String fileName = inquiryService.saveFile(inquiryFile);
+            inquiry.setInqFile(fileName);
+        }
+
+        inquiryService.saveInquiry(inquiry);
+
+        response.put("success", true);
+        response.put("message", "문의가 성공적으로 등록되었습니다.");
+        return response;
+    }
+
+    // 문의 삭제 API (JSON 형식으로 반환)
+    @DeleteMapping("/api/inquiry/{inqNum}")
+    @ResponseBody
+    public Map<String, Object> deleteInquiryApi(@PathVariable("inqNum") int inqNum, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+
+        String userId = (String) session.getAttribute("user");
+        if (userId == null) {
+            response.put("success", false);
+            response.put("message", "로그인이 필요합니다.");
+            return response;
+        }
+
+        Inquiry inquiry = inquiryService.getInquiryDetail(inqNum);
+        if (inquiry == null || !inquiry.getUserId().equals(userId)) { // 수정된 부분
+            response.put("success", false);
+            response.put("message", "삭제 권한이 없습니다.");
+            return response;
+        }
+
+        inquiryService.hardDeleteInquiry(inqNum);
+
+        response.put("success", true);
+        response.put("message", "삭제되었습니다.");
+        return response;
+    }
+
+    // 문의 상세 정보 API (JSON 형식으로 반환)
+    @GetMapping("/api/inquiry/{inqNum}")
+    @ResponseBody
+    public Map<String, Object> getInquiryDetailApi(@PathVariable("inqNum") int inqNum, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+
+        String userId = (String) session.getAttribute("user");
+
+        Inquiry inquiry = inquiryService.getInquiryDetail(inqNum);
+        if (inquiry == null) {
+            response.put("success", false);
+            response.put("message", "해당 문의를 찾을 수 없습니다.");
+            return response;
+        }
+
+        response.put("success", true);
+        response.put("currentUserId", userId);
+        response.put("inquiry", inquiry);
+        return response;
+    }
+    
+    // 상태 코드를 상태 이름으로 매핑
+    private String mapStatusCodeToName(String statusCode) {
+        switch (statusCode) {
+            case "CI-05":
+                return "접수 완료";
+            case "CI-06":
+                return "처리중";
+            case "CI-07":
+                return "처리 완료";
+            default:
+                return "알 수 없음";
+        }
+    }
+    
+
+    
 }

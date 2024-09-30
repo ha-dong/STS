@@ -1,123 +1,113 @@
+// Scene.java
+
 package com.example.storycraft.model;
 
 import java.util.List;
 
 public class Scene {
 
-	private int scNum;
+    private int scNum;
     private int stNum;
     private int parentScNum;
     private int scLevel;
     private String scText;
     private String scIllus;
-    private String scChoices;
     private int money;
     private int hp;
     private List<Choice> choices;
-    
+
     public Scene() {
     }
 
-	public Scene(int scNum, int stNum, int parentScNum, int scLevel, String scText, String scIllus, String scChoices,
-			int money, int hp, List<Choice> choices) {
-		super();
-		this.scNum = scNum;
-		this.stNum = stNum;
-		this.parentScNum = parentScNum;
-		this.scLevel = scLevel;
-		this.scText = scText;
-		this.scIllus = scIllus;
-		this.scChoices = scChoices;
-		this.money = money;
-		this.hp = hp;
-		this.choices = choices;
-	}
+    public Scene(int scNum, int stNum, int parentScNum, int scLevel, String scText, String scIllus, int money, int hp, List<Choice> choices) {
+        super();
+        this.scNum = scNum;
+        this.stNum = stNum;
+        this.parentScNum = parentScNum;
+        this.scLevel = scLevel;
+        this.scText = scText;
+        this.scIllus = scIllus;
+        this.money = money;
+        this.hp = hp;
+        this.choices = choices;
+    }
 
-	public int getScNum() {
-		return scNum;
-	}
+    public int getScNum() {
+        return scNum;
+    }
 
-	public void setScNum(int scNum) {
-		this.scNum = scNum;
-	}
+    public void setScNum(int scNum) {
+        this.scNum = scNum;
+    }
 
-	public int getStNum() {
-		return stNum;
-	}
+    public int getStNum() {
+        return stNum;
+    }
 
-	public void setStNum(int stNum) {
-		this.stNum = stNum;
-	}
+    public void setStNum(int stNum) {
+        this.stNum = stNum;
+    }
 
-	public int getParentScNum() {
-		return parentScNum;
-	}
+    public int getParentScNum() {
+        return parentScNum;
+    }
 
-	public void setParentScNum(int parentScNum) {
-		this.parentScNum = parentScNum;
-	}
+    public void setParentScNum(int parentScNum) {
+        this.parentScNum = parentScNum;
+    }
 
-	public int getScLevel() {
-		return scLevel;
-	}
+    public int getScLevel() {
+        return scLevel;
+    }
 
-	public void setScLevel(int scLevel) {
-		this.scLevel = scLevel;
-	}
+    public void setScLevel(int scLevel) {
+        this.scLevel = scLevel;
+    }
 
-	public String getScText() {
-		return scText;
-	}
+    public String getScText() {
+        return scText;
+    }
 
-	public void setScText(String scText) {
-		this.scText = scText;
-	}
+    public void setScText(String scText) {
+        this.scText = scText;
+    }
 
-	public String getScIllus() {
-		return scIllus;
-	}
+    public String getScIllus() {
+        return scIllus;
+    }
 
-	public void setScIllus(String scIllus) {
-		this.scIllus = scIllus;
-	}
+    public void setScIllus(String scIllus) {
+        this.scIllus = scIllus;
+    }
 
-	public String getScChoices() {
-		return scChoices;
-	}
+    public int getMoney() {
+        return money;
+    }
 
-	public void setScChoices(String scChoices) {
-		this.scChoices = scChoices;
-	}
+    public void setMoney(int money) {
+        this.money = money;
+    }
 
-	public int getMoney() {
-		return money;
-	}
+    public int getHp() {
+        return hp;
+    }
 
-	public void setMoney(int money) {
-		this.money = money;
-	}
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
 
-	public int getHp() {
-		return hp;
-	}
+    public List<Choice> getChoices() {
+        return choices;
+    }
 
-	public void setHp(int hp) {
-		this.hp = hp;
-	}
+    public void setChoices(List<Choice> choices) {
+        this.choices = choices;
+    }
 
-	public List<Choice> getChoices() {
-		return choices;
-	}
-
-	public void setChoices(List<Choice> choices) {
-		this.choices = choices;
-	}
-
-	@Override
-	public String toString() {
-		return "Scene [scNum=" + scNum + ", stNum=" + stNum + ", parentScNum=" + parentScNum + ", scLevel=" + scLevel
-				+ ", scText=" + scText + ", scIllus=" + scIllus + ", scChoices=" + scChoices + ", money=" + money
-				+ ", hp=" + hp + ", choices=" + choices + "]";
-	}
-    
+    @Override
+    public String toString() {
+        return "Scene [scNum=" + scNum + ", stNum=" + stNum + ", parentScNum=" + parentScNum + ", scLevel=" + scLevel
+                + ", scText=" + scText + ", scIllus=" + scIllus + ", money=" + money
+                + ", hp=" + hp + ", choices=" + choices + "]";
+    }
 }

@@ -1,10 +1,11 @@
+// ChoiceDao.java
+
 package com.example.storycraft.dao;
 
 import com.example.storycraft.model.Choice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import java.sql.*;
 
 @Repository
 public class ChoiceDao {

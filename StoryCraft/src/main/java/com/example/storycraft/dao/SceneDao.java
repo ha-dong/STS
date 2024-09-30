@@ -1,3 +1,5 @@
+// SceneDao.java
+
 package com.example.storycraft.dao;
 
 import com.example.storycraft.model.Choice;
@@ -6,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import java.sql.*;
+import java.util.List;
 
 @Repository
 public class SceneDao {
@@ -39,5 +42,11 @@ public class SceneDao {
         }
 
         return 1;
+    }
+
+    // 장면 삭제 by 스토리 번호
+    public int deleteScenesByStory(int stNum) {
+        String sql = "DELETE FROM SCENE WHERE ST_NUM = ?";
+        return jdbcTemplate.update(sql, stNum);
     }
 }

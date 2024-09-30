@@ -1,11 +1,11 @@
 package com.example.storycraft.service;
 
 import com.example.storycraft.dao.InquiryDao;
+import com.example.storycraft.model.Comment;
 import com.example.storycraft.model.Inquiry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -27,10 +27,14 @@ public class InquiryService {
     // 파일 저장
     public String saveFile(MultipartFile file) {
         String originalFileName = file.getOriginalFilename();
-        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        String fileExtension = "";
+        if (originalFileName != null && originalFileName.contains(".")) {
+            fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        }
         String newFileName = UUID.randomUUID().toString() + fileExtension;
 
         try {
+            // 파일 저장 경로를 실제 경로로 변경해야 합니다.
             File saveFile = new File("/path/to/save/files", newFileName);
             file.transferTo(saveFile);
             return newFileName;
@@ -39,23 +43,38 @@ public class InquiryService {
         }
     }
 
-    // 사용자 ID에 따른 문의 목록 가져오기
-    public List<Inquiry> getInquiryListByUserId(String userId) {
-        return inquiryDao.getInquiryListByUserId(userId);
+    // 모든 문의 목록 가져오기
+    public List<Inquiry> getAllInquiries() {
+        return inquiryDao.getAllInquiries();
     }
 
     // 문의 상세 정보 가져오기
-    public Inquiry getInquiryDetail(int inqNum, String userId) {
-        return inquiryDao.getInquiryDetail(inqNum, userId);
+    public Inquiry getInquiryDetail(int inqNum) {
+        return inquiryDao.getInquiryDetail(inqNum);
     }
 
     // 문의 삭제 처리 (완전 삭제)
-    public void hardDeleteInquiry(int inqNum, String userId) {
-        inquiryDao.hardDeleteInquiry(inqNum, userId);
+    public void hardDeleteInquiry(int inqNum) {
+        inquiryDao.hardDeleteInquiry(inqNum);
     }
 
     // 문의 수정 처리
-    public void updateInquiry(int inqNum, Inquiry inquiryDetails, String userId) {
-        inquiryDao.updateInquiry(inqNum, inquiryDetails, userId);
+    public void updateInquiry(int inqNum, Inquiry inquiryDetails) {
+        inquiryDao.updateInquiry(inqNum, inquiryDetails);
     }
+    
+    // 문의 상태 업데이트
+    public void updateInquiryStatus(int inqNum, String newStatus) {
+        inquiryDao.updateInquiryStatus(inqNum, newStatus);
+    }
+
+    // 댓글 추가
+    public void addComment(int inqNum, String commentText) {
+        inquiryDao.insertComment(inqNum, commentText);
+    }
+ 
+    public List<Comment> getCommentsForInquiry(int inqNum) {
+        return inquiryDao.getCommentsForInquiry(inqNum);
+    }
+    
 }

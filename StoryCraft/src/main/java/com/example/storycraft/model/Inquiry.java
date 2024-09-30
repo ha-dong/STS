@@ -3,37 +3,35 @@ package com.example.storycraft.model;
 import java.sql.Timestamp;
 
 public class Inquiry {
-    private int inqNum;
-    private String inqTitle;
-    private String inqText;
-    private String inqTypecode;
-    private String inqGenrecode;
-    private String inqFile;
-    private Timestamp inqCrdate;
-    private String inqDstatus;
-    private String uId;
-    private String inqDreason;  // 삭제 사유
-    private Timestamp inqDdate; // 삭제 날짜
+    private int inqNum;          // 문의 번호
+    private String inqTitle;     // 문의 제목
+    private String userId;       // 작성자 ID
+    private String inqTypecode;  // 문의 종류 코드
+    private String inqGenrecode; // 문의 장르 코드 또는 상태 코드
+    private String inqText;      // 문의 내용
+    private String inqFile;      // 첨부 파일 이름
+    private Timestamp inqCrdate; // 작성일
+    private String inqDstatus;   // 삭제 상태 (Active 또는 Deleted)
 
-    public Inquiry() {
-    }
+    // 기본 생성자
+    public Inquiry() {}
 
-    public Inquiry(int inqNum, String inqTitle, String inqText, String inqTypecode, String inqGenrecode, String inqFile,
-                   Timestamp inqCrdate, String inqDstatus, String uId, String inqDreason, Timestamp inqDdate) {
+    // 모든 필드를 포함하는 생성자
+    public Inquiry(int inqNum, String inqTitle, String userId, String inqTypecode,
+                   String inqGenrecode, String inqText, String inqFile,
+                   Timestamp inqCrdate, String inqDstatus) {
         this.inqNum = inqNum;
         this.inqTitle = inqTitle;
-        this.inqText = inqText;
+        this.userId = userId;
         this.inqTypecode = inqTypecode;
         this.inqGenrecode = inqGenrecode;
+        this.inqText = inqText;
         this.inqFile = inqFile;
         this.inqCrdate = inqCrdate;
         this.inqDstatus = inqDstatus;
-        this.uId = uId;
-        this.inqDreason = inqDreason;
-        this.inqDdate = inqDdate;
     }
 
-    // getter 및 setter 메서드들
+    // Getter 및 Setter 메서드
 
     public int getInqNum() {
         return inqNum;
@@ -51,12 +49,12 @@ public class Inquiry {
         this.inqTitle = inqTitle;
     }
 
-    public String getInqText() {
-        return inqText;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setInqText(String inqText) {
-        this.inqText = inqText;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getInqTypecode() {
@@ -73,6 +71,14 @@ public class Inquiry {
 
     public void setInqGenrecode(String inqGenrecode) {
         this.inqGenrecode = inqGenrecode;
+    }
+
+    public String getInqText() {
+        return inqText;
+    }
+
+    public void setInqText(String inqText) {
+        this.inqText = inqText;
     }
 
     public String getInqFile() {
@@ -99,36 +105,19 @@ public class Inquiry {
         this.inqDstatus = inqDstatus;
     }
 
-    public String getUId() {
-        return uId;
-    }
-
-    public void setUId(String uId) {
-        this.uId = uId;
-    }
-
-    // 삭제 사유 (inqDreason) getter 및 setter
-    public String getInqDreason() {
-        return inqDreason;
-    }
-
-    public void setInqDreason(String inqDreason) {
-        this.inqDreason = inqDreason;
-    }
-
-    // 삭제 날짜 (inqDdate) getter 및 setter
-    public Timestamp getInqDdate() {
-        return inqDdate;
-    }
-
-    public void setInqDdate(Timestamp inqDdate) {
-        this.inqDdate = inqDdate;
-    }
-
+    // toString 메서드 (디버깅용)
     @Override
     public String toString() {
-        return "Inquiry [inqNum=" + inqNum + ", inqTitle=" + inqTitle + ", inqText=" + inqText + ", inqTypecode="
-                + inqTypecode + ", inqGenrecode=" + inqGenrecode + ", inqFile=" + inqFile + ", inqCrdate=" + inqCrdate
-                + ", inqDstatus=" + inqDstatus + ", uId=" + uId + ", inqDreason=" + inqDreason + ", inqDdate=" + inqDdate + "]";
+        return "Inquiry{" +
+                "inqNum=" + inqNum +
+                ", inqTitle='" + inqTitle + '\'' +
+                ", userId='" + userId + '\'' +
+                ", inqTypecode='" + inqTypecode + '\'' +
+                ", inqGenrecode='" + inqGenrecode + '\'' +
+                ", inqText='" + inqText + '\'' +
+                ", inqFile='" + inqFile + '\'' +
+                ", inqCrdate=" + inqCrdate +
+                ", inqDstatus='" + inqDstatus + '\'' +
+                '}';
     }
 }

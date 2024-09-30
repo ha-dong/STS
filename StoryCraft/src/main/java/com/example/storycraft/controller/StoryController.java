@@ -1,8 +1,11 @@
+// StoryController.java
+
 package com.example.storycraft.controller;
 
 import com.example.storycraft.model.Story;
 import com.example.storycraft.service.StoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,13 +32,22 @@ public class StoryController {
     @Autowired
     private StoryService storyService;
 
-    // 스토리 제작 페이지 이동
-    @GetMapping("/create")
-    public String showStoryCreatePage() {
+    // 스토리 제작 페이지 이동 (추가: editMode 파라미터)
+    @GetMapping({"/create", "/edit"})
+    public String showStoryCreatePage(@RequestParam(value = "stNum", required = false) Integer stNum, Model model) {
+        if (stNum != null) {
+            Story story = storyService.getStoryById(stNum);
+            if (story != null) {
+                model.addAttribute("story", story);
+                model.addAttribute("editMode", true);
+            }
+        }
+        // Assuming genreList is fetched from service or defined elsewhere
+        model.addAttribute("genreList", storyService.getGenreList());
         return "storyCreate";
     }
 
-    // 스토리 저장 처리
+    // 스토리 저장 처리 (수정 포함)
     @PostMapping("/save")
     @ResponseBody
     public Map<String, Object> saveStory(
@@ -71,6 +83,8 @@ public class StoryController {
             String genre = allParams.get("genre");
             int initialMoney = Integer.parseInt(allParams.getOrDefault("initialMoney", "0"));
             int initialHP = Integer.parseInt(allParams.getOrDefault("initialHP", "100"));
+            String endCode = allParams.get("endCode");
+            Integer stNum = allParams.get("stNum") != null ? Integer.parseInt(allParams.get("stNum")) : null;
 
             // 필수 입력 필드 검증
             if (title == null || title.trim().isEmpty()) {
@@ -89,7 +103,7 @@ public class StoryController {
             if (cover != null && !cover.isEmpty()) {
                 try {
                     coverFileName = System.currentTimeMillis() + "_" + cover.getOriginalFilename();
-                    String savePath = "D:/uploads/" + coverFileName;
+                    String savePath = "C:/embeded/upload/" + coverFileName;
                     cover.transferTo(new File(savePath));
                 } catch (IOException e) {
                     logger.error("표지 이미지 저장 중 오류 발생", e);
@@ -106,7 +120,7 @@ public class StoryController {
                     if (sceneImage != null && !sceneImage.isEmpty()) {
                         try {
                             String sceneImageFileName = System.currentTimeMillis() + "_" + sceneImage.getOriginalFilename();
-                            String savePath = "D:/uploads/" + sceneImageFileName;
+                            String savePath = "C:/embeded/upload/" + sceneImageFileName;
                             sceneImage.transferTo(new File(savePath));
                             // 파일명을 allParams에 추가
                             String sceneNum = key.substring("sceneImage_".length());
@@ -121,8 +135,14 @@ public class StoryController {
                 }
             }
 
-            // 스토리 저장 로직 호출
-            boolean isSaved = storyService.saveFullStory(title, genre, coverFileName, initialMoney, initialHP, userId, allParams);
+            boolean isSaved;
+            if (stNum == null) {
+                // 스토리 저장 로직 호출
+                isSaved = storyService.saveFullStory(title, genre, coverFileName, initialMoney, initialHP, userId, allParams);
+            } else {
+                // 스토리 수정 로직 호출
+                isSaved = storyService.updateFullStory(stNum, title, genre, coverFileName, initialMoney, initialHP, userId, allParams);
+            }
 
             if (isSaved) {
                 response.put("success", true);
@@ -140,8 +160,14 @@ public class StoryController {
 
     // 스토리 목록 페이지 이동
     @GetMapping("/list")
-    public String showStoryListPage(Model model, HttpSession session, HttpServletRequest request) {
-        List<Story> storyList = storyService.getAllStories();
+    public String showStoryListPage(
+            @RequestParam(value = "genre", required = false) String genre,
+            @RequestParam(value = "sort", required = false) String sort,
+            Model model,
+            HttpSession session,
+            HttpServletRequest request
+    ) {
+        List<Story> storyList = storyService.getAllStoriesFilteredAndSorted(genre, sort);
         model.addAttribute("storyList", storyList);
 
         // 로그인된 사용자 ID 가져오기
@@ -162,6 +188,9 @@ public class StoryController {
             }
         }
         model.addAttribute("userId", userId);
+
+        // Assuming genreList is fetched from service or defined elsewhere
+        model.addAttribute("genreList", storyService.getGenreList());
 
         return "storyList";
     }
@@ -204,14 +233,25 @@ public class StoryController {
             return response;
         }
 
-        boolean isDeleted = storyService.deleteStory(stNum);
+        try {
+            boolean isDeleted = storyService.deleteStory(stNum);
 
-        if (isDeleted) {
-            response.put("success", true);
-        } else {
+            if (isDeleted) {
+                response.put("success", true);
+            } else {
+                response.put("success", false);
+                response.put("message", "스토리 삭제에 실패했습니다.");
+            }
+        } catch (DataIntegrityViolationException e) {
+            logger.error("스토리 삭제 중 데이터 무결성 오류 발생", e);
             response.put("success", false);
-            response.put("message", "스토리 삭제에 실패했습니다.");
+            response.put("message", "스토리에 관련된 다른 데이터가 존재하여 삭제할 수 없습니다.");
+        } catch (Exception e) {
+            logger.error("스토리 삭제 중 예외 발생", e);
+            response.put("success", false);
+            response.put("message", "스토리 삭제 중 오류가 발생했습니다.");
         }
+
         return response;
     }
 
@@ -296,7 +336,7 @@ public class StoryController {
                 response.put("success", true);
             } else {
                 response.put("success", false);
-                response.put("message", "이미 추천한 스토리입니다.");
+                response.put("message", "이미 추천한 스토리이거나 자신의 스토리입니다.");
             }
         } catch (Exception e) {
             logger.error("추천 처리 중 예외 발생", e);

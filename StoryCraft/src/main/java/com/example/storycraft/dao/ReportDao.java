@@ -15,4 +15,9 @@ public class ReportDao {
                      "VALUES (SEQ_REPORT.NEXTVAL, ?, ?, ?, SYSDATE, ?)";
         return jdbcTemplate.update(sql, stNum, reTypeCode, reText, userId);
     }
+
+    public void deleteReportsByStory(int stNum) {
+        String sql = "DELETE FROM REPORT WHERE ST_NUM = ?";
+        jdbcTemplate.update(sql, stNum);
+    }
 }

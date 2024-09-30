@@ -1,4 +1,3 @@
-// WebConfig.java
 package com.example.storycraft.config;
 
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +19,11 @@ public class WebConfig implements WebMvcConfigurer {
 
         // 프로필 이미지 업로드 경로 설정
         registry.addResourceHandler("/profile-images/**")
-                .addResourceLocations("file:/C:/embeded/upload/"); // 실제 이미지 파일이 저장된 경로로 수정
+                .addResourceLocations("file:///C:/embeded/upload/"); // Windows 경로 형식 수정
+
+        // 스토리 이미지 업로드 경로 설정 추가
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:///C:/embeded/upload/"); // 스토리 이미지 매핑 추가
     }
     
     @Override

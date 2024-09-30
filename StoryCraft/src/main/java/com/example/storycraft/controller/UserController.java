@@ -60,13 +60,6 @@ public class UserController {
         return "main";
     }
 
-
-    // 문의 페이지 매핑
-    @GetMapping("/inquiry")
-    public String inquiry() {
-        return "inquiry";
-    }
-
     // 문의 목록 페이지 매핑
     @GetMapping("/inquiryList")
     public String inquiryList() {

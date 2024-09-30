@@ -1,13 +1,12 @@
 package com.example.storycraft.dao;
 
+import com.example.storycraft.model.Comment;
 import com.example.storycraft.model.Inquiry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -28,39 +27,38 @@ public class InquiryDao {
                 inquiry.getInqFile(),
                 inquiry.getInqCrdate(),
                 inquiry.getInqDstatus(),
-                inquiry.getUId());
+                inquiry.getUserId()); // 수정된 부분
     }
 
-    // 사용자 ID로 문의 목록 가져오기
-    public List<Inquiry> getInquiryListByUserId(String userId) {
-        String sql = "SELECT * FROM INQUIRY WHERE U_ID = ? AND INQ_DSTATUS != 'Delete' ORDER BY INQ_CRDATE DESC";
-        return jdbcTemplate.query(sql, new Object[]{userId}, (rs, rowNum) -> mapRowToInquiry(rs));
+    // 모든 문의 목록 가져오기
+    public List<Inquiry> getAllInquiries() {
+        String sql = "SELECT * FROM INQUIRY WHERE INQ_DSTATUS != 'Delete' ORDER BY INQ_CRDATE DESC";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapRowToInquiry(rs));
     }
 
-    // 문의 상세 조회
-    public Inquiry getInquiryDetail(int inqNum, String userId) {
-        String sql = "SELECT * FROM INQUIRY WHERE INQ_NUM = ? AND U_ID = ?";
-        List<Inquiry> inquiryList = jdbcTemplate.query(sql, new Object[]{inqNum, userId}, (rs, rowNum) -> mapRowToInquiry(rs));
-        return inquiryList.isEmpty() ? null : inquiryList.get(0);  // 데이터가 없으면 null 반환
+    // 문의 상세 정보 가져오기
+    public Inquiry getInquiryDetail(int inqNum) {
+        String sql = "SELECT * FROM INQUIRY WHERE INQ_NUM = ?";
+        List<Inquiry> inquiries = jdbcTemplate.query(sql, new Object[]{inqNum}, (rs, rowNum) -> mapRowToInquiry(rs));
+        return inquiries.isEmpty() ? null : inquiries.get(0);
     }
 
-    // 문의 하드 삭제 처리
-    public void hardDeleteInquiry(int inqNum, String userId) {
-        String sql = "DELETE FROM INQUIRY WHERE INQ_NUM = ? AND U_ID = ?";
-        jdbcTemplate.update(sql, inqNum, userId);  // 실제로 DB에서 데이터를 삭제
+    // 문의 삭제 (완전 삭제)
+    public void hardDeleteInquiry(int inqNum) {
+        String sql = "DELETE FROM INQUIRY WHERE INQ_NUM = ?";
+        jdbcTemplate.update(sql, inqNum);
     }
 
-    // 문의 수정 처리
-    public void updateInquiry(int inqNum, Inquiry inquiryDetails, String userId) {
-        String sql = "UPDATE INQUIRY SET INQ_TITLE = ?, INQ_TEXT = ?, INQ_TYPECODE = ?, INQ_GENRECODE = ?, INQ_EDDATE = ? WHERE INQ_NUM = ? AND U_ID = ?";
+    // 문의 수정
+    public void updateInquiry(int inqNum, Inquiry inquiry) {
+        String sql = "UPDATE INQUIRY SET INQ_TITLE = ?, INQ_TEXT = ?, INQ_TYPECODE = ?, INQ_FILE = ?, INQ_CRDATE = ? WHERE INQ_NUM = ?";
         jdbcTemplate.update(sql,
-                            inquiryDetails.getInqTitle(),
-                            inquiryDetails.getInqText(),
-                            inquiryDetails.getInqTypecode(),
-                            inquiryDetails.getInqGenrecode(),
-                            new Timestamp(System.currentTimeMillis()),
-                            inqNum,
-                            userId);
+                inquiry.getInqTitle(),
+                inquiry.getInqText(),
+                inquiry.getInqTypecode(),
+                inquiry.getInqFile(),
+                inquiry.getInqCrdate(),
+                inqNum);
     }
 
     // ResultSet을 Inquiry 객체로 변환하는 메소드
@@ -74,9 +72,37 @@ public class InquiryDao {
         inquiry.setInqFile(rs.getString("INQ_FILE"));
         inquiry.setInqCrdate(rs.getTimestamp("INQ_CRDATE"));
         inquiry.setInqDstatus(rs.getString("INQ_DSTATUS"));
-        inquiry.setInqDreason(rs.getString("INQ_DREASON"));
-        inquiry.setInqDdate(rs.getTimestamp("INQ_DDATE"));
-        inquiry.setUId(rs.getString("U_ID"));
+        // inquiry.setInqDreason(rs.getString("INQ_DREASON")); // 해당 프로퍼티가 없을 경우 주석 처리
+        // inquiry.setInqDdate(rs.getTimestamp("INQ_DDATE")); // 해당 프로퍼티가 없을 경우 주석 처리
+        inquiry.setUserId(rs.getString("U_ID")); // 수정된 부분
         return inquiry;
     }
+    
+    // 문의 상태 업데이트
+    public void updateInquiryStatus(int inqNum, String newStatus) {
+        String sql = "UPDATE INQUIRY SET INQ_GENRECODE = ? WHERE INQ_NUM = ?";
+        jdbcTemplate.update(sql, newStatus, inqNum);
+    }
+
+    // 댓글 추가
+    public void insertComment(int inqNum, String commentText) {
+        String sql = "INSERT INTO COMMENTS (CMT_NUM, INQ_NUM, CMT_DATE, CMT_TEXT) VALUES (SEQ_COMMENT.NEXTVAL, ?, SYSDATE, ?)";
+        jdbcTemplate.update(sql, inqNum, commentText);
+    }
+    
+ // InquiryDao.java
+    public List<Comment> getCommentsForInquiry(int inqNum) {
+        String sql = "SELECT * FROM COMMENTS WHERE INQ_NUM = ?";
+        return jdbcTemplate.query(sql, new Object[] { inqNum }, (rs, rowNum) -> {
+            Comment comment = new Comment();
+            comment.setCmtNum(rs.getInt("CMT_NUM"));
+            comment.setInqNum(rs.getInt("INQ_NUM"));
+            comment.setCmtDate(rs.getTimestamp("CMT_DATE"));
+            comment.setCmtText(rs.getString("CMT_TEXT"));
+            return comment;
+        });
+    }
+
+    
+    
 }

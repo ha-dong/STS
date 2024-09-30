@@ -1,14 +1,17 @@
 package com.example.storycraft.service;
 
+import com.example.storycraft.dao.CommentsDao;
+import com.example.storycraft.dao.InquiryDao;
+import com.example.storycraft.dao.PlayerDao;
+import com.example.storycraft.dao.ReportDao;
 import com.example.storycraft.dao.SceneDao;
 import com.example.storycraft.dao.StoryDao;
-import com.example.storycraft.dao.ReportDao;
-import com.example.storycraft.dao.PlayerDao;
 import com.example.storycraft.model.Choice;
 import com.example.storycraft.model.Scene;
 import com.example.storycraft.model.Story;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +34,12 @@ public class StoryService {
 
     @Autowired
     private PlayerDao playerDao;
+
+    @Autowired
+    private CommentsDao commentsDao;
+
+    @Autowired
+    private InquiryDao inquiryDao;
 
     // 전체 스토리 저장
     public boolean saveFullStory(String title, String genre, String coverFileName, int initialMoney, int initialHP,
@@ -71,6 +80,53 @@ public class StoryService {
         }
     }
 
+    // 스토리 수정
+    public boolean updateFullStory(int stNum, String title, String genre, String coverFileName, int initialMoney, int initialHP,
+                                   String userId, Map<String, String> allParams) {
+        try {
+            // 스토리 업데이트
+            Story story = new Story();
+            story.setStNum(stNum);
+            story.setStTitle(title);
+            story.setStGenrecode(genre);
+            story.setStTypecode("CST-02");
+            if (coverFileName != null) {
+                story.setStCover(coverFileName);
+            }
+            story.setuId(userId != null ? userId : "subo"); // userId가 null이면 "subo"로 설정
+            story.setEndCode(allParams.get("endCode")); // 엔딩 코드 설정
+            // 기타 필드 설정
+
+            int result = storyDao.updateStory(story);
+
+            if (result > 0) {
+                // 기존 장면 삭제
+                sceneDao.deleteScenesByStory(stNum);
+
+                // 장면 및 선택지 데이터 파싱
+                List<Scene> scenes = parseScenesFromParameters(allParams, stNum);
+
+                // 장면 저장
+                for (Scene scene : scenes) {
+                    sceneDao.insertScene(scene);
+                }
+
+                return true;
+            } else {
+                logger.error("스토리 수정 실패: 영향 받은 행의 수가 0입니다.");
+                return false;
+            }
+        } catch (Exception e) {
+            logger.error("스토리 수정 중 오류 발생", e);
+            throw e;
+        }
+    }
+
+    // 전체 스토리 가져오기 필터링 및 정렬
+    public List<Story> getAllStoriesFilteredAndSorted(String genre, String sort) {
+        return storyDao.getAllStoriesFilteredAndSorted(genre, sort);
+    }
+
     // 모든 스토리 가져오기
     public List<Story> getAllStories() {
         return storyDao.getAllStories();
@@ -82,8 +138,22 @@ public class StoryService {
     }
 
     // 스토리 삭제
+    @Transactional
     public boolean deleteStory(int stNum) {
-        return storyDao.deleteStory(stNum) > 0;
+        try {
+            // 자식 테이블의 레코드 삭제
+            reportDao.deleteReportsByStory(stNum);
+            commentsDao.deleteCommentsByStory(stNum);
+            playerDao.deletePlayersByStory(stNum);
+
+            // SCENE 및 CHOICE는 외래 키에 ON DELETE CASCADE가 설정되어 있으므로 STORY 삭제 시 자동으로 삭제됨
+
+            // STORY 삭제
+            return storyDao.deleteStory(stNum) > 0;
+        } catch (Exception e) {
+            logger.error("스토리 삭제 중 오류 발생", e);
+            return false;
+        }
     }
 
     // 신고 처리
@@ -98,8 +168,25 @@ public class StoryService {
         if (hasRecommended) {
             return false;
         }
+        // 추천이 자신의 스토리인지 확인
+        Story story = storyDao.getStoryById(stNum);
+        if (story != null && userId.equals(story.getuId())) {
+            return false;
+        }
+        // 플레이어 레코드가 있는지 확인
+        boolean hasPlayerRecord = playerDao.hasPlayerRecord(stNum, userId);
+        if (!hasPlayerRecord) {
+            // 플레이어 레코드 삽입
+            playerDao.insertPlayer(stNum, userId);
+        }
         // 추천 처리
-        return playerDao.recommendStory(stNum, userId) > 0;
+        boolean updated = playerDao.recommendStory(stNum, userId);
+        if (updated) {
+            // 추천 수 증가
+            storyDao.incrementRecommendation(stNum);
+            return true;
+        }
+        return false;
     }
 
     // 장면 및 선택지 데이터 파싱
@@ -156,5 +243,30 @@ public class StoryService {
         }
 
         return choices;
+    }
+
+    // Assuming this method fetches genre list from database or predefined list
+    public List<Map<String, String>> getGenreList() {
+        // Example predefined genres
+        List<Map<String, String>> genreList = new ArrayList<>();
+        genreList.add(createCodeMap("CG-01", "판타지"));
+        genreList.add(createCodeMap("CG-02", "스릴러"));
+        genreList.add(createCodeMap("CG-03", "코미디"));
+        genreList.add(createCodeMap("CG-04", "SF"));
+        genreList.add(createCodeMap("CG-05", "미스터리"));
+        genreList.add(createCodeMap("CG-06", "로맨스"));
+        genreList.add(createCodeMap("CG-07", "호러"));
+        genreList.add(createCodeMap("CG-08", "무협"));
+        genreList.add(createCodeMap("CG-09", "드라마"));
+        genreList.add(createCodeMap("CG-10", "서부"));
+        genreList.add(createCodeMap("CG-11", "역사"));
+        return genreList;
+    }
+
+    private Map<String, String> createCodeMap(String code, String codeName) {
+        Map<String, String> map = new HashMap<>();
+        map.put("CODE", code);
+        map.put("CODE_NAME", codeName);
+        return map;
     }
 }
