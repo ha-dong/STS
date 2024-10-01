@@ -1,5 +1,3 @@
-<!-- inquiry.jsp -->
-
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -13,9 +11,18 @@
     <script src="${pageContext.request.contextPath}/resources/js/inquiry.js"></script>
 </head>
 <body>
-    <h2>문의 목록</h2>
-    <!-- 문의 작성 버튼 -->
-    <button onclick="location.href='${pageContext.request.contextPath}/inquiryForm'">문의 등록</button>
+    <!-- 로고 컨테이너 -->
+    <div class="logo-container">
+        <a href="${pageContext.request.contextPath}/main">
+            <img src="${pageContext.request.contextPath}/resources/img/logo.png" alt="로고" class="small-logo logo-animation">
+        </a>
+    </div>
+
+    <!-- 문의 등록 버튼 -->
+    <button class="inquiry-button" onclick="location.href='${pageContext.request.contextPath}/inquiryForm'">문의 등록</button>
+
+    <!-- 문의 목록 제목 -->
+    <h2 class="inquiry-title">문의 목록</h2>
 
     <!-- 문의 목록 표시 영역 -->
     <table id="inquiryListTable">
@@ -32,5 +39,6 @@
             <!-- 문의 목록이 JavaScript로 동적으로 추가됩니다 -->
         </tbody>
     </table>
+
 </body>
 </html>

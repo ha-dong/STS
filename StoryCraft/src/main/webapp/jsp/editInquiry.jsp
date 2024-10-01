@@ -4,75 +4,74 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>문의 수정</title>
-    <script src="${pageContext.request.contextPath}/resources/js/editInquiry.js"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/editInquiry.css">
 </head>
 <body>
+		<div class="sidebar-buttons">
+			<a href="${pageContext.request.contextPath}/main" class="btn">메인페이지</a> 
+			<a href="${pageContext.request.contextPath}/inquiry" class="btn">돌아가기</a>
+		</div>
     <h2>문의 수정</h2>
     
-    <form id="editInquiryForm">
-        <label for="inquiryTitle">문의 제목:</label>
-        <input type="text" id="inquiryTitle" name="inquiryTitle" required>
-
+    
+    <!-- 문의 수정 폼 -->
+    <form action="${pageContext.request.contextPath}/editInquiry" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="inqNum" value="${inquiry.inqNum}">
+        
+        <!-- 제목 입력 필드 -->
+        <label for="inquiryTitle">제목:</label>
+        <input type="text" id="inquiryTitle" name="inquiryTitle" value="${inquiry.inqTitle}" required>
+        
+        <!-- 문의 종류 선택 -->
         <label for="inquiryType">문의 종류:</label>
         <select id="inquiryType" name="inquiryType" required>
-            <option value="스토리 문의">스토리 문의</option>
-            <option value="서비스 문의">서비스 문의</option>
-            <option value="계정 관련 문의">계정 관련 문의</option>
-            <option value="신고 문의">신고 문의</option>
+            <option value="서비스 문의" ${inquiry.inqTypecode == '서비스 문의' ? 'selected' : ''}>서비스 문의</option>
+            <option value="스토리 문의" ${inquiry.inqTypecode == '스토리 문의' ? 'selected' : ''}>스토리 문의</option>
+            <option value="계정 관련 문의" ${inquiry.inqTypecode == '계정 관련 문의' ? 'selected' : ''}>계정 관련 문의</option>
+            <option value="신고 문의" ${inquiry.inqTypecode == '신고 문의' ? 'selected' : ''}>신고 문의</option>
+            <option value="기타 문의" ${inquiry.inqTypecode == '기타 문의' ? 'selected' : ''}>기타 문의</option>
         </select>
-
-        <label for="inquiryText">문의 내용:</label>
-        <textarea id="inquiryText" name="inquiryText" required></textarea>
-
-        <button type="button" onclick="submitEdit()">수정 완료</button>
+        
+        <!-- 문의 내용 입력 필드 -->
+        <label for="inquiryText">내용:</label>
+        <textarea id="inquiryText" name="inquiryText" required>${inquiry.inqText}</textarea>
+        
+        <!-- 파일 첨부 -->
+        <label for="inquiryFile">첨부 파일:</label>
+        <input type="file" id="inquiryFile" name="inquiryFile">
+        
+        <!-- 수정 버튼 -->
+        <button type="submit">수정</button>
     </form>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const params = new URLSearchParams(window.location.search);
-            const inqNum = params.get('inqNum');
-            
-            fetch(`/StoryCraft/api/inquiry/${inqNum}`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('inquiryTitle').value = data.inqTitle;
-                document.getElementById('inquiryText').value = data.inqText;
-                document.getElementById('inquiryType').value = data.inqTypecode;
-            })
-            .catch(error => console.error('문의 상세 정보 로드 중 오류 발생:', error));
-        });
+    document.addEventListener('DOMContentLoaded', function() {
+        var inquiryId = 22; // 예시 ID
+        var contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1));
 
-        function submitEdit() {
-            const params = new URLSearchParams(window.location.search);
-            const inqNum = params.get('inqNum');
-            const updatedTitle = document.getElementById('inquiryTitle').value;
-            const updatedText = document.getElementById('inquiryText').value;
-            const updatedType = document.getElementById('inquiryType').value;
-
-            fetch(`/StoryCraft/api/inquiry/${inqNum}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    inqTitle: updatedTitle,
-                    inqText: updatedText,
-                    inqTypecode: updatedType
-                })
+        fetch(contextPath + '/api/inquiry/' + inquiryId)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('문의 상세 정보를 불러오는 중 오류 발생');
+                }
+                return response.json();
             })
-            .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('문의가 수정되었습니다.');
-                    window.location.href = '/StoryCraft/jsp/inquiryList.jsp'; // 수정 후 문의 목록 페이지로 리디렉션
+                    var inquiry = data.inquiry;
+                    document.getElementById('inquiryTitle').value = inquiry.inqTitle;
+                    document.getElementById('inquiryType').value = inquiry.inqTypecode;
+                    document.getElementById('inquiryText').value = inquiry.inqText;
                 } else {
-                    alert('수정 실패');
+                    alert(data.message);
                 }
             })
-            .catch(error => console.error('수정 중 오류 발생:', error));
-        }
+            .catch(error => {
+                console.error('문의 상세 정보 로드 중 오류 발생:', error);
+            });
+    });
+
     </script>
 </body>
 </html>

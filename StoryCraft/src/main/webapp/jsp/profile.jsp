@@ -54,28 +54,6 @@
         <!-- 사용자 포스트 버튼 추가 -->
         <button id="userPostButton" class="user-post-btn" style="display: none;">내 포스트 보기</button>
     </section>
-    
-    <section class="stats">
-        <div class="stat">추천 수<br>0개</div>
-        <div class="stat">조회 수<br>0회</div>
-    </section>
-
-    <section class="content">
-        <div class="stories">
-            <button class="mystorylist" onclick="location.href='mystorylist'">내가 작성한 스토리</button>
-            <div class="story-grid" id="myStoryList">
-                <!-- 사용자가 작성한 스토리를 동적으로 로드 -->
-            </div>
-            <button class="more-btn" onclick="location.href='mystorylist'">더보기</button>
-        </div>
-        <div class="recommendations">
-            <button class="favoritestorylist" onclick="location.href='favoritestorylist'">내가 좋아요 누른 스토리</button>
-            <div class="story-grid" id="favoriteStoryList">
-                <!-- 사용자가 좋아요한 스토리를 동적으로 로드 -->
-            </div>
-            <button class="more-btn" onclick="location.href='favoritestorylist'">더보기</button>
-        </div>
-    </section>
 
     <!-- 수정 모달 -->
     <div id="editModal" class="modal">

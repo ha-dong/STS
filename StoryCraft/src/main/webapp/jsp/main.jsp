@@ -41,7 +41,7 @@
     </div>
 
     <!-- 배경음악 오디오 태그 -->
-    <audio id="backgroundMusic" src="${pageContext.request.contextPath}/resources/audio/IU.mp3" loop></audio>   
+    <audio id="backgroundMusic" src="${pageContext.request.contextPath}/resources/audio/BGM.mp3" loop></audio>   
 
     <div class="content">
         <div id="mainStory" class="highlight" onclick="startMainStory()">메인 스토리</div>

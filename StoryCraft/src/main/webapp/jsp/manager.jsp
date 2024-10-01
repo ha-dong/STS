@@ -1,3 +1,5 @@
+<!-- manager.jsp -->
+
 <%@ page import="java.time.ZonedDateTime, java.time.format.DateTimeFormatter, java.time.ZoneId" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
@@ -22,11 +24,10 @@
         </div>
         <nav>
             <ul>
-                <li><a href="manager">대시보드</a></li> 
                 <li><a href="#">스토리 관리</a></li>
-                <li><a href="#">유저 관리</a></li>
+                <li><a href="${pageContext.request.contextPath}/adminUser">유저 관리</a></li>
                 <li><a href="${pageContext.request.contextPath}/notice">공지 관리</a></li>
-                <li><a href="inquiryList">문의 관리</a></li>
+                <li><a href="${pageContext.request.contextPath}/adminInquiryList">문의 관리</a></li>
             </ul>
         </nav>
     </div>
@@ -36,7 +37,7 @@
 		    <div class="title">Story Craft</div>
 		    <div class="actions">
 		        <a href="${pageContext.request.contextPath}/main">
-		            <button>나가기</button>
+		            <button>메인 페이지</button>
 		        </a>
 		    </div>
 		</header>
