@@ -2,9 +2,7 @@
 
 // 사운드 효과 파일 목록
 const soundEffectFiles = [
-    '/StoryCraft/resources/audio/Can.mp3',
-    '/StoryCraft/resources/audio/ci.mp3',
-    '/StoryCraft/resources/audio/pon.mp3'
+    '/StoryCraft/resources/audio/click.mp3'
 ];
 
 let soundEffectsVolume = 0.5; // 효과음 기본 볼륨 (슬라이더 초기 값 50에 따라 설정)
@@ -445,13 +443,13 @@ function addSoundEffectListeners() {
         });
     }
 
-    // 문의사항 아이콘에 이벤트 리스너 추가
-    const inquiryIcon = document.querySelector('.inquiry-icon');
-    if (inquiryIcon) {
-        inquiryIcon.addEventListener('click', function () {
-            navigateWithDelay(`${contextPath}/inquiry`);
-        });
-    }
+// 문의사항 아이콘에 이벤트 리스너 추가
+const inquiryIcon = document.querySelector('.inquiry-icon');
+if (inquiryIcon) {
+    inquiryIcon.addEventListener('click', function () {
+        navigateWithDelay(`${contextPath}/inquiry`);
+    });
+}
 
     // 설정 아이콘에 이벤트 리스너 추가
     const settingIcon = document.querySelector('.setting-icon');
@@ -505,7 +503,7 @@ function toggleMute(sliderId) {
 // 카카오 로그인 함수
 function kakaoLogin() {
     Kakao.Auth.authorize({
-        redirectUri: 'https://1f23-123-142-55-115.ngrok-free.app/StoryCraft/callback'  // 실제 배포 시점에 맞게 수정
+        redirectUri: 'https://68ea-123-142-55-115.ngrok-free.app/StoryCraft/callback'  // 실제 배포 시점에 맞게 수정
     });
 }
 

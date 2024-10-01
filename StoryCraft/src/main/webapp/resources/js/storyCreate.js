@@ -1,3 +1,5 @@
+// storyCreate.js
+
 let sceneCounter = 1; // 장면 번호를 관리하는 변수
 
 const choiceNames = {};     // 선택지 이름을 저장하는 객체
@@ -84,7 +86,7 @@ function saveChoice(sceneNum, choiceNum) {
     // 선택지에 따른 스토리 작성 버튼 활성화
     const createSceneBtn = document.getElementById(`createSceneBtn_${sceneNum}_${choiceNum}`);
     createSceneBtn.style.display = 'inline-block';
-    createSceneBtn.textContent = `'${choiceName}' 선택지에 따른 스토리 작성`;
+    createSceneBtn.textContent = `${choiceName} 선택지에 따른 스토리 작성`;
 
     // 선택지 이름과 내용을 저장
     const choiceKey = `scene_${sceneNum}_choice_${choiceNum}`;
@@ -183,8 +185,8 @@ function resetForm() {
 }
 
 // 제출하기 버튼 클릭 시 호출되는 함수
-function submitStory() {
-    if (confirm('스토리를 제출하시겠습니까?')) {
+function submitStory(isEdit) {
+    if (confirm(isEdit ? '스토리를 수정하시겠습니까?' : '스토리를 제출하시겠습니까?')) {
         // 폼 데이터를 서버로 전송
         const form = document.getElementById('storyForm');
         const formData = new FormData(form);
@@ -210,15 +212,15 @@ function submitStory() {
         })
         .then(data => {
             if (data.success) {
-                alert('제출이 완료되었습니다.');
+                alert(isEdit ? '수정이 완료되었습니다.' : '제출이 완료되었습니다.');
                 window.location.href = `${contextPath}story/list`;
             } else {
-                alert(data.message || '스토리 제출에 실패했습니다.');
+                alert(data.message || (isEdit ? '스토리 수정에 실패했습니다.' : '스토리 제출에 실패했습니다.'));
             }
         })
         .catch(error => {
             console.error('스토리 제출 중 오류 발생:', error);
-            alert('스토리 제출 중 오류가 발생했습니다. (' + error.message + ')');
+            alert(`스토리 ${isEdit ? '수정' : '제출'} 중 오류가 발생했습니다. (${error.message})`);
         });
-    }
+	}
 }
