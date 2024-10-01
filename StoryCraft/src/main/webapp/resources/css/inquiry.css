@@ -1,34 +1,57 @@
-/* inquiry.css */
-
-/* 폼 스타일 */
-form {
+/* 문의 목록 로고와 제목을 포함한 상단 컨테이너 */
+.header-container {
     display: flex;
     flex-direction: column;
-    width: 400px;
-    margin: 0 auto;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-label {
-    margin-top: 10px;
+/* 로고 스타일 */
+.logo-container {
+    margin-bottom: 10px;
 }
 
-input[type="text"],
-textarea,
-select {
-    width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
+.small-logo {
+    width: 120px;
+    height: auto;
 }
 
-button {
-    margin-top: 20px;
-    padding: 10px;
+.logo-animation {
+    transition: transform 0.3s ease;
+}
+
+.logo-animation:hover {
+    transform: scale(1.1);
+}
+
+/* 문의 목록 제목 */
+.inquiry-title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* 문의 등록 버튼 스타일 */
+.inquiry-button {
+    position: absolute; /* 버튼을 절대 위치로 고정 */
+    left: 11%; 
+    top: 180px;
+    padding: 10px 20px;
+    background-color: #f2f2f2;
+    color: black;
+    border: none;
+    cursor: pointer;
+}
+
+.inquiry-button:hover {
+    background-color: #808080;
 }
 
 /* 테이블 스타일 */
 table {
     width: 80%;
-    margin: 20px auto;
+    margin: 50px auto; /* 상단 여백 추가 */
     border-collapse: collapse;
 }
 

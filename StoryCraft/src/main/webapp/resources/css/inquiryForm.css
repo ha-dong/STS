@@ -1,0 +1,90 @@
+/* 컨테이너 */
+.container {
+    width: 60%;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+}
+
+/* 로고 */
+.logo-container {
+    text-align: left;
+}
+
+.small-logo {
+    width: 80px;
+    height: auto;
+}
+
+.logo-animation {
+    transition: transform 0.3s ease;
+}
+
+.logo-animation:hover {
+    transform: scale(1.1);
+}
+
+/* 제목 스타일 */
+.form-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: left;
+    padding-left: 5px;
+}
+
+/* 폼 그룹 */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* 폼 버튼 스타일 */
+.form-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center; /* 버튼들을 가운데 정렬 */
+    gap: 20px; /* 버튼 간격 추가 */
+}
+
+.submit-btn,
+.cancel-btn {
+    width: 20%; /* 가로 사이즈 줄임 */
+    padding: 10px;
+    font-size: 16px;
+    color: white;
+    background-color: #8080ff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.submit-btn:hover,
+.cancel-btn:hover {
+    background-color: #8000ff;
+}
+
+.cancel-btn {
+    background-color: #8000ff;
+}
+
+.cancel-btn:hover {
+    background-color: #8080ff;
+}

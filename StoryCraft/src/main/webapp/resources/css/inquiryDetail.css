@@ -1,0 +1,79 @@
+/* 로고와 문의 상세 정보는 왼쪽 정렬 */
+.logo-container,
+.inquiry-title {
+    text-align: left;
+    margin-left: 20px;
+}
+
+/* 로고 스타일 */
+.small-logo {
+    width: 80px; /* 로고 크기 줄임 */
+    height: auto;
+}
+
+.logo-animation {
+    transition: transform 0.3s ease;
+}
+
+.logo-animation:hover {
+    transform: scale(1.1);
+}
+
+/* 문의 정보는 전체적으로 가운데 정렬하되, 오른쪽으로 약간 이동 */
+.inquiry-info {
+    text-align: left; /* 텍스트는 왼쪽 정렬 유지 */
+    margin: 0 auto;
+    line-height: 1.8;
+    width: 60%; /* 폭을 설정하여 전체를 가운데 정렬 */
+    margin-right: 5%; /* 오른쪽으로 10% 정도 이동 */
+    margin-bottom: 20px;
+}
+
+/* 각 텍스트 요소에 여백 추가 */
+.inquiry-info p {
+    margin: 0 auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    line-height: 1.6; /* 줄 간격 조정 */
+}
+
+/* 수정 및 삭제 버튼 중앙 정렬 */
+.inquiry-actions {
+    display: flex;
+    justify-content: center; /* 중앙 정렬 */
+    gap: 30px; /* 버튼 사이 간격 */
+    margin-bottom: 20px;
+    margin-right: 10%; /* 오른쪽으로 살짝 이동 */
+}
+
+/* 버튼 스타일 */
+button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #ff8080;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover {
+    background-color: #ff80c0;
+}
+
+/* 목록으로 버튼 중앙 정렬 */
+.return-button {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.return-button button {
+    padding: 10px 20px;
+    background-color: #6c757d;
+    color: white;
+    border-radius: 4px;
+    border: none;
+}
+
+.return-button button:hover {
+    background-color: #5a6268;
+}
