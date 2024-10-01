@@ -1,3 +1,5 @@
+// UserDao.java
+
 package com.example.storycraft.dao;
 
 import com.example.storycraft.model.User;
@@ -71,10 +73,25 @@ public class UserDao {
     }
 
     // 계정 비활성화 (삭제) 처리
+    // 3-파라미터 메서드 수정: 기본 사유와 비활성화자 설정 후 업데이트
     public boolean updateAccountStatus(String userId, String activateStatus, Timestamp deactivateDate) {
-        String sql = "UPDATE USERS SET U_ACTIVATE = ?, U_DDATE = ? WHERE U_ID = ?";
+        String defaultReason = "비공개 사유"; // 기본 비활성화 사유
+        String defaultDeactivatedBy = "SYSTEM"; // 기본 비활성화자
+        String sql = "UPDATE USERS SET U_ACTIVATE = ?, U_DREASON = ?, DEACTIVATED_BY = ?, U_DDATE = ? WHERE U_ID = ?";
         try {
-            int result = jdbcTemplate.update(sql, activateStatus, deactivateDate, userId);
+            int result = jdbcTemplate.update(sql, activateStatus, defaultReason, defaultDeactivatedBy, deactivateDate, userId);
+            return result > 0;
+        } catch (DataAccessException e) {
+            System.err.println("Error updating account status: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // 5-파라미터 메서드 유지
+    public boolean updateAccountStatus(String userId, String activateStatus, String reason, Timestamp deactivateDate, String deactivatedBy) {
+        String sql = "UPDATE USERS SET U_ACTIVATE = ?, U_DREASON = ?, DEACTIVATED_BY = ?, U_DDATE = ? WHERE U_ID = ?";
+        try {
+            int result = jdbcTemplate.update(sql, activateStatus, reason, deactivatedBy, deactivateDate, userId);
             return result > 0;
         } catch (DataAccessException e) {
             System.err.println("Error updating account status: " + e.getMessage());
@@ -104,6 +121,8 @@ public class UserDao {
                 user.setMainComplete(rs.getString("MAIN_COMPLETE"));
                 user.setuCode(rs.getString("U_CODE"));
                 user.setuDstatus(rs.getString("U_DSTATUS"));
+                user.setuDreason(rs.getString("U_DREASON")); // 추가
+                user.setDeactivatedBy(rs.getString("DEACTIVATED_BY")); // 추가
                 return user;
             });
             
@@ -142,7 +161,6 @@ public class UserDao {
         }
     }
     
-    
     // 비밀번호 변경 메서드
     public User findUserByIdAndEmail(String userId, String email) {
         String sql = "SELECT * FROM USERS WHERE U_ID = ? AND U_EMAIL = ?";
@@ -166,6 +184,8 @@ public class UserDao {
                 user.setMainComplete(rs.getString("MAIN_COMPLETE"));
                 user.setuCode(rs.getString("U_CODE"));
                 user.setuDstatus(rs.getString("U_DSTATUS"));
+                user.setuDreason(rs.getString("U_DREASON")); // 추가
+                user.setDeactivatedBy(rs.getString("DEACTIVATED_BY")); // 추가
                 return user;
             });
             
@@ -190,6 +210,8 @@ public class UserDao {
             user.setuId(rs.getString("U_ID"));
             user.setuEmail(rs.getString("U_EMAIL"));
             // 필요한 다른 필드들 설정...
+            user.setuDreason(rs.getString("U_DREASON")); // 추가
+            user.setDeactivatedBy(rs.getString("DEACTIVATED_BY")); // 추가
             return user;
         });
     }
@@ -208,5 +230,17 @@ public class UserDao {
         jdbcTemplate.update(sql, user.getuId(), user.getuName(), user.getuEmail(), user.getuCertified(), 
                             user.getuCdate(), user.getuActivate(), user.getMainComplete(), 
                             user.getuCode(), user.getuDstatus());
+    }
+    
+    // 계정 비활성화 (관리자에 의한 비활성화)
+    public boolean deactivateAccountByAdmin(String userId, String reason) {
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+        return updateAccountStatus(userId, "N", reason, currentTimestamp, "ADMIN");
+    }
+
+    // 계정 비활성화 (사용자 스스로 비활성화)
+    public boolean deactivateAccountByUser(String userId, String reason) {
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+        return updateAccountStatus(userId, "N", reason, currentTimestamp, "USER");
     }
 }

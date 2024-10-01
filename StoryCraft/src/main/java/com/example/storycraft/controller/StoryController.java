@@ -102,7 +102,16 @@ public class StoryController {
             String coverFileName = null;
             if (cover != null && !cover.isEmpty()) {
                 try {
-                    coverFileName = System.currentTimeMillis() + "_" + cover.getOriginalFilename();
+                    // 원본 파일 이름 가져오기
+                    String originalFileName = cover.getOriginalFilename();
+                    // 확장자 추출
+                    String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                    // 파일 이름에서 확장자를 제외한 부분 추출
+                    String fileNameWithoutExtension = originalFileName.substring(0, originalFileName.lastIndexOf("."));
+                    // 고유한 파일 이름 생성 (타임스탬프 + 원본 파일 이름)
+                    coverFileName = System.currentTimeMillis() + "_" + fileNameWithoutExtension + fileExtension;
+
+                    // 저장 경로 설정 및 파일 저장
                     String savePath = "C:/embeded/upload/" + coverFileName;
                     cover.transferTo(new File(savePath));
                 } catch (IOException e) {
@@ -113,15 +122,26 @@ public class StoryController {
                 }
             }
 
+
             // 삽화 이미지 파일 저장 처리
             for (String key : files.keySet()) {
                 if (key.startsWith("sceneImage_")) {
                     MultipartFile sceneImage = files.get(key);
                     if (sceneImage != null && !sceneImage.isEmpty()) {
                         try {
-                            String sceneImageFileName = System.currentTimeMillis() + "_" + sceneImage.getOriginalFilename();
+                            // 원본 파일 이름 가져오기
+                            String originalFileName = sceneImage.getOriginalFilename();
+                            // 확장자 추출
+                            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                            // 파일 이름에서 확장자를 제외한 부분 추출
+                            String fileNameWithoutExtension = originalFileName.substring(0, originalFileName.lastIndexOf("."));
+                            // 고유한 파일 이름 생성 (타임스탬프 + 원본 파일 이름)
+                            String sceneImageFileName = System.currentTimeMillis() + "_" + fileNameWithoutExtension + fileExtension;
+
+                            // 저장 경로 설정 및 파일 저장
                             String savePath = "C:/embeded/upload/" + sceneImageFileName;
                             sceneImage.transferTo(new File(savePath));
+
                             // 파일명을 allParams에 추가
                             String sceneNum = key.substring("sceneImage_".length());
                             allParams.put("sceneImageFileName_" + sceneNum, sceneImageFileName);
@@ -134,6 +154,7 @@ public class StoryController {
                     }
                 }
             }
+
 
             boolean isSaved;
             if (stNum == null) {
@@ -200,24 +221,8 @@ public class StoryController {
     @ResponseBody
     public Map<String, Object> deleteStory(@RequestParam("stNum") int stNum, HttpSession session, HttpServletRequest request) {
         Map<String, Object> response = new HashMap<>();
-
-        // 로그인된 사용자 ID 가져오기
-        String userId = (String) session.getAttribute("user"); // "userId" -> "user"
-        if (userId == null) {
-            // 쿠키에서 userId 가져오기
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if ("U_ID".equals(cookie.getName())) {
-                        userId = cookie.getValue();
-                        break;
-                    }
-                }
-            }
-            if (userId == null) {
-                userId = "subo"; // 쿠키에도 없으면 "subo"로 설정
-            }
-        }
+        
+        String userId = getUserIdFromSessionOrCookie(session, request);
 
         Story story = storyService.getStoryById(stNum);
 
@@ -254,6 +259,29 @@ public class StoryController {
 
         return response;
     }
+    
+    // 세션 또는 쿠키에서 사용자 ID를 가져오는 메소드
+    private String getUserIdFromSessionOrCookie(HttpSession session, HttpServletRequest request) {
+        // 로그인된 사용자 ID 가져오기
+        String userId = (String) session.getAttribute("user");
+        if (userId == null) {
+            // 쿠키에서 userId 가져오기
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("U_ID".equals(cookie.getName())) {
+                        userId = cookie.getValue();
+                        break;
+                    }
+                }
+            }
+            if (userId == null) {
+                userId = "subo"; // 쿠키에도 없으면 "subo"로 설정
+            }
+        }
+        return userId;
+    }
+
 
     // 신고 처리
     @PostMapping("/report")

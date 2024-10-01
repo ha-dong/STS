@@ -1,11 +1,7 @@
+//StoryService.java
 package com.example.storycraft.service;
 
-import com.example.storycraft.dao.CommentsDao;
-import com.example.storycraft.dao.InquiryDao;
-import com.example.storycraft.dao.PlayerDao;
-import com.example.storycraft.dao.ReportDao;
-import com.example.storycraft.dao.SceneDao;
-import com.example.storycraft.dao.StoryDao;
+import com.example.storycraft.dao.*;
 import com.example.storycraft.model.Choice;
 import com.example.storycraft.model.Scene;
 import com.example.storycraft.model.Story;
@@ -143,7 +139,6 @@ public class StoryService {
         try {
             // 자식 테이블의 레코드 삭제
             reportDao.deleteReportsByStory(stNum);
-            commentsDao.deleteCommentsByStory(stNum);
             playerDao.deletePlayersByStory(stNum);
 
             // SCENE 및 CHOICE는 외래 키에 ON DELETE CASCADE가 설정되어 있으므로 STORY 삭제 시 자동으로 삭제됨

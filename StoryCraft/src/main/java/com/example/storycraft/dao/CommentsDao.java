@@ -10,8 +10,9 @@ public class CommentsDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public void deleteCommentsByStory(int stNum) {
-        String sql = "DELETE FROM COMMENTS WHERE ST_NUM = ?";
-        jdbcTemplate.update(sql, stNum);
+    // 특정 문의 번호에 해당하는 모든 댓글 삭제
+    public void deleteCommentsByInquiry(int inqNum) {
+        String sql = "DELETE FROM COMMENTS WHERE INQ_NUM = ?";
+        jdbcTemplate.update(sql, inqNum);
     }
 }

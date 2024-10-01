@@ -1,3 +1,5 @@
+//StoryDao.java
+
 package com.example.storycraft.dao;
 
 import com.example.storycraft.model.Story;
@@ -7,11 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
 
 @Repository
 public class StoryDao {
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -91,16 +91,44 @@ public class StoryDao {
         return jdbcTemplate.queryForObject(sql, new Object[]{stNum}, (rs, rowNum) -> mapStory(rs));
     }
 
-    // 스토리 삭제
+    // 선택지 삭제
+    public int deleteChoicesByStory(int stNum) {
+        String sql = "DELETE FROM CHOICE WHERE ST_NUM = ?";
+        return jdbcTemplate.update(sql, stNum);
+    }
+
+    // 장면 삭제
+    public int deleteScenesByStory(int stNum) {
+        String sql = "DELETE FROM SCENE WHERE ST_NUM = ?";
+        return jdbcTemplate.update(sql, stNum);
+    }
+
+    // 플레이어 데이터 삭제
+    public int deletePlayersByStory(int stNum) {
+        String sql = "DELETE FROM PLAYER WHERE ST_NUM = ?";
+        return jdbcTemplate.update(sql, stNum);
+    }
+
+    // 신고 데이터 삭제
+    public int deleteReportsByStory(int stNum) {
+        String sql = "DELETE FROM REPORT WHERE ST_NUM = ?";
+        return jdbcTemplate.update(sql, stNum);
+    }
+
+    // 스토리 삭제 (모든 종속 데이터 삭제 후)
     public int deleteStory(int stNum) {
         String sql = "DELETE FROM STORY WHERE ST_NUM = ?";
         return jdbcTemplate.update(sql, stNum);
     }
 
-    // 추천 수 증가
-    public int incrementRecommendation(int stNum) {
-        String sql = "UPDATE STORY SET ST_SUGNUM = ST_SUGNUM + 1 WHERE ST_NUM = ?";
-        return jdbcTemplate.update(sql, stNum);
+    // 전체 삭제 처리 메소드
+    public boolean deleteFullStory(int stNum) {
+        // 삭제 순서대로 실행
+        deleteChoicesByStory(stNum);
+        deleteScenesByStory(stNum);
+        deletePlayersByStory(stNum);
+        deleteReportsByStory(stNum);
+        return deleteStory(stNum) > 0; // 성공 시 true 반환
     }
 
     // Story 객체로 매핑하는 메서드
@@ -120,9 +148,6 @@ public class StoryDao {
         story.setStDdate(rs.getTimestamp("ST_DDATE"));
         story.setuId(rs.getString("U_ID"));
         story.setEndCode(rs.getString("END_CODE")); // 엔딩 코드 설정
-
-        // 추가: 장면 정보 로드 (필요 시 추가 구현)
-        // 예: story.setScenes(sceneDao.getScenesByStory(story.getStNum()));
 
         return story;
     }

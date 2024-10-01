@@ -29,29 +29,46 @@ public class AuthController {
     private ProfileService profileService; // 추가
     
     // 일반 로그인 처리
+    // 일반 로그인 처리
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> credentials, HttpSession session) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> credentials, HttpSession session) {
         String username = credentials.get("username");
         String password = credentials.get("password");
 
         if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
-            return ResponseEntity.status(400).body("사용자 이름과 비밀번호는 필수 입력 항목입니다.");
+            return ResponseEntity.status(400).body(Map.of(
+                "success", false,
+                "message", "사용자 이름과 비밀번호는 필수 입력 항목입니다."
+            ));
         }
 
         User user = userService.findUserByUsername(username);
         if (user != null && "N".equals(user.getuActivate())) {
-            // 계정이 비활성화된 경우 복구 여부를 묻는 응답 반환
+            // 계정이 비활성화된 경우
             session.setAttribute("user", username); // 계정 복구에 사용할 사용자 정보 세션 저장
-            return ResponseEntity.ok(new SimpleResponse(false, "계정이 비활성화되었습니다. 복구하시겠습니까?"));
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "비활성화");
+            response.put("uDreason", user.getuDreason());
+            response.put("deactivatedBy", user.getDeactivatedBy());
+            return ResponseEntity.ok(response);
         }
 
         if (userService.authenticate(username, password)) {
             session.setAttribute("user", username);
             String nickname = userService.getNicknameByUsername(username);
             String uCode = user.getuCode(); // uCode 가져오기
-            return ResponseEntity.ok(new LoginResponse(true, username, nickname, uCode));
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("loggedIn", true);
+            response.put("token", "your-token-here"); // 실제 토큰 생성 로직 필요
+            response.put("uCode", uCode);
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(401).body(new LoginResponse(false, null, null, null));
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "로그인 실패");
+            return ResponseEntity.status(401).body(response);
         }
     }
 

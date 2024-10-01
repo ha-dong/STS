@@ -63,8 +63,12 @@ public class UserService {
 
     // 계정 비활성화 (탈퇴 처리)
     public void deleteAccount(String userId) {
+        String reason = "사용자 요청"; // 사용자 비활성화 사유
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-        userDao.updateAccountStatus(userId, "N", currentTimestamp);  // U_ACTIVATE를 'N'으로 변경하고 U_DDATE에 현재 시간 기록
+        boolean success = userDao.updateAccountStatus(userId, "N", reason, currentTimestamp, "USER");
+        if (!success) {
+            throw new RuntimeException("사용자에 의한 계정 비활성화에 실패했습니다.");
+        }
     }
 
     // 계정 복구 처리
@@ -144,6 +148,23 @@ public class UserService {
 
         // 새로운 사용자 로그인 처리 (세션 설정 등)
     }
+    
+ // 계정 비활성화 (관리자에 의한 비활성화)
+    public void deactivateAccountByAdmin(String userId, String reason) {
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+        boolean success = userDao.updateAccountStatus(userId, "N", reason, currentTimestamp, "ADMIN");
+        if (!success) {
+            throw new RuntimeException("관리자에 의한 계정 비활성화에 실패했습니다.");
+        }
+    }
 
+    // 계정 비활성화 (사용자 스스로 비활성화)
+    public void deactivateAccountByUser(String userId, String reason) {
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+        boolean success = userDao.updateAccountStatus(userId, "N", reason, currentTimestamp, "USER");
+        if (!success) {
+            throw new RuntimeException("사용자에 의한 계정 비활성화에 실패했습니다.");
+        }
+    }
 }
 
