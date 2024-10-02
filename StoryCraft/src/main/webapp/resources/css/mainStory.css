@@ -1,0 +1,304 @@
+/* 기본 설정 */
+body {
+    font-family: 'Noto Serif KR', serif; /* 고급진 세리프 폰트로 변경 */
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden; /* 화면 넘침 방지 */
+    background-color: #121212; /* 전체 배경을 더욱 어두운 색으로 설정 */
+    color: #e0e0e0; /* 기본 텍스트 색상 */
+}
+
+/* 제목 및 시작 버튼 컨테이너 */
+.title-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 2;
+    color: #e0e0e0; /* 밝은 회색 텍스트 */
+    background: rgba(20, 20, 20, 0.85); /* 배경을 반투명하게 설정 */
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7); /* 고급진 그림자 효과 */
+    animation: fadeInOpacity 1.5s ease forwards; /* 수정된 애니메이션 */
+}
+
+.title-description {
+    font-size: 1.2em;
+    margin: 20px 0;
+    line-height: 1.6;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+/* 스토리 컨테이너: 배경 이미지를 설정하여 화면에 꽉 차게 설정 */
+.story-container {
+    position: fixed; /* 고정 위치로 설정 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh; /* 화면 전체 높이 */
+    background-size: cover; /* 배경 이미지가 화면을 꽉 채우도록 설정 */
+    background-position: center; /* 이미지 중앙 정렬 */
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column; /* 세로 방향으로 정렬 */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: background-image 0.5s ease; /* 배경 이미지 전환 애니메이션 */
+    filter: brightness(0.6); /* 배경 이미지를 더욱 어둡게 조정하여 텍스트 가독성 향상 */
+    animation: fadeInOpacity 1.5s ease forwards; /* 수정된 애니메이션 */
+}
+
+/* 배경 오버레이 추가 */
+.story-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* 더욱 어두운 오버레이 */
+    z-index: 1;
+}
+
+/* 텍스트 컨테이너: 이미지 위에 텍스트를 표시 */
+.story-content {
+    position: relative;
+    z-index: 2; /* 텍스트를 배경 이미지 위에 표시 */
+    color: #e0e0e0; /* 밝은 회색 텍스트 */
+    background: rgba(20, 20, 20, 0.85); /* 텍스트 배경을 더 어둡고 반투명하게 설정 */
+    padding: 40px;
+    border-radius: 15px;
+    width: 90%; /* 너비를 증가시켜 버튼이 더 넓게 표시되도록 함 */
+    max-width: 900px; /* 최대 너비를 900px로 증가 */
+    box-sizing: border-box;
+    display: flex; /* Flexbox 적용 */
+    flex-direction: column; /* 세로 방향으로 정렬 */
+    align-items: center; /* 중앙 정렬 */
+    animation: fadeInUp 1.5s ease forwards; /* 새로운 애니메이션 */
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7); /* 고급진 그림자 효과 */
+}
+
+/* 제목 스타일 */
+#story-title {
+    font-size: 3.5em;
+    color: #c0c0c0; /* 밝은 회색으로 변경 */
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
+    margin-bottom: 20px; /* 간격 조정 */
+    animation: titleFadeIn 2s ease;
+    letter-spacing: 3px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    font-family: 'Cinzel', serif; /* 추가 폰트 사용 */
+}
+
+/* 제목 숨김 클래스 */
+.hidden {
+    display: none;
+}
+
+/* 스토리 내용 텍스트 스타일 */
+.story-text, .ending {
+    font-size: 1.4em;
+    line-height: 1.8;
+    margin-bottom: 30px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    animation: textFadeIn 1s forwards;
+}
+
+/* 선택지 버튼 스타일 */
+/* 수정된 스타일 */
+.choice, .next-button, .main-button {
+    padding: 12px 30px; /* 패딩 약간 줄이기 */
+    font-size: 1em; /* 글씨 크기 줄이기 */
+    /* 나머지 스타일은 그대로 유지 */
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 10px 0;
+    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+    background: linear-gradient(135deg, #8e44ad, #2c3e50);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 150px; /* 최소 너비 줄이기 */
+}
+
+/* 엔딩으로 버튼 스타일 */
+.next-button {
+    /* 필요한 경우 별도의 스타일 추가 가능 */
+}
+
+/* 선택지 버튼 호버 효과 */
+.choice:hover, .next-button:hover, .main-button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #2c3e50, #8e44ad); /* 색상 반전 */
+}
+
+/* 엔딩 텍스트 스타일 */
+.ending {
+    font-size: 1.6em;
+    line-height: 1.8;
+    margin-bottom: 30px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    animation: textFadeIn 1s forwards;
+}
+
+/* 메인으로 버튼 스타일 */
+.main-button {
+    background: linear-gradient(135deg, #3a3a3a, #1e1e1e); /* 어두운 그라데이션으로 변경 */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    animation: buttonPulse 2s infinite;
+    white-space: nowrap; /* 텍스트 줄 바꿈 방지 */
+    overflow: hidden; /* 넘치는 텍스트 숨김 */
+    text-overflow: ellipsis; /* 넘치는 텍스트에 생략 부호 추가 */
+    min-width: 200px; /* 필요에 따라 조정 */
+}
+
+/* 메인으로 버튼 호버 효과 */
+.main-button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #1e1e1e, #3a3a3a); /* 색상 반전 */
+}
+
+/* Skip 버튼 스타일 */
+/* 수정된 스타일 */
+.skip-button {
+    font-size: 0.9em; /* 글씨 크기 줄이기 */
+    padding: 10px 30px; /* 패딩 약간 줄이기 */
+    background: linear-gradient(45deg, #2c3e50, #34495e);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+    font-family: 'Noto Serif KR', serif;
+    margin-top: 25px;
+    font-weight: bold;
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.skip-button::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(45deg);
+    transition: all 0.5s;
+}
+
+.skip-button:hover::after {
+    top: 150%;
+    left: 150%;
+}
+
+.skip-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    #story-title {
+        font-size: 2.5em;
+    }
+    .story-text, .ending {
+        font-size: 1.0em;
+    }
+    .choice, .next-button, .main-button, .skip-button {
+        padding: 10px 25px; /* 패딩 약간 더 줄이기 */
+        font-size: 0.9em; /* 글씨 크기 줄이기 */
+        /* 최대 너비 제거 */
+        /* max-width: 90%; */
+        white-space: nowrap; /* 텍스트 줄 바꿈 방지 */
+        text-overflow: ellipsis; /* 넘치는 텍스트에 생략 부호 추가 */
+        /* 최소 너비 조정 */
+        min-width: 130px; /* 최소 너비 더 줄이기 */
+    }
+    .story-content {
+        width: 90%;
+        padding: 20px;
+    }
+}
+
+/* 애니메이션 */
+@keyframes fadeInOpacity {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes titleFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes textFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes buttonPulse {
+    0% {
+        box-shadow: 0 0 10px rgba(140, 140, 140, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(140, 140, 140, 1);
+    }
+    100% {
+        box-shadow: 0 0 10px rgba(140, 140, 140, 0.7);
+    }
+}
+
+/* 새로운 애니메이션 */
+@keyframes storyFadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

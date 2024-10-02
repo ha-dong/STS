@@ -1,0 +1,417 @@
+/* 전체적인 스타일 */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: url('/StoryCraft/resources/img/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+}
+
+/* 헤더 스타일 */
+.header {
+    width: 100%;
+    display: flex;
+    align-items: center; /* 수정: 아이템들을 수직 중앙 정렬 */
+    justify-content: flex-end;
+    padding: 20px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.logo {
+    height: 100px;
+    cursor: pointer;
+    margin-right: auto;
+    margin-left: 40px;
+}
+
+.header button {
+    padding: 15px 25px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.7);
+    color: #333;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.header button:hover {
+    background-color: rgba(255, 255, 255, 255);
+}
+
+/* 메인 콘텐츠 스타일 */
+.content {
+    width: 80%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
+}
+
+
+
+#mainStory, #userStory {
+    width: 100%;
+    padding: 25px;
+    margin: 25px;
+    border: 3px solid rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 32px;
+    line-height: 1.5;
+    background-color: rgba(255, 255, 255, 0.7);
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border 0.3s;
+	font-family: 'Spoqa Han Sans Neo', sans-serif;
+	margin-left: 80px; /* 오른쪽으로 50px 만큼 이동 */
+}
+
+#mainStory:hover, #userStory:hover:not(.disabled) {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #000;
+    border: 3px solid rgba(255, 255, 255, 1);
+}
+
+/* 비활성화된 버튼 */
+.disabled {
+    background-color: rgba(200, 200, 200, 0.5);
+    color: rgba(100, 100, 100, 0.5);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* 푸터 스타일 */
+.footer {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+/* 아이콘 컨테이너 스타일 */
+.icon-container {
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.7); /* 밝은 회색 배경 */
+    padding: 15px 30px; /* 내부 여백을 늘려 컨테이너 너비 확장 */
+    border-radius: 10px;
+    align-items: center;
+}
+
+.icon-wrapper:first-child {
+    margin-left: 0; /* 첫 번째 아이콘의 왼쪽 여백 제거 */
+}
+
+.icon-wrapper {
+    position: relative;
+    margin-left: 20px;
+}
+
+.icon-label {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.icon-wrapper:hover .icon-label {
+    display: block;
+}
+
+.setting-icon, .inquiry-icon, .notice-icon {
+    height: 50px;
+    cursor: pointer;
+    filter: drop-shadow(2px 4px 6px black);
+}
+
+/* 설정 모달 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000; /* 모든 모달의 기본 z-index */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #333;
+    margin: 10% auto; /* 상단에서 10%, 중앙 정렬 */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.volume-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border: 2px solid #ccc;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.control-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 45%;
+}
+
+.slider {
+    width: 100%;
+}
+
+.mute-options {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    border: 2px solid #ccc;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.mute-options label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* 슬라이더 스타일 */
+.slider {
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: #ddd;
+    outline: none;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ffcccb;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ffcccb;
+    cursor: pointer;
+}
+
+/* 탈퇴하기 버튼 스타일 */
+.delete-account-btn {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #ff4c4c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    text-align: center;
+}
+
+.delete-account-btn:hover {
+    background-color: #ff0000;
+}
+
+/* 탈퇴 확인 모달 스타일 */
+.delete-options {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+#confirmDeleteButton.disabled {
+    background-color: grey;
+    cursor: not-allowed;
+}
+
+#confirmDeleteButton {
+    background-color: #ff4c4c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px;
+    font-size: 16px;
+    width: 45%;
+}
+
+#confirmDeleteButton.enabled:hover {
+    background-color: #ff0000;
+}
+
+/* 공지사항 테이블 스타일 */
+#noticeTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#noticeTable th, #noticeTable td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+#noticeTable th {
+    background-color: #f4f4f4;
+}
+
+/* 공지사항 내용 표시 영역 스타일링 */
+.notice-content {
+    margin-top: 20px;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+}
+
+.notice-content h3 {
+    margin-bottom: 10px;
+}
+
+.notice-content p {
+    white-space: pre-wrap; /* 줄바꿈을 유지 */
+}
+
+
+
+
+
+/* 사용자 스토리 모달 배경 */
+.user-story-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 모달 배경 오버레이 */
+.user-story-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* 사용자 스토리 모달 내용 */
+.user-story-modal-content {
+    position: relative;
+    background: #2c3e50; /* 어두운 배경색 */
+    padding: 40px;
+    border-radius: 15px;
+    z-index: 2;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    color: #ecf0f1; /* 밝은 텍스트 색상 */
+}
+
+/* 닫기 버튼 */
+.user-story-modal-content .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #ecf0f1; /* 밝은 닫기 버튼 */
+    transition: color 0.3s;
+}
+
+.user-story-modal-content .close:hover {
+    color: #e74c3c; /* 닫기 버튼 호버 시 붉은 색상 */
+}
+
+/* 버튼 스타일 */
+.user-story-modal-content .button-primary, .user-story-modal-content .button-secondary {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+/* 기본 버튼 스타일 */
+.user-story-modal-content .button-primary {
+    background-color: #34495e; /* 어두운 색상 */
+    color: #ecf0f1;
+}
+
+.user-story-modal-content .button-primary:hover {
+    background-color: #1abc9c; /* 버튼 호버 시 밝은 포인트 색상 */
+    color: #fff;
+    transform: translateY(-5px);
+}
+
+.user-story-modal-content .button-secondary {
+    background-color: #e74c3c; /* 두 번째 버튼은 붉은색 */
+    color: #fff;
+}
+
+.user-story-modal-content .button-secondary:hover {
+    background-color: #c0392b; /* 호버 시 더 어두운 붉은색 */
+    color: #fff;
+    transform: translateY(-5px);
+}

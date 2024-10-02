@@ -1,0 +1,114 @@
+/* 전체 컨테이너 스타일 */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 20px;
+    position: relative;
+}
+
+/* 제목 스타일 */
+h2 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 40px;
+    color: #333;
+}
+
+/* 폼 스타일 */
+form {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+   margin-top: -30px; /* 위쪽 여백을 30px 줄이기 */
+}
+
+/* 폼 요소 스타일 */
+label {
+    font-size: 14px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+input[type="text"],
+select,
+textarea,
+input[type="file"] {
+    width: 100%; 
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    color: #333;
+    box-sizing: border-box;
+}
+
+/* 텍스트 입력 필드 */
+textarea {
+    height: 200px;
+    resize: vertical;
+}
+
+/* 파일 선택 버튼 스타일 */
+input[type="file"] {
+    background-color: white;
+    color: black;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    background-color: #8080ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #400080;
+}
+
+/* 메인페이지와 돌아가기 버튼 스타일 */
+.sidebar-buttons {
+    position: absolute;
+    bottom: 100px; /* 화면의 최하단에서 20px 위에 고정 */
+    width: 100%;
+    text-align: center;
+}
+
+.sidebar-buttons .btn {
+    text-decoration: none;
+    color: white;
+    background-color: #c0c0c0;
+    padding: 10px 20px;
+    margin-right: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.sidebar-buttons .btn:hover {
+    background-color: #808080;
+}
+
+.sidebar-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}

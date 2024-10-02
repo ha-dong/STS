@@ -1,0 +1,166 @@
+/* inquiryDetail.css */
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f9f9f9;
+    color: #2c3e50;
+    margin: 0;
+    padding: 0;
+}
+
+h2, h3 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 20px;
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.logo-container {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.small-logo {
+    width: 100px;
+}
+
+/* 문의 정보 스타일 */
+.inquiry-info {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    width: 80%;
+    font-size: 20px;
+    margin-top: 100px;
+}
+
+/* 제목을 크게, 가로로 길게 */
+.inquiry-title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+}
+
+/* 작성자, 작성일, 문의 종류, 상태를 가로로 정렬하고 크게 배치 */
+.inquiry-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.inquiry-meta p {
+    margin: 0;
+    padding: 0 20px;
+}
+
+/* 문의 내용을 위한 큰 칸 */
+.inquiry-content {
+    font-size: 22px;
+    line-height: 1.8;
+    padding: 30px;
+    border: 1px solid #ccc;
+    background-color: #fafafa;
+    margin-top: 20px;
+    border-radius: 8px;
+    min-height: 200px;
+}
+
+/* 댓글 섹션 */
+.comment-section {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    width: 80%;
+}
+
+.comment-section h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #2c3e50;
+}
+
+.comment-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.comment-section li {
+    background-color: #f0f0f0;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.comment-section li:hover {
+    background-color: #e0e0e0;
+}
+
+.comment-box {
+    margin-top: 20px;
+}
+
+.comment-box textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+}
+
+.comment-box button {
+    background-color: #4A7DAB;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.comment-box button:hover {
+    background-color: #6A9BC4;
+}
+
+/* 버튼을 중앙에 배치, 수정/삭제 버튼은 붙이고 목록으로는 간격 */
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.buttons-container .list-button {
+    margin-right: 150px; /* 목록으로 버튼과 수정/삭제 버튼 사이 간격 */
+}
+
+.buttons-container button {
+    background-color: #4A7DAB;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 5px; /* 수정/삭제 버튼 간격 줄임 */
+    transition: background-color 0.3s ease;
+}
+
+.buttons-container button:hover {
+    background-color: #6A9BC4;
+}

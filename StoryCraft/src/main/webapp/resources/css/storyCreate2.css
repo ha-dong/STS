@@ -1,0 +1,129 @@
+/* 기본 스타일 설정 */
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #ffffff;  /* 배경을 흰색으로 설정 */
+    color: #121212;  /* 기본 텍스트 색상은 검은색 */
+}
+
+.container {
+    width: 50%;  /* 가로 폭을 50%로 줄임 */
+    margin: 0 auto;  /* 화면 가운데 정렬 */
+    background-color: #f5f5f5;  /* 스토리 제작 영역 배경을 밝은 회색으로 설정 */
+    padding: 30px;
+    border-radius: 8px;  /* 모서리를 살짝 둥글게 처리 */
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);  /* 부드러운 그림자 효과 */
+}
+
+h1, h2, h3 {
+    color: #000000;  /* 제목 색상을 검은색으로 설정 */
+    text-align: center;  /* 제목 가운데 정렬 */
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    color: #121212;  /* 레이블 색상을 검은색으로 설정 */
+}
+
+input[type="text"], input[type="number"], textarea, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #000000;  /* 경계선 색상을 연한 회색으로 설정 */
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: #ffffff;  /* 입력 필드 배경을 밝은 회색으로 설정 */
+    color: #121212;  /* 텍스트 색상을 검은색으로 설정 */
+}
+
+textarea {
+    height: 120px;
+    resize: none;
+}
+
+.form-actions {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.form-actions button {
+    padding: 12px 24px;
+    margin-right: 10px;
+    border: none;
+    background-color: #404040;  /* 버튼 배경을 회색으로 설정 */
+    color: #ffffff;  /* 버튼 텍스트를 흰색으로 설정 */
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.form-actions button:hover {
+    background-color: #606060;  /* 버튼 호버 시 더 어두운 회색으로 변경 */
+}
+
+.scene {
+    border: 2px solid #000000;  /* 장면 경계선을 밝은 회색으로 설정 */
+    padding: 20px;
+    margin-top: 20px;
+    background-color: #f5f5f5;  /* 배경을 밝은 회색으로 설정 */
+    border-radius: 6px;
+}
+
+.choice {
+    border: 2px dashed #000000;  /* 선택지 경계선을 연한 회색으로 설정 */
+    padding: 12px;
+    margin-top: 12px;
+    background-color: #ffffff;  /* 선택지 배경을 밝은 회색으로 설정 */
+    border-radius: 6px;
+}
+
+.scene h2 {
+    background-color: #cccccc;  /* 장면 제목 배경을 밝은 회색으로 설정 */
+    color: #121212;  /* 장면 제목 텍스트 색상을 검은색으로 설정 */
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.choice h3 {
+    background-color: #aaaaaa;  /* 선택지 제목 배경을 연한 회색으로 설정 */
+    color: #121212;  /* 선택지 제목 텍스트 색상을 검은색으로 설정 */
+    padding: 8px;
+    border-radius: 6px;
+}
+
+/* 헤더 스타일 */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+.header .logo {
+    width: 50px;
+    cursor: pointer;
+}
+
+.header .login-box {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 50px;
+}
+
+.header .login-box span {
+    margin-right: 10px;
+    color: #121212;  /* 텍스트 색상을 검은색으로 설정 */
+}
+
+.header .login-box button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: #000000;  /* 버튼 텍스트 색상을 검은색으로 설정 */
+    font-size: 14px;
+}
+
+.header .login-box button:hover {
+    color: #555555;  /* 호버 시 밝은 회색으로 변경 */
+}

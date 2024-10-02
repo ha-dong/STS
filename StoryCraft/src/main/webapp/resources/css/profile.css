@@ -1,0 +1,451 @@
+/* 전체적인 스타일 */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Spoqa Han Sans Neo', sans-serif;
+    min-height: 100vh; /* 최소 높이를 화면 높이로 설정 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: url('/StoryCraft/resources/img/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+}
+
+/* 헤더 스타일 */
+.header {
+    width: 100%;
+    display: flex;
+    align-items: center; /* 아이템들을 수직 중앙 정렬 */
+    justify-content: space-between; /* 양쪽 끝에 요소 배치 */
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0; /* 헤더를 왼쪽 끝에 붙입니다 */
+}
+/* 헤더와 푸터에서 상호작용이 필요한 부분에 다시 pointer-events: auto 적용 */
+.header button, .header .logo, .footer .icon-wrapper {
+    pointer-events: auto; /* 버튼, 로고, 아이콘 등은 클릭 가능하게 유지 */
+}
+
+/* 상단과 하단에 추가 여백을 설정해 가려지는 콘텐츠가 없도록 처리 */
+body {
+    padding-top: 10px; /* 헤더 높이만큼 상단 여백 추가 */
+    padding-bottom: 400px; /* 푸터 높이만큼 하단 여백 추가 */
+    overflow-y: hidden; /* 세로 스크롤 숨기기 */
+}
+
+.logo {
+    height: 100px;
+    cursor: pointer;
+    margin-left: 0; /* 로고를 왼쪽 끝에 붙입니다 */
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    margin-right: 10px; /* 오른쪽 여백 추가 */
+}
+
+.header-right > * {
+    margin-left: 15px; /* 요소들 사이 간격 조절 */
+}
+
+.header button {
+    padding: 15px 25px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.7);
+    color: #333;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.header button:hover {
+    background-color: rgba(255, 255, 255, 0.9); /* 호버 시 버튼 배경색을 더 밝게 변경 */
+}
+
+/* 프로필 섹션 스타일 */
+.profile {
+    display: flex; /* Flexbox 레이아웃을 사용하여 프로필 섹션의 자식 요소를 정렬 */
+    flex-direction: column; /* Flexbox 방향을 세로로 설정 */
+    align-items: center; /* 모든 자식을 가운데 정렬 */
+    margin-top: 130px; /* 헤더 아래에 130px 여백 추가 */
+    margin-bottom: 20px; /* 섹션 아래에 20px 여백 추가 */
+}
+
+.profile-image {
+    position: relative; /* 자식 요소들의 위치를 조정하기 위해 상대 위치 사용 */
+    width: 150px; /* 프로필 이미지 컨테이너의 너비를 140px로 설정 */
+    height: 150px; /* 프로필 이미지 컨테이너의 높이를 140px로 설정 */
+    margin-bottom: 30px; /* 아래에 30px 간격 추가 */
+    border: 2px dashed #000; /* 테두리를 점선으로 설정 */
+    border-radius: 50%; /* 둥근 모양으로 설정 */
+    display: flex; /* Flexbox 레이아웃을 사용하여 자식 요소를 정렬 */
+    justify-content: center; /* 자식 요소를 가운데 정렬 */
+    align-items: center; /* 자식 요소를 수직으로도 가운데 정렬 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+    overflow: hidden;
+}
+
+/* 프로필 이미지 내부의 placeholder 스타일 */
+.profile-image-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-image 0.3s ease;
+}
+
+/* 프로필 이미지 placeholder의 "+" 모양 스타일 */
+.profile-image-placeholder::before, 
+.profile-image-placeholder::after {
+    content: ''; /* 가상 요소에 빈 내용 설정 */
+    position: absolute; /* 절대 위치로 설정하여 프로필 이미지 중앙에 배치 */
+    background-color: #000; /* "+" 모양의 색상 설정 */
+    transition: opacity 0.3s ease; /* 부드러운 전환 효과 */
+}
+
+.profile-image-placeholder::before {
+    width: 2px; /* 세로선의 두께 설정 */
+    height: 30px; /* 세로선의 길이 설정 */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.profile-image-placeholder::after {
+    height: 2px; /* 가로선의 두께 설정 */
+    width: 30px; /* 가로선의 길이 설정 */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* 'image-uploaded' 클래스가 적용되면 "+" 모양 숨기기 */
+.profile-image-placeholder.image-uploaded::before,
+.profile-image-placeholder.image-uploaded::after {
+    opacity: 0;
+}
+
+/* 프로필 이미지 placeholder의 텍스트 숨기기 */
+.profile-image-placeholder span {
+    visibility: hidden; /* 텍스트를 숨기되 공간은 유지 */
+}
+
+.profile-details {
+    text-align: left; /* 중앙 정렬을 왼쪽 정렬로 변경하여 가독성 향상 */
+    color: #333; /* 텍스트 색상을 어두운 회색으로 변경하여 가독성 향상 */
+    max-width: 600px;
+    padding: 30px; /* 패딩을 조금 더 줄여서 공간 활용 최적화 */
+    border-radius: 10px; /* 모서리를 조금 덜 둥글게 설정 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과를 부드럽게 줄임 */
+    margin-top: -20px; /* 프로필 이미지와의 간격 조정 */
+    border: 2px dashed #000; /* 테두리를 점선으로 설정 */
+    background-color: rgba(255, 255, 255, 0.7); /* 밝은 회색 배경 */
+    transition: box-shadow 0.3s ease; /* 그림자 전환 효과만 유지 */
+}
+
+.profile-details:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 강화 */
+}
+
+.profile-details p {
+    font-size: 18px; /* 글씨 크기를 조금 줄여서 깔끔하게 */
+    margin: 10px 0;
+    color: #555; /* 텍스트 색상을 중간 회색으로 변경 */
+    line-height: 1.6; /* 줄 간격을 늘려 가독성 향상 */
+}
+
+.profile-details p strong {
+    color: #222; /* 강조 텍스트 색상을 더 어둡게 설정 */
+    font-weight: bold;
+}
+
+.nickname-wrapper, .intro-wrapper {
+    display: flex; /* Flexbox 레이아웃을 사용하여 자식 요소를 정렬 */
+    align-items: center; /* 자식 요소를 수직으로 가운데 정렬 */
+    margin-bottom: 20px; /* 아래에 20px 여백 추가 */
+}
+
+.nickname {
+    width: 160px; /* 닉네임 입력 필드의 너비를 160px로 설정 */
+    font-size: 17px; /* 텍스트 크기를 17px로 설정 */
+    border: 1px solid #000; /* 입력 필드 테두리를 검정색 실선으로 설정 */
+    border-radius: 10px; /* 입력 필드 모서리를 10px 둥글게 설정 */
+    text-align: center; /* 텍스트를 가운데 정렬 */
+    padding: 5px; /* 내부 여백 5px 설정 */
+    margin-left: 0px; /* 왼쪽 여백을 0으로 설정 */
+    color: #333;
+    background-color: #ffffff;
+}
+
+.intro {
+    width: 400px; /* 한 줄 소개 입력 필드의 너비를 400px로 설정 */
+    padding: 7px; /* 내부 여백 7px 설정 */
+    border: 1px solid #000; /* 테두리를 검정색 실선으로 설정 */
+    border-radius: 5px; /* 모서리를 5px 둥글게 설정 */
+    text-align: center; /* 텍스트를 가운데 정렬 */
+    margin-left: 55px; /* 왼쪽 여백을 55px로 설정 */
+}
+
+.confirm-btn {
+    background-color: #fff; /* 버튼 배경색을 흰색으로 설정 */
+    border: 1px solid #000; /* 테두리를 검정색 실선으로 설정 */
+    margin-left: 10px; /* 왼쪽 여백을 10px로 설정 */
+    padding: 5px 15px; /* 내부 여백 설정 (위/아래 5px, 좌/우 15px) */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+    border-radius: 5px; /* 모서리를 5px 둥글게 설정 */
+    height: 32px; /* 버튼의 높이를 32px로 설정 */
+}
+
+/* 푸터 스타일 */
+.footer {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+/* 아이콘 컨테이너 스타일 */
+.icon-container {
+    display: flex;
+    background-color: rgba(255, 255, 255, 0.7); /* 밝은 회색 배경 */
+    padding: 15px 30px; /* 내부 여백을 늘려 컨테이너 너비 확장 */
+    border-radius: 10px;
+    align-items: center;
+}
+
+.icon-wrapper:first-child {
+    margin-left: 0; /* 첫 번째 아이콘의 왼쪽 여백 제거 */
+}
+
+.icon-wrapper {
+    position: relative;
+    margin-left: 20px;
+}
+
+.icon-label {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.icon-wrapper:hover .icon-label {
+    display: block; /* 호버 시 레이블을 표시 */
+}
+
+.setting-icon, .inquiry-icon, .notice-icon {
+    height: 50px; /* 아이콘의 높이를 50px로 설정 */
+    cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+    filter: drop-shadow(2px 4px 6px black); /* 아이콘에 그림자 효과 추가 */
+}
+
+.edit-btn {
+    background-color: #f0f0f0; /* 버튼 배경색을 연한 회색으로 변경 */
+    color: #333; /* 텍스트 색상을 어두운 회색으로 변경 */
+    padding: 10px 20px;
+    border: 1px solid #ccc; /* 테두리를 연한 회색으로 설정 */
+    cursor: pointer;
+    border-radius: 5px; /* 모서리를 조금 더 둥글게 설정 */
+    margin-top: 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 추가 */
+    font-family: 'Spoqa Han Sans Neo', sans-serif;
+}
+
+.edit-btn:hover {
+    background-color: #e0e0e0; /* 호버 시 배경색을 조금 더 어둡게 변경 */
+    color: #000; /* 호버 시 텍스트 색상을 검정색으로 변경 */
+    transform: translateY(-2px); /* 호버 시 약간 위로 이동 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 강화 */
+}
+
+/* 기본 스타일 리셋 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* 모달 전체 배경 */
+.modal {
+    display: none; /* 기본적으로 숨김 */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background: rgba(0, 0, 0, 0.75); /* 반투명 검정 배경 */
+    backdrop-filter: blur(5px); /* 배경 흐림 효과 */
+    animation: fadeInBackground 0.5s ease;
+}
+
+/* 모달 콘텐츠 */
+.modal-content {
+    background-color: #333333; /* 어두운 밝은 회색 배경 */
+    margin: 10% auto;
+    padding: 25px 35px;
+    border-radius: 10px;
+    width: 450px;
+    max-width: 90%;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    color: #ffffff; /* 기본 텍스트 색상을 흰색으로 설정 */
+    position: relative;
+    transform: scale(0.9);
+    animation: scaleIn 0.5s forwards;
+}
+
+/* 닫기 버튼 */
+.close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close:hover {
+    color: #ff6b81;
+}
+
+/* 제목 */
+.modal-content h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    letter-spacing: 1px;
+    color: #ffffff; /* 제목 텍스트도 흰색으로 설정 */
+}
+
+/* 폼 그룹 */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #ffffff; /* 레이블 텍스트를 흰색으로 변경 */
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.1); /* 입력 필드 배경색 */
+    color: #ffffff; /* 입력 텍스트를 흰색으로 변경 */
+    font-size: 14px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    font-family: 'Poppins', sans-serif;
+}
+
+.form-group select {
+    /* 추가 스타일링이 필요할 경우 여기에 추가 */
+}
+
+/* 셀렉트 드롭다운 옵션 텍스트 색상 변경 (브라우저 제한) */
+.form-group select option {
+    color: #000000; /* 옵션 텍스트를 검정색으로 설정 */
+    background-color: #ffffff; /* 옵션 배경을 흰색으로 설정 */
+}
+
+/* 플레이스홀더 텍스트 색상 조정 */
+.form-group input::placeholder,
+.form-group select::placeholder {
+    color: #dddddd;
+}
+
+/* 포커스 시 스타일 유지 */
+.form-group input:focus,
+.form-group select:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    outline: none;
+    box-shadow: 0 0 8px rgba(255, 107, 129, 0.6);
+}
+
+/* 저장 버튼 */
+.save-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #ff6b81;
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-family: 'Poppins', sans-serif;
+}
+
+.save-btn:hover {
+    background-color: #ff4757;
+    transform: translateY(-2px);
+}
+
+.save-btn:active {
+    transform: translateY(0);
+}
+
+/* 애니메이션 */
+@keyframes fadeInBackground {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 500px) {
+    .modal-content {
+        padding: 20px 25px;
+        width: 90%;
+    }
+
+    .modal-content h2 {
+        font-size: 20px;
+    }
+
+    .close {
+        font-size: 25px;
+        top: 10px;
+        right: 15px;
+    }
+}
+
