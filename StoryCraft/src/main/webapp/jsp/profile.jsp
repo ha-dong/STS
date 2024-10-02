@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <title>프로필 페이지</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/profile.css">
+    <link href="https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans/css/SpoqaHanSansNeo.css" rel="stylesheet" type="text/css" />
     <script>
         var contextPath = '${pageContext.request.contextPath}';
     </script>
@@ -18,18 +19,17 @@
             <img src="${pageContext.request.contextPath}/resources/img/logo.png" alt="로고" class="logo" id="logo">
         </a>
         
-        <!-- 프로필 이미지 -->
-        <img id="profileImage"
-             src="${contextPath}/resources/img/default_profile.png"
-             style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; cursor: pointer; display: none;">
-        
-        <!-- 닉네임 표시 -->
-        <span id="nickname" style="display: none;"></span>
-        
-        <!-- 버튼들 -->
-        <button id="logoutButton" style="display: none;">로그아웃</button>
-        <button id="loginButton">로그인</button>
-        <button id="signupButton">회원가입</button>
+        <div class="header-right">
+           <!-- 프로필 이미지 -->
+           <img id="profileImage"
+                src="${contextPath}/resources/img/default_profile.png"
+                style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; cursor: pointer; display: none;">
+           
+           <!-- 버튼들 -->
+           <button id="logoutButton" style="display: none;">로그아웃</button>
+           <button id="loginButton">로그인</button>
+           <button id="signupButton">회원가입</button>
+        </div>
     </div>
 
     <!-- 프로필 섹션 -->
@@ -87,44 +87,6 @@
                 </div>
                 <button type="submit" class="save-btn">저장</button>
             </form>
-        </div>
-    </div>
-
-    <!-- Footer Icons -->
-    <div class="footer">
-        <div class="icon-wrapper">
-            <img src="${pageContext.request.contextPath}/resources/img/inquiry_icon.png" alt="문의" class="inquiry-icon" onclick="location.href='inquiry'">
-            <span class="icon-label">문의사항</span>
-        </div>
-        <div class="icon-wrapper">
-            <img src="${pageContext.request.contextPath}/resources/img/ntc.png" alt="공지사항" class="notice-icon" onclick="location.href='notice'">
-            <span class="icon-label">공지사항</span>
-        </div>
-        <div class="icon-wrapper">
-            <img src="${pageContext.request.contextPath}/resources/img/setting_icon.png" alt="설정" class="setting-icon" onclick="showSettingsModal()">
-            <span class="icon-label">설정</span>
-        </div>
-    </div>
-
-    <!-- 설정 모달 -->
-    <div id="settingsModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeSettingsModal()">&times;</span>
-            <h2>설정</h2>
-            <button id="deleteAccountButton" class="delete-account-btn" onclick="showDeleteAccountModal()">탈퇴하기</button>
-        </div>
-    </div>
-
-    <!-- 탈퇴 확인 모달 -->
-    <div id="deleteAccountModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeDeleteAccountModal()">&times;</span>
-            <h2>회원 탈퇴</h2>
-            <p>정말로 탈퇴하시겠습니까?</p>
-            <div class="delete-options">
-                <button id="confirmDeleteButton" onclick="confirmDeleteAccount()">네</button>
-                <button onclick="closeDeleteAccountModal()">아니오</button>
-            </div>
         </div>
     </div>
 

@@ -10,23 +10,30 @@
           href="${pageContext.request.contextPath}/resources/css/adminInquiryList.css">
 </head>
 <body>
-<div class="sidebar">
-    <div class="logo">
-        <img src="${pageContext.request.contextPath}/resources/img/Story_Craft_white-remove.png" alt="Logo">
+    <div class="sidebar">
+        <div class="logo">
+            <img
+                src="${pageContext.request.contextPath}/resources/img/Story_Craft_white-remove.png"
+                alt="Logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">스토리 관리</a></li>
+                <li><a href="${pageContext.request.contextPath}/adminUser">유저 관리</a></li>
+                <li><a href="${pageContext.request.contextPath}/notice">공지
+                        관리</a></li>
+                <li><a
+                    href="${pageContext.request.contextPath}/adminInquiryList">문의
+                        관리</a></li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-buttons">
+            <a href="${pageContext.request.contextPath}/main" class="btn">메인
+                페이지</a> <a href="${pageContext.request.contextPath}/manager" class="btn">관리자
+                페이지</a>
+        </div>
     </div>
-    <nav>
-        <ul>
-            <li><a href="#">스토리 관리</a></li>
-            <li><a href="#">유저 관리</a></li>
-            <li><a href="${pageContext.request.contextPath}/notice">공지 관리</a></li>
-            <li><a href="${pageContext.request.contextPath}/adminInquiryList">문의 관리</a></li>
-        </ul>
-    </nav>
-    <div class="sidebar-buttons">
-        <a href="${pageContext.request.contextPath}/main" class="btn">메인 페이지</a>
-        <a href="${pageContext.request.contextPath}/manager" class="btn">관리자 페이지</a>
-    </div>
-</div>
 
 <div class="main-content">
     <header>

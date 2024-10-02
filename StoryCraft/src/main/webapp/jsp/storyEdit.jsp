@@ -7,53 +7,40 @@
 <head>
     <meta charset="UTF-8">
     <title>스토리 제작</title>
-    
-    <!-- 기본 CSS 파일 설정 -->
-    <link id="themeStylesheet" rel="stylesheet" href="<c:url value='/resources/css/storyCreate.css'/>">
-
+    <link rel="stylesheet" href="<c:url value='/resources/css/storyCreate.css'/>">
     <script src="<c:url value='/resources/js/storyCreate.js'/>"></script>
-    
     <!-- 컨텍스트 경로를 JavaScript 변수으로 설정 -->
     <script>
-        let contextPath = '<c:url value="/" />';
-        let editMode = ${editMode != null ? editMode : false};
-        let stNum = '<c:out value="${story != null ? story.stNum : ''}" />';
+        var contextPath = '<c:url value="/" />';
+        var editMode = ${editMode != null ? editMode : false};
+        var stNum = '<c:out value="${story != null ? story.stNum : ''}" />';
         stNum = stNum !== '' ? parseInt(stNum) : null;
-
-        // 색상 변경 함수 - CSS 파일을 동적으로 변경
-        function changeTheme() {
-            const themeStylesheet = document.getElementById('themeStylesheet');
-            const themeButton = document.getElementById('themeButton');
-            const currentTheme = themeStylesheet.getAttribute('href');
-            const newTheme = currentTheme.includes('storyCreate.css') ? 'storyCreate2.css' : 'storyCreate.css';
-            
-            // 경로 설정에 맞게 CSS 파일 교체
-            themeStylesheet.setAttribute('href', contextPath + 'resources/css/' + newTheme);
-            
-            // 버튼 스타일 변경
-            if (newTheme === 'storyCreate.css') {
-                themeButton.style.backgroundColor = '#fff';  // 하얀 배경
-                themeButton.style.color = '#000';  // 검은색 글자
-            } else {
-                themeButton.style.backgroundColor = '#000';  // 검은 배경
-                themeButton.style.color = '#fff';  // 흰색 글자
-            }
-        }
     </script>
 </head>
 <body>
     <!-- 헤더 부분 시작 -->
-    <div class="header" style="position: relative;">
-        <img src="<c:url value='/resources/img/logo.png'/>" alt="로고" class="logo" id="logo" onclick="location.href='<c:url value='/main'/>'" style="float:left;">
-        
-        <!-- 색상 변경 버튼 -->
-        <button id="themeButton" onclick="changeTheme()" style="position: absolute; right: 100px; top: 20px; background-color: #fff; color: #000;">색상 변경</button>
+    <div class="header">
+        <img src="<c:url value='/resources/img/logo.png'/>" alt="로고" class="logo" id="logo">
+        <!-- 로그인 상태와 관계없이 헤더 간소화 -->
     </div>
     <!-- 헤더 부분 끝 -->
 
     <div class="container">
         <h1>${editMode ? '스토리 수정' : '스토리 제작'}</h1>
-
+        
+        <div class="login-box">
+                <c:choose>
+                    <c:when test="${not empty sessionScope.user}">
+                        <span>${sessionScope.user}님</span> <!-- 사용자 이름 표시 -->
+                        <button class="login-button" onclick="logout()">로그아웃</button> <!-- 로그아웃 버튼 -->
+                    </c:when>
+                    <c:otherwise>
+                        <button class="login-button" onclick="location.href='<c:url value='/login'/>'">로그인</button>
+                        <button class="login-button" onclick="location.href='<c:url value='/register'/>'">회원가입</button>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        
         <form id="storyForm" enctype="multipart/form-data">
             <c:if test="${editMode}">
                 <input type="hidden" name="stNum" value="${story.stNum}">
@@ -166,7 +153,7 @@
                         <button type="button" onclick="submitStory(true)">수정 완료</button>
                     </c:when>
                     <c:otherwise>
-                        <button type="button" onclick="submitStory(false)">제출하기</button>
+                        <button type="button" onclick="submitStory(false)">수정하기</button>
                     </c:otherwise>
                 </c:choose>
             </div>

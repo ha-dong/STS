@@ -1,3 +1,5 @@
+<!-- storyList.jsp -->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -10,14 +12,14 @@
     <!-- Bootstrap CSS 추가 -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- 커스텀 CSS -->
-    <link rel="stylesheet" href="<c:url value='/resources/css/storylist.css'/>">
+    <link rel="stylesheet" href="<c:url value='/resources/css/storyList.css'/>">
     <!-- jQuery 및 Bootstrap JS 추가 -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- 컨텍스트 경로 및 userId 설정 -->
     <script>
-        var contextPath = '<c:url value="/" />';
-        var userId = "${userId != null ? fn:replace(userId, '\"', '\\\"') : 'subo'}";
+        let contextPath = '<c:url value="/" />';
+        let userId = "${userId != null ? fn:replace(userId, '\"', '\\\"') : 'subo'}";
         console.log("User ID:", userId); // 디버깅용 로그
     </script>
 </head>
@@ -33,7 +35,7 @@
         <c:choose>
             <c:when test="${not empty sessionScope.user}">
                 <span>${sessionScope.user}님</span> <!-- 사용자 이름 표시 -->
-                <button class="login-button" onclick="location.href='<c:url value='/login'/>'">로그아웃</button>
+                <button class="login-button" onclick="logout()">로그아웃</button>
             </c:when>
             <c:otherwise>
                 <button class="login-button" onclick="location.href='<c:url value='/login'/>'">로그인</button>
@@ -47,17 +49,17 @@
         <!-- 드롭다운 메뉴 -->
         <div class="row mb-3">
             <div class="col-md-6">
-                <select id="categorySelect" class="form-control">
+                <select id="categorySelect" class="form-control" onchange="filterAndSort()">
                     <option value="">전체 카테고리</option>
-                    <option value="CG-01">판타지</option>
-                    <option value="CG-02">스릴러</option>
-                    <!-- 기타 카테고리 추가 -->
+                    <c:forEach var="code" items="${genreList}">
+                        <option value="${code.CODE}" <c:if test="${param.genre == code.CODE}">selected</c:if>>${code.CODE_NAME}</option>
+                    </c:forEach>
                 </select>
             </div>
             <div class="col-md-6">
-                <select id="sortSelect" class="form-control">
-                    <option value="recent">최신순</option>
-                    <option value="popular">인기순</option>
+                <select id="sortSelect" class="form-control" onchange="filterAndSort()">
+                    <option value="recent" <c:if test="${param.sort == 'recent'}">selected</c:if>>최신순</option>
+                    <option value="popular" <c:if test="${param.sort == 'popular'}">selected</c:if>>인기순</option>
                 </select>
             </div>
         </div>
@@ -66,13 +68,14 @@
             <c:forEach var="story" items="${storyList}">
                 <div class="story-item col-md-3 mb-4" data-genre="${story.stGenrecode}" data-stnum="${story.stNum}"
                      data-title="${story.stTitle}" data-cover="${story.stCover}" data-uid="${story.uId}"
-                     data-viewnum="${story.stViewnum}" data-crdate="${story.stCrdate}">
+                     data-viewnum="${story.stViewnum}" data-sugnum="${story.stSugnum}" data-crdate="${story.stCrdate}">
                     <div class="card">
                         <img src="<c:url value='/uploads/${story.stCover}'/>" class="card-img-top" alt="스토리 표지">
                         <div class="card-body">
                             <h5 class="card-title">${story.stTitle}</h5>
                             <p class="card-text">작성자: ${story.uId}</p>
                             <p class="card-text">조회수: ${story.stViewnum}</p>
+                            <p class="card-text">추천수: ${story.stSugnum}</p>
                             <button class="btn btn-primary" onclick="openStoryModal(this)">자세히 보기</button>
                         </div>
                     </div>
@@ -98,6 +101,7 @@
                     <p class="genre">장르: </p>
                     <p class="uId">작성자: </p>
                     <p class="viewNum">조회수: </p>
+                    <p class="sugNum">추천수: </p>
                     <p class="crDate">생성일: </p>
                     <!-- 기타 정보 추가 가능 -->
                 </div>
@@ -134,6 +138,13 @@
                 console.error('로그아웃 중 오류 발생:', error);
                 alert('로그아웃 중 오류가 발생했습니다.');
             });
+        }
+
+        // 필터링 및 정렬 함수
+        function filterAndSort() {
+            const genre = document.getElementById('categorySelect').value;
+            const sort = document.getElementById('sortSelect').value;
+            window.location.href = `${contextPath}story/list?genre=${genre}&sort=${sort}`;
         }
     </script>
 </body>

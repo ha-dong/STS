@@ -7,11 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ICS - 메인 페이지</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css"> <!-- contextPath 사용 -->
+    <link href="https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans/css/SpoqaHanSansNeo.css" rel="stylesheet" type="text/css" />
 
     <!-- 컨텍스트 경로와 사용자 이름을 JavaScript 변수로 설정 -->
     <script>
-        var contextPath = '${pageContext.request.contextPath}';
-        var storedUsername = ''; // 메인 페이지에서는 필요에 따라 설정
+        let contextPath = '${pageContext.request.contextPath}';
+        let storedUsername = ''; // 메인 페이지에서는 필요에 따라 설정
     </script>
     <script src="${pageContext.request.contextPath}/resources/js/storyControl.js"></script>
 </head>
@@ -49,18 +50,20 @@
     </div>
 
     <div class="footer">
-        <div class="icon-wrapper">
-            <img src="${pageContext.request.contextPath}/resources/img/inquiry_icon.png" alt="문의" class="inquiry-icon">
-            <span class="icon-label">문의사항</span>
-        </div>
-        <div class="icon-wrapper">
-            <img src="${pageContext.request.contextPath}/resources/img/ntc.png" alt="공지사항" class="notice-icon">
-            <span class="icon-label">공지사항</span>
-        </div>
-        <div class="icon-wrapper">
-            <img src="${pageContext.request.contextPath}/resources/img/setting_icon.png" alt="설정" class="setting-icon" id="settingsIcon">
-            <span class="icon-label">설정</span>
-        </div>
+       <div class="icon-container">
+           <div class="icon-wrapper">
+               <img src="${pageContext.request.contextPath}/resources/img/inquiry_icon.png" alt="문의" class="inquiry-icon">
+               <span class="icon-label">문의사항</span>
+           </div>
+           <div class="icon-wrapper">
+               <img src="${pageContext.request.contextPath}/resources/img/ntc.png" alt="공지사항" class="notice-icon">
+               <span class="icon-label">공지사항</span>
+           </div>
+           <div class="icon-wrapper">
+               <img src="${pageContext.request.contextPath}/resources/img/setting_icon_white.png" alt="설정" class="setting-icon" id="settingsIcon">
+               <span class="icon-label">설정</span>
+           </div>
+       </div>
     </div>
 
     <!-- 공지사항 모달 -->

@@ -27,7 +27,7 @@
         <nav>
             <ul>
                 <li><a href="#">스토리 관리</a></li>
-                <li><a href="#">유저 관리</a></li>
+                <li><a href="${pageContext.request.contextPath}/adminUser">유저 관리</a></li>
                 <li><a href="${pageContext.request.contextPath}/notice">공지
                         관리</a></li>
                 <li><a

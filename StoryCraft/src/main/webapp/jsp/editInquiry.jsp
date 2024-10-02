@@ -47,8 +47,8 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var inquiryId = 22; // 예시 ID
-        var contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1));
+        let inquiryId = 22; // 예시 ID
+        let contextPath = window.location.pathname.substring(0, window.location.pathname.indexOf('/', 1));
 
         fetch(contextPath + '/api/inquiry/' + inquiryId)
             .then(response => {
@@ -59,7 +59,7 @@
             })
             .then(data => {
                 if (data.success) {
-                    var inquiry = data.inquiry;
+                    let inquiry = data.inquiry;
                     document.getElementById('inquiryTitle').value = inquiry.inqTitle;
                     document.getElementById('inquiryType').value = inquiry.inqTypecode;
                     document.getElementById('inquiryText').value = inquiry.inqText;
