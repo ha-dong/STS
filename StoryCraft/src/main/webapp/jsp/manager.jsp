@@ -1,5 +1,3 @@
-<!-- manager.jsp -->
-
 <%@ page import="java.time.ZonedDateTime, java.time.format.DateTimeFormatter, java.time.ZoneId" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
@@ -23,23 +21,23 @@
             <img src="${pageContext.request.contextPath}/resources/img/Story_Craft_white-remove.png" alt="Logo">
         </div>
         <nav>
-            <ul>
-                <li><a href="#">스토리 관리</a></li>
-                <li><a href="${pageContext.request.contextPath}/adminUser">유저 관리</a></li>
-                <li><a href="${pageContext.request.contextPath}/notice">공지 관리</a></li>
-                <li><a href="${pageContext.request.contextPath}/adminInquiryList">문의 관리</a></li>
-            </ul>
+			<ul>
+				<li><a href="#">스토리 관리</a></li>
+				<li><a href="${pageContext.request.contextPath}/adminUser">유저관리</a></li>
+				<li><a href="${pageContext.request.contextPath}/notice">공지관리</a></li>
+				<li><a href="${pageContext.request.contextPath}/adminInquiryList">문의관리</a></li>
+			</ul>
         </nav>
     </div>
     
     <div class="main-content">
         <header>
 		    <div class="title">Story Craft</div>
-		    <div class="actions">
-		        <a href="${pageContext.request.contextPath}/main">
-		            <button>메인 페이지</button>
-		        </a>
-		    </div>
+			<div class="actions">
+				<a href="${pageContext.request.contextPath}/main">
+					<button>메인 페이지</button>
+				</a>
+			</div>
 		</header>
         
         <div class="dashboard">
@@ -52,6 +50,31 @@
                         <li>사용자 신고</li>
                         <li>문의 처리</li>
                     </ul>
+                </div>
+                <div class="visitor-summary">
+                    <h2>입자별 요약</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>일자</th>
+                                <th>신규 회원 수</th>
+                                <th>방문자수</th>
+                                <th>가입</th>
+                                <th>신고</th>
+                                <th>문의</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><%= currentDate %></td>
+                                <td>1명</td>
+                                <td>1명</td>
+                                <td>1명</td>
+                                <td>0건</td>
+                                <td>0건</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             

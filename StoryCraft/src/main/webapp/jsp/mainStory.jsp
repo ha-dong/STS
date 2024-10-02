@@ -22,6 +22,10 @@
     
 </head>
 <body>
+
+	<!-- 오디오 파일 추가 -->
+	<audio id="clickSound" src="${pageContext.request.contextPath}/resources/audio/Storyclick.mp3"></audio>
+	
     <!-- 제목 및 시작 버튼 컨테이너 -->
     <div class="title-container" id="title-container">
         <h1 id="story-title">완벽한 범죄</h1>

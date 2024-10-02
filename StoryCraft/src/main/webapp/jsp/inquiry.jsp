@@ -6,7 +6,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>문의 목록</title>
+    <title>문의 사항</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/inquiry.css">
     <script src="${pageContext.request.contextPath}/resources/js/inquiry.js"></script>
 </head>
@@ -22,7 +22,7 @@
     <button class="inquiry-button" onclick="location.href='${pageContext.request.contextPath}/inquiryForm'">문의 등록</button>
 
     <!-- 문의 목록 제목 -->
-    <h2 class="inquiry-title">문의 목록</h2>
+    <h2 class="inquiry-title">문의 사항</h2>
 
     <!-- 문의 목록 표시 영역 -->
     <table id="inquiryListTable">

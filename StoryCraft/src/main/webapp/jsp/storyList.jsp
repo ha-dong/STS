@@ -18,8 +18,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- 컨텍스트 경로 및 userId 설정 -->
     <script>
-        let contextPath = '<c:url value="/" />';
-        let userId = "${userId != null ? fn:replace(userId, '\"', '\\\"') : 'subo'}";
+        var contextPath = '<c:url value="/" />';
+        var userId = "${userId != null ? fn:replace(userId, '\"', '\\\"') : 'subo'}";
         console.log("User ID:", userId); // 디버깅용 로그
     </script>
 </head>

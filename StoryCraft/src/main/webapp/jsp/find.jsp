@@ -23,11 +23,9 @@
             <form id="find-id-form" class="form-find">
                 <h2>아이디 찾기</h2>
                 <div class="form-floating">
-                    <label for="find-id-username">이름</label>
                     <input type="text" id="find-id-username" class="form-control" placeholder="이름" required>
                 </div>
                 <div class="form-floating">
-                    <label for="find-id-email">이메일</label>
                     <input type="email" id="find-id-email" class="form-control" placeholder="이메일" required>
                 </div>
                 <button class="w-100 btn btn-lg btn-primary" type="submit">아이디 찾기</button>
@@ -36,11 +34,9 @@
             <form id="find-password-form" class="form-find">
                 <h2>비밀번호 찾기</h2>
                 <div class="form-floating">
-                    <label for="find-password-userid">아이디</label>
                     <input type="text" id="find-password-userid" class="form-control" placeholder="아이디" required>
                 </div>
                 <div class="form-floating">
-                    <label for="find-password-email">이메일</label>
                     <input type="email" id="find-password-email" class="form-control" placeholder="이메일" required>
                 </div>
                 <button class="w-100 btn btn-lg btn-primary" type="submit">비밀번호 찾기</button>

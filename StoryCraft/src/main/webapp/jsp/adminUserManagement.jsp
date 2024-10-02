@@ -40,18 +40,12 @@
     
     <div class="main-content">
         <header>
-            <div class="title">Story Craft - 관리자 유저 관리</div>
-            <div class="actions">
-                <a href="${pageContext.request.contextPath}/main">
-                    <button>메인 페이지</button>
-                </a>
-            </div>
+            <div class="title">유저 관리</div>
         </header>
         
         <div class="dashboard">
             <!-- 사용자 관리 섹션 -->
             <div class="user-management">
-                <h2>유저 관리</h2>
                 <table id="user-table">
                     <thead>
                         <tr>

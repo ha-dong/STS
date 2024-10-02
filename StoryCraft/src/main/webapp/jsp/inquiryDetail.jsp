@@ -1,69 +1,97 @@
 <!-- inquiryDetail.jsp -->
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>문의 상세 정보</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/inquiryDetail.css">
+<meta charset="UTF-8">
+<title>문의 상세 정보</title>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/resources/css/inquiryDetail.css">
 </head>
 <body>
-        <div class="logo-container">
-        <a href="main">
-            <img src="/StoryCraft/resources/img/logo.png" alt="로고" class="small-logo logo-animation">
-        </a>
-    </div>
-    
-    <h2>문의 상세 정보</h2>
-    <!-- 문의 정보 -->
+	<div class="logo-container">
+		<a href="main"> <img src="/StoryCraft/resources/img/logo.png"
+			alt="로고" class="small-logo logo-animation">
+		</a>
+	</div>
+
+	<h2>문의 상세 정보</h2>
+	<!-- 문의 정보 -->
 	<div class="inquiry-info">
-	    <p><strong>제목:</strong> ${inquiry.inqTitle}</p>
-	    <p><strong>작성자:</strong> ${inquiry.userId}</p>
-	    <p><strong>작성일:</strong> ${inquiry.inqCrdate}</p>
-	    <p><strong>문의 종류:</strong> ${inquiry.inqTypecode}</p>
-	    <p><strong>상태:</strong> ${statusName}</p> <!-- 상태를 한국어로 출력 -->
-	    <p><strong>문의 내용:</strong></p>
-	    <p>${inquiry.inqText}</p>
+		<!-- 제목 -->
+		<div class="inquiry-title">
+			<strong>제목:</strong> ${inquiry.inqTitle}
+		</div>
+
+		<!-- 작성자, 작성일, 문의 종류, 상태를 가로로 정렬 -->
+		<div class="inquiry-meta">
+			<p>
+				<strong>작성자:</strong> ${inquiry.userId}
+			</p>
+			<p>
+				<strong>문의 종류:</strong> ${inquiry.inqTypecode}
+			</p>
+			<p>
+				<strong>상태:</strong> ${statusName}
+			</p>
+			<p>
+				<strong>작성일:</strong> ${inquiry.inqCrdate}
+			</p>
+		</div>
+
+		<!-- 문의 내용 -->
+		<div class="inquiry-content">
+			<p>${inquiry.inqText}</p>
+		</div>
 	</div>
 
 
-    <!-- 첨부 파일이 있을 경우 표시 -->
-    <c:if test="${not empty inquiry.inqFile}">
-        <p><strong>첨부 파일:</strong> 
-            <a href="${pageContext.request.contextPath}/uploads/${inquiry.inqFile}">${inquiry.inqFile}</a>
-        </p>
-    </c:if>
+	<!-- 첨부 파일이 있을 경우 표시 -->
+	<c:if test="${not empty inquiry.inqFile}">
+		<p>
+			<strong>첨부 파일:</strong> <a
+				href="${pageContext.request.contextPath}/uploads/${inquiry.inqFile}">${inquiry.inqFile}</a>
+		</p>
+	</c:if>
 
-    <!-- 수정 및 삭제 버튼 -->
-<!-- 수정 및 삭제 버튼 -->
-<c:if test="${currentUserId == inquiry.userId}">
+
+
+	<!-- 댓글 섹션 -->
+	<div class="comment-section">
+		<a>댓글</a>
+		<ul>
+			<c:forEach var="comment" items="${comments}">
+				<li>${comment.cmtDate}:${comment.cmtText}</li>
+			</c:forEach>
+		</ul>
+		<c:if test="${empty comments}">
+			<p>댓글이 없습니다.</p>
+		</c:if>
+	</div>
+
+
+
+<!-- 버튼들을 동일한 높이에 배치하고 중앙에서 띄움 -->
+<div class="buttons-container">
+	<!-- 목록으로 버튼 -->
+	<div class="list-button">
+		<button
+			onclick="location.href='${pageContext.request.contextPath}/inquiry'">목록으로</button>
+	</div>
+	<!-- 수정 및 삭제 버튼 -->
+	<c:if test="${currentUserId == inquiry.userId}">
+    <!-- 수정 및 삭제 버튼을 오른쪽 아래에 배치 -->
     <div class="inquiry-actions">
         <button onclick="location.href='${pageContext.request.contextPath}/editInquiry?inqNum=${inquiry.inqNum}'">수정</button>
         <button onclick="deleteInquiry(${inquiry.inqNum})">삭제</button>
     </div>
-</c:if>
+	</c:if>
+</div>
 
-
-    <!-- 댓글 섹션 -->
-    <h3>댓글</h3>
-    <c:if test="${not empty comments}">
-        <ul>
-            <c:forEach var="comment" items="${comments}">
-                <li>${comment.cmtDate}: ${comment.cmtText}</li>
-            </c:forEach>
-        </ul>
-    </c:if>
-    <c:if test="${empty comments}">
-        <p>댓글이 없습니다.</p>
-    </c:if>
-
-    <!-- 목록으로 버튼 -->
-    <button onclick="location.href='${pageContext.request.contextPath}/inquiry'">목록으로</button>
-
-<script>
+	<script>
 
 
 fetch('/StoryCraft/api/inquiry/' + inquiryId)
