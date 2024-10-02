@@ -1,15 +1,3 @@
-/* 애니메이션 효과를 위한 키프레임 */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* 로고 애니메이션 */
-@keyframes logoSpin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 /* 배경 흐림 효과 */
 body {
   background-image: url('/StoryCraft/resources/img/tree.png');
