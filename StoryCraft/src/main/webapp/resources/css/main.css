@@ -74,7 +74,7 @@ body, html {
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s, border 0.3s;
 	font-family: 'Spoqa Han Sans Neo', sans-serif;
-	margin-left: 110px; /* 오른쪽으로 50px 만큼 이동 */
+	margin-left: 80px; /* 오른쪽으로 50px 만큼 이동 */
 }
 
 #mainStory:hover, #userStory:hover:not(.disabled) {

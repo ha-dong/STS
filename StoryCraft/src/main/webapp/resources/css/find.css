@@ -40,19 +40,19 @@ body {
 }
 
 .container {
-    width: 100%;
-    max-width: 450px;
-    background-color: rgba(255, 255, 255, 0.85); /* 투명도 조정된 배경 */
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    animation: fadeInUp 0.8s ease-out;
+  width: 100%;
+  max-width: 400px;
+  background-color: rgba(0, 0, 0, 0.5); /* 더 낮은 투명도 */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 1s ease-out;
 }
 
 h2 {
     text-align: center;
     margin-bottom: 20px;
-    color: #333;
+    color: #ffffff;
 }
 
 /* 인풋 필드 스타일 */
@@ -86,7 +86,7 @@ h2 {
     display: block;
     width: 100%;
     padding: 12px;
-    background-color: #6de2f7;
+    background-color: #400080;
     color: white;
     font-size: 18px;
     border: none;
@@ -96,6 +96,6 @@ h2 {
 }
 
 .btn:hover {
-    background-color: #79c3ff;
+    background-color: #400040;
     transform: translateY(-3px);
 }
