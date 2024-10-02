@@ -246,7 +246,7 @@ public class UserController {
     private void sendAuthEmail(String email, String authToken) throws Exception {
         String host = "smtp.gmail.com";
         String user = "suleehk@gmail.com";
-        String pass = "dujy aizq nbhw xuut";  // 실제 비밀번호는 적절한 방식으로 관리되어야 함
+        String pass = "udpx bwhk qpft amns";  // 실제 비밀번호는 적절한 방식으로 관리되어야 함
 
         Properties props = new Properties();
         props.put("mail.smtp.host", host);

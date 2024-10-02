@@ -29,7 +29,6 @@ public class AuthController {
     private ProfileService profileService; // 추가
     
     // 일반 로그인 처리
-    // 일반 로그인 처리
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> credentials, HttpSession session) {
         String username = credentials.get("username");

@@ -2,7 +2,11 @@
 
 package com.example.storycraft.controller;
 
+import com.example.storycraft.model.Choice;
+import com.example.storycraft.model.Scene;
 import com.example.storycraft.model.Story;
+import com.example.storycraft.service.ChoiceService;
+import com.example.storycraft.service.SceneService;
 import com.example.storycraft.service.StoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -31,21 +35,54 @@ public class StoryController {
 
     @Autowired
     private StoryService storyService;
-
+    
+    @Autowired
+    private SceneService sceneService;
+    
+    @Autowired
+    private ChoiceService choiceService;
+    
     // 스토리 제작 페이지 이동 (추가: editMode 파라미터)
-    @GetMapping({"/create", "/edit"})
-    public String showStoryCreatePage(@RequestParam(value = "stNum", required = false) Integer stNum, Model model) {
-        if (stNum != null) {
-            Story story = storyService.getStoryById(stNum);
-            if (story != null) {
-                model.addAttribute("story", story);
-                model.addAttribute("editMode", true);
-            }
-        }
-        // Assuming genreList is fetched from service or defined elsewhere
+//    @GetMapping({"/create", "/edit"})
+//    public String showStoryCreatePage(@RequestParam(value = "stNum", required = false) Integer stNum, Model model) {
+//        if (stNum != null) {
+//            Story story = storyService.getStoryById(stNum);
+//            if (story != null) {
+//                model.addAttribute("story", story);
+//                model.addAttribute("editMode", true);
+//            }
+//        }
+//        // Assuming genreList is fetched from service or defined elsewhere
+//        model.addAttribute("genreList", storyService.getGenreList());
+//        return "storyCreate";
+//    }
+    
+ // 스토리 생성 페이지 이동
+    @GetMapping("/create")
+    public String showStoryCreatePage(Model model) {
         model.addAttribute("genreList", storyService.getGenreList());
-        return "storyCreate";
+        return "storyCreate"; // 스토리 생성 페이지 뷰
     }
+
+    // 스토리 수정 페이지 이동
+    @GetMapping("/edit")
+    public String showStoryEditPage(@RequestParam("stNum") Integer stNum, Model model, HttpSession session) {
+        // 로그인된 사용자 확인
+        String userId = getUserIdFromSessionOrCookie(session, null);
+        Story story = storyService.getStoryById(stNum);
+        if (story == null) {
+            // 스토리가 없을 경우 에러 페이지로 이동하거나 메시지 표시
+            return "error/404";
+        }
+        if (!story.getuId().equals(userId)) {
+            // 수정 권한이 없는 경우 처리
+            return "error/403";
+        }
+        model.addAttribute("story", story);
+        model.addAttribute("genreList", storyService.getGenreList());
+        return "storyEdit"; // 스토리 수정 페이지 뷰
+    }
+
 
     // 스토리 저장 처리 (수정 포함)
     @PostMapping("/save")
@@ -260,12 +297,10 @@ public class StoryController {
         return response;
     }
     
-    // 세션 또는 쿠키에서 사용자 ID를 가져오는 메소드
+    // 유저 ID 가져오는 메서드
     private String getUserIdFromSessionOrCookie(HttpSession session, HttpServletRequest request) {
-        // 로그인된 사용자 ID 가져오기
         String userId = (String) session.getAttribute("user");
         if (userId == null) {
-            // 쿠키에서 userId 가져오기
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
@@ -276,43 +311,52 @@ public class StoryController {
                 }
             }
             if (userId == null) {
-                userId = "subo"; // 쿠키에도 없으면 "subo"로 설정
+                userId = "subo"; // 기본값 설정
             }
         }
         return userId;
     }
 
-
     // 신고 처리
     @PostMapping("/report")
     @ResponseBody
-    public Map<String, Object> reportStory(@RequestParam Map<String, String> params, HttpSession session, HttpServletRequest request) {
-        Map<String, Object> response = new HashMap<>();
+    public Map<String, Object> reportStory(
+            @RequestParam Map<String, String> params,
+            @RequestParam(value = "reportImage", required = false) MultipartFile reportImage,
+            HttpSession session, HttpServletRequest request) {
 
-        // 로그인된 사용자 ID 가져오기
-        String userId = (String) session.getAttribute("user"); // "userId" -> "user"
-        if (userId == null) {
-            // 쿠키에서 userId 가져오기
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if ("U_ID".equals(cookie.getName())) {
-                        userId = cookie.getValue();
-                        break;
-                    }
-                }
-            }
-            if (userId == null) {
-                userId = "subo"; // 쿠키에도 없으면 "subo"로 설정
-            }
-        }
+        Map<String, Object> response = new HashMap<>();
+        String userId = getUserIdFromSessionOrCookie(session, request);
 
         try {
             int stNum = Integer.parseInt(params.get("stNum"));
             String reTypeCode = params.get("reTypeCode");
             String reText = params.get("reText");
 
-            boolean isReported = storyService.reportStory(stNum, reTypeCode, reText, userId);
+            // 이미지 파일 저장 처리
+            String imagePath = null;
+            if (reportImage != null && !reportImage.isEmpty()) {
+                try {
+                    // 파일 저장 경로 설정
+                    String originalFileName = reportImage.getOriginalFilename();
+                    String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+                    String fileName = System.currentTimeMillis() + "_" + originalFileName;
+
+                    // 파일 저장 (예: C:/uploaded/reportImages/)
+                    String savePath = "C:/uploaded/reportImages/" + fileName;
+                    reportImage.transferTo(new File(savePath));
+
+                    // 이미지 경로 저장
+                    imagePath = savePath;
+                } catch (IOException e) {
+                    response.put("success", false);
+                    response.put("message", "이미지 파일 저장 중 오류가 발생했습니다.");
+                    return response;
+                }
+            }
+
+            // 신고 저장 처리
+            boolean isReported = storyService.reportStory(stNum, reTypeCode, reText, userId, imagePath);
 
             if (isReported) {
                 response.put("success", true);
@@ -321,18 +365,64 @@ public class StoryController {
                 response.put("message", "신고 접수에 실패했습니다.");
             }
         } catch (NumberFormatException e) {
-            logger.error("신고 처리 중 잘못된 스토리 번호: {}", params.get("stNum"), e);
             response.put("success", false);
             response.put("message", "잘못된 스토리 번호입니다.");
         } catch (Exception e) {
-            logger.error("신고 처리 중 예외 발생", e);
             response.put("success", false);
             response.put("message", "신고 처리 중 오류가 발생했습니다.");
         }
 
         return response;
     }
+    
+    @GetMapping("/play")
+    public String playStory(@RequestParam("stNum") int stNum, Model model) {
+        Scene firstScene = sceneService.getFirstSceneByStory(stNum);
+        model.addAttribute("story", storyService.getStoryById(stNum));
+        model.addAttribute("scene", firstScene);
+        return "storyPlay";
+    }
 
+
+    @PostMapping("/nextScene")
+    @ResponseBody
+    public Map<String, Object> getNextScene(@RequestBody Map<String, Integer> requestParams) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            int choiceNum = requestParams.get("scNum");
+
+            // 선택한 선택지의 NEXT_SC_NUM 가져오기
+            Integer nextScNum = choiceService.getNextSceneNum(choiceNum);
+
+            // 다음 장면이 없을 경우 처리
+            if (nextScNum == null || nextScNum == 0) {
+                response.put("success", false);
+                response.put("message", "다음 장면이 존재하지 않습니다.");
+                return response;
+            }
+
+            // 다음 장면 가져오기
+            Scene nextScene = sceneService.getSceneByScNum(nextScNum);
+            
+            // 선택지 추가
+            if (nextScene != null) {
+                List<Choice> choices = choiceService.getChoicesByScNum(nextScene.getScNum());
+                response.put("success", true);
+                response.put("scene", nextScene);
+                response.put("choices", choices);
+            } else {
+                response.put("success", false);
+                response.put("message", "다음 장면을 찾을 수 없습니다.");
+            }
+        } catch (Exception e) {
+            logger.error("Error fetching next scene", e);
+            response.put("success", false);
+            response.put("message", "서버 오류 발생: " + e.getMessage());
+        }
+        return response;
+    }
+    
+    
     // 추천 처리
     @PostMapping("/recommend")
     @ResponseBody
@@ -361,7 +451,10 @@ public class StoryController {
             boolean isRecommended = storyService.recommendStory(stNum, userId);
 
             if (isRecommended) {
+                // 추천된 후 추천수 가져오기
+                Story story = storyService.getStoryById(stNum);
                 response.put("success", true);
+                response.put("recommendCount", story.getStSugnum()); // 추천수 추가
             } else {
                 response.put("success", false);
                 response.put("message", "이미 추천한 스토리이거나 자신의 스토리입니다.");
@@ -375,19 +468,4 @@ public class StoryController {
         return response;
     }
 
-    // 스토리 플레이 페이지 이동
-    @GetMapping("/play")
-    public String playStory(@RequestParam("stNum") int stNum, Model model) {
-        // 스토리 및 첫 번째 장면 정보 로드
-        Story story = storyService.getStoryById(stNum);
-        if (story == null) {
-            // 스토리를 찾을 수 없는 경우, 에러 페이지로 이동
-            return "error/404";
-        }
-        // 첫 번째 장면 정보도 로드해야 함 (추가 구현 필요)
-        model.addAttribute("story", story);
-        // 필요한 데이터 추가
-
-        return "storyPlay";
-    }
 }
