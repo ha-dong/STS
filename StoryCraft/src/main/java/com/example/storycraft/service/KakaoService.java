@@ -20,7 +20,7 @@ public class KakaoService {
         String tokenUrl = "https://kauth.kakao.com/oauth/token";
         String params = "grant_type=authorization_code" +
                 "&client_id=277b7da274fd3f49f47cb0c95028c100" +  // REST API 키 사용
-                "&redirect_uri=https://0b98-123-142-55-115.ngrok-free.app/StoryCraft/callback" +  // 새로운 ngrok URL로 수정
+                "&redirect_uri=https://6cb4-123-142-55-115.ngrok-free.app/StoryCraft/callback" +  // 새로운 ngrok URL로 수정
                 "&code=" + code;
 
         String accessToken = null;

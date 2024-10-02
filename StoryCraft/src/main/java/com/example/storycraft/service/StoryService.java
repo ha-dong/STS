@@ -24,6 +24,9 @@ public class StoryService {
 
     @Autowired
     private SceneDao sceneDao;
+    
+    @Autowired
+    private ChoiceDao choiceDao;
 
     @Autowired
     private ReportDao reportDao;
@@ -38,8 +41,7 @@ public class StoryService {
     private InquiryDao inquiryDao;
 
     // 전체 스토리 저장
-    public boolean saveFullStory(String title, String genre, String coverFileName, int initialMoney, int initialHP,
-                                 String userId, Map<String, String> allParams) {
+    public boolean saveFullStory(String title, String genre, String coverFileName, int initialMoney, int initialHP, String userId, Map<String, String> allParams) {
         try {
             // 스토리 저장
             Story story = new Story();
@@ -75,7 +77,7 @@ public class StoryService {
             throw e;
         }
     }
-
+    
     // 스토리 수정
     public boolean updateFullStory(int stNum, String title, String genre, String coverFileName, int initialMoney, int initialHP,
                                    String userId, Map<String, String> allParams) {
@@ -152,8 +154,8 @@ public class StoryService {
     }
 
     // 신고 처리
-    public boolean reportStory(int stNum, String reTypeCode, String reText, String userId) {
-        return reportDao.insertReport(stNum, reTypeCode, reText, userId) > 0;
+    public boolean reportStory(int stNum, String reTypeCode, String reText, String userId, String imagePath) {
+        return reportDao.insertReport(stNum, reTypeCode, reText, userId, imagePath) > 0;
     }
 
     // 추천 처리
@@ -188,7 +190,6 @@ public class StoryService {
     private List<Scene> parseScenesFromParameters(Map<String, String> allParams, int stNum) {
         List<Scene> scenes = new ArrayList<>();
 
-        // sceneText_{sceneNum} 형태의 키를 찾아서 장면을 생성
         for (String key : allParams.keySet()) {
             if (key.startsWith("sceneText_")) {
                 String sceneNumStr = key.substring("sceneText_".length());
@@ -197,8 +198,9 @@ public class StoryService {
                 Scene scene = new Scene();
                 scene.setStNum(stNum);
                 scene.setScNum(sceneNum);
-                scene.setScLevel(1); // 필요에 따라 레벨 설정
+                scene.setScLevel(1);
                 scene.setScText(allParams.get(key));
+
                 // 부모 장면 번호 설정
                 int parentSceneNum = Integer.parseInt(allParams.getOrDefault("parentSceneNum_" + sceneNum, "0"));
                 scene.setParentScNum(parentSceneNum);
@@ -206,9 +208,6 @@ public class StoryService {
                 // 선택지 정보 수집
                 List<Choice> choices = collectChoicesForScene(allParams, sceneNum);
                 scene.setChoices(choices);
-
-                // 삽화 이미지 파일명 설정 (필요한 경우)
-                scene.setScIllus(allParams.get("sceneImageFileName_" + sceneNum));
 
                 scenes.add(scene);
             }
@@ -222,16 +221,22 @@ public class StoryService {
 
         for (String key : allParams.keySet()) {
             if (key.startsWith("choiceName_scene_" + sceneNum + "_choice_")) {
-                String choiceKey = key.substring("choiceName_".length()); // "scene_1_choice_1" 형식
+                String choiceKey = key.substring("choiceName_".length());
                 int choiceNum = Integer.parseInt(choiceKey.substring(choiceKey.lastIndexOf("_") + 1));
 
                 Choice choice = new Choice();
-                choice.setSceneNum(sceneNum);
+                choice.setScNum(sceneNum);
                 choice.setChoiceNum(choiceNum);
                 choice.setChoiceName(allParams.get(key));
                 choice.setChoiceContent(allParams.get("choiceContent_" + choiceKey));
                 choice.setMoney(Integer.parseInt(allParams.getOrDefault("choiceMoney_" + choiceKey, "0")));
                 choice.setHp(Integer.parseInt(allParams.getOrDefault("choiceHP_" + choiceKey, "0")));
+
+                // 선택지 이름으로 다음 장면 번호 설정 (NEXT_SC_NUM 설정)
+                Integer nextScNum = choiceDao.getNextSceneNumByChoiceName(choice.getChoiceName());
+                if (nextScNum != null) {
+                    choice.setNextScNum(nextScNum);  // 선택지 이름으로 찾은 다음 장면 번호 설정
+                }
 
                 choices.add(choice);
             }
@@ -239,6 +244,7 @@ public class StoryService {
 
         return choices;
     }
+
 
     // Assuming this method fetches genre list from database or predefined list
     public List<Map<String, String>> getGenreList() {

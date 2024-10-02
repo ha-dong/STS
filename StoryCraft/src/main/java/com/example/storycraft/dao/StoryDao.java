@@ -130,7 +130,13 @@ public class StoryDao {
         deleteReportsByStory(stNum);
         return deleteStory(stNum) > 0; // 성공 시 true 반환
     }
-
+    
+    // 추천 수 증가 메서드 추가
+    public void incrementRecommendation(int stNum) {
+        String sql = "UPDATE STORY SET ST_SUGNUM = ST_SUGNUM + 1 WHERE ST_NUM = ?";
+        jdbcTemplate.update(sql, stNum);
+    }
+    
     // Story 객체로 매핑하는 메서드
     private Story mapStory(ResultSet rs) throws SQLException {
         Story story = new Story();

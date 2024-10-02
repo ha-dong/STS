@@ -1,79 +1,120 @@
-// Choice.java
-
 package com.example.storycraft.model;
 
 public class Choice {
     private int choiceNum;
-    private int sceneNum;
+    private int scNum;
+    private int stNum;
+    private int parentScNum;
+    private int scLevel;
     private String choiceName;
     private String choiceContent;
     private int money;
     private int hp;
+    private int nextScNum;
 
     public Choice() {
     }
 
-    public Choice(int choiceNum, int sceneNum, String choiceName, String choiceContent, int money, int hp) {
-        super();
-        this.choiceNum = choiceNum;
-        this.sceneNum = sceneNum;
-        this.choiceName = choiceName;
-        this.choiceContent = choiceContent;
-        this.money = money;
-        this.hp = hp;
-    }
+	public Choice(int choiceNum, int scNum, int stNum, int parentScNum, int scLevel, String choiceName,
+			String choiceContent, int money, int hp, int nextScNum) {
+		super();
+		this.choiceNum = choiceNum;
+		this.scNum = scNum;
+		this.stNum = stNum;
+		this.parentScNum = parentScNum;
+		this.scLevel = scLevel;
+		this.choiceName = choiceName;
+		this.choiceContent = choiceContent;
+		this.money = money;
+		this.hp = hp;
+		this.nextScNum = nextScNum;
+	}
 
-    public int getChoiceNum() {
-        return choiceNum;
-    }
+	public int getChoiceNum() {
+		return choiceNum;
+	}
 
-    public void setChoiceNum(int choiceNum) {
-        this.choiceNum = choiceNum;
-    }
+	public void setChoiceNum(int choiceNum) {
+		this.choiceNum = choiceNum;
+	}
 
-    public int getSceneNum() {
-        return sceneNum;
-    }
+	public int getScNum() {
+		return scNum;
+	}
 
-    public void setSceneNum(int sceneNum) {
-        this.sceneNum = sceneNum;
-    }
+	public void setScNum(int scNum) {
+		this.scNum = scNum;
+	}
 
-    public String getChoiceName() {
-        return choiceName;
-    }
+	public int getStNum() {
+		return stNum;
+	}
 
-    public void setChoiceName(String choiceName) {
-        this.choiceName = choiceName;
-    }
+	public void setStNum(int stNum) {
+		this.stNum = stNum;
+	}
 
-    public String getChoiceContent() {
-        return choiceContent;
-    }
+	public int getParentScNum() {
+		return parentScNum;
+	}
 
-    public void setChoiceContent(String choiceContent) {
-        this.choiceContent = choiceContent;
-    }
+	public void setParentScNum(int parentScNum) {
+		this.parentScNum = parentScNum;
+	}
 
-    public int getMoney() {
-        return money;
-    }
+	public int getScLevel() {
+		return scLevel;
+	}
 
-    public void setMoney(int money) {
-        this.money = money;
-    }
+	public void setScLevel(int scLevel) {
+		this.scLevel = scLevel;
+	}
 
-    public int getHp() {
-        return hp;
-    }
+	public String getChoiceName() {
+		return choiceName;
+	}
 
-    public void setHp(int hp) {
-        this.hp = hp;
-    }
+	public void setChoiceName(String choiceName) {
+		this.choiceName = choiceName;
+	}
 
-    @Override
-    public String toString() {
-        return "Choice [choiceNum=" + choiceNum + ", sceneNum=" + sceneNum + ", choiceName=" + choiceName
-                + ", choiceContent=" + choiceContent + ", money=" + money + ", hp=" + hp + "]";
-    }
+	public String getChoiceContent() {
+		return choiceContent;
+	}
+
+	public void setChoiceContent(String choiceContent) {
+		this.choiceContent = choiceContent;
+	}
+
+	public int getMoney() {
+		return money;
+	}
+
+	public void setMoney(int money) {
+		this.money = money;
+	}
+
+	public int getHp() {
+		return hp;
+	}
+
+	public void setHp(int hp) {
+		this.hp = hp;
+	}
+
+	public int getNextScNum() {
+		return nextScNum;
+	}
+
+	public void setNextScNum(int nextScNum) {
+		this.nextScNum = nextScNum;
+	}
+
+	@Override
+	public String toString() {
+		return "Choice [choiceNum=" + choiceNum + ", scNum=" + scNum + ", stNum=" + stNum + ", parentScNum="
+				+ parentScNum + ", scLevel=" + scLevel + ", choiceName=" + choiceName + ", choiceContent="
+				+ choiceContent + ", money=" + money + ", hp=" + hp + ", nextScNum=" + nextScNum + "]";
+	}
+    
 }
