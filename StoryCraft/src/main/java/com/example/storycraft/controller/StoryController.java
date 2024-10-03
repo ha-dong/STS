@@ -42,46 +42,61 @@ public class StoryController {
     @Autowired
     private ChoiceService choiceService;
     
-    // 스토리 제작 페이지 이동 (추가: editMode 파라미터)
-//    @GetMapping({"/create", "/edit"})
-//    public String showStoryCreatePage(@RequestParam(value = "stNum", required = false) Integer stNum, Model model) {
-//        if (stNum != null) {
-//            Story story = storyService.getStoryById(stNum);
-//            if (story != null) {
-//                model.addAttribute("story", story);
-//                model.addAttribute("editMode", true);
-//            }
-//        }
-//        // Assuming genreList is fetched from service or defined elsewhere
-//        model.addAttribute("genreList", storyService.getGenreList());
-//        return "storyCreate";
-//    }
+//     스토리 제작 페이지 이동 (추가: editMode 파라미터)
+    @GetMapping({"/create", "/edit"})
+    public String showStoryCreatePage(@RequestParam(value = "stNum", required = false) Integer stNum, Model model) {
+    	if (stNum != null) {
+    		// 수정일 때
+            // 스토리 조회
+    		Story story = storyService.getStoryById(stNum);
+            
+    		// 씬 조회
+            List<Scene> scenes = sceneService.getSceneByStNum(stNum);
+            
+            // 초이스 조회
+            for (Scene scene : scenes) {				
+            	List<Choice> choices = choiceService.getChoicesByScNum(scene.getScNum());
+            	scene.setChoices(choices);
+			}
+            
+            // 스토리객체에 씬, 초이스 세팅
+            story.setScenes(scenes);
+            
+            if (story != null) {
+                model.addAttribute("story", story);
+                model.addAttribute("editMode", true);
+            }
+        }
+        // Assuming genreList is fetched from service or defined elsewhere
+        model.addAttribute("genreList", storyService.getGenreList());
+        return "storyCreate";
+    }
     
- // 스토리 생성 페이지 이동
-    @GetMapping("/create")
-    public String showStoryCreatePage(Model model) {
-        model.addAttribute("genreList", storyService.getGenreList());
-        return "storyCreate"; // 스토리 생성 페이지 뷰
-    }
-
-    // 스토리 수정 페이지 이동
-    @GetMapping("/edit")
-    public String showStoryEditPage(@RequestParam("stNum") Integer stNum, Model model, HttpSession session) {
-        // 로그인된 사용자 확인
-        String userId = getUserIdFromSessionOrCookie(session, null);
-        Story story = storyService.getStoryById(stNum);
-        if (story == null) {
-            // 스토리가 없을 경우 에러 페이지로 이동하거나 메시지 표시
-            return "error/404";
-        }
-        if (!story.getuId().equals(userId)) {
-            // 수정 권한이 없는 경우 처리
-            return "error/403";
-        }
-        model.addAttribute("story", story);
-        model.addAttribute("genreList", storyService.getGenreList());
-        return "storyEdit"; // 스토리 수정 페이지 뷰
-    }
+// // 스토리 생성 페이지 이동
+//    @GetMapping("/create")
+//    public String showStoryCreatePage(Model model) {
+//        model.addAttribute("genreList", storyService.getGenreList());
+//        return "storyCreate"; // 스토리 생성 페이지 뷰
+//    }
+//
+//    // 스토리 수정 페이지 이동
+//    @GetMapping("/edit")
+//    public String showStoryEditPage(@RequestParam("stNum") Integer stNum, Model model, HttpSession session) {
+//        // 로그인된 사용자 확인
+//        String userId = getUserIdFromSessionOrCookie(session, null);
+//        Story story = storyService.getStoryById(stNum);
+//        if (story == null) {
+//            // 스토리가 없을 경우 에러 페이지로 이동하거나 메시지 표시
+//            return "error/404";
+//        }
+//        if (!story.getuId().equals(userId)) {
+//            // 수정 권한이 없는 경우 처리
+//            return "error/403";
+//        }
+//        model.addAttribute("story", story);
+//        model.addAttribute("genreList", storyService.getGenreList());
+//        return "storyEdit"; // 스토리 수정 페이지 뷰
+//    }
 
 
     // 스토리 저장 처리 (수정 포함)

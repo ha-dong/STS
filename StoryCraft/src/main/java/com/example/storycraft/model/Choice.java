@@ -11,6 +11,7 @@ public class Choice {
     private int money;
     private int hp;
     private int nextScNum;
+    
 
     public Choice() {
     }

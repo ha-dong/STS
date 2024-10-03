@@ -62,4 +62,5 @@ public class ChoiceDao {
             nextScNum  // 0으로 저장되지 않도록 수정된 로직
         );
     }
+
 }

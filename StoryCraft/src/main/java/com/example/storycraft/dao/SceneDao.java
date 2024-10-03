@@ -2,13 +2,15 @@
 
 package com.example.storycraft.dao;
 
-import com.example.storycraft.model.Choice;
-import com.example.storycraft.model.Scene;
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import java.sql.*;
-import java.util.List;
+
+import com.example.storycraft.model.Choice;
+import com.example.storycraft.model.Scene;
 
 @Repository
 public class SceneDao {
@@ -44,12 +46,28 @@ public class SceneDao {
         return 1;
     }
     
+    public List<Scene> getNextSceneList(int stNum, int parentScNum) {
+    	int nextParentScNum = parentScNum + 1;
+    	String sql = "SELECT * FROM SCENE WHERE ST_NUM = ? AND PARENT_SC_NUM = ? ORDER BY SC_LEVEL ASC";
+        List<Scene> scenes = jdbcTemplate.query(sql, new Object[]{stNum, parentScNum}, new SceneRowMapper());
+        return scenes;
+    }
+    
     public Scene getFirstScene(int stNum) {
         String sql = "SELECT * FROM SCENE WHERE ST_NUM = ? AND PARENT_SC_NUM = 0 ORDER BY SC_LEVEL ASC";
         Scene scene = jdbcTemplate.queryForObject(sql, new Object[]{stNum}, new SceneRowMapper());
         
+        // 다음 씬 조회
+        List<Scene> scenes = getNextSceneList(scene.getScNum(), scene.getParentScNum());
+        
         // 선택지 추가
         List<Choice> choices = getChoicesForScene(scene.getScNum());
+        
+        // 현재 초이스 객체의 씬 번호와 씬 번호가 동일하면
+        for (Choice choice : choices) {
+        	
+		}
+        
         scene.setChoices(choices);
         
         return scene;
@@ -78,7 +96,11 @@ public class SceneDao {
     
     // 선택지 가져오는 메서드 추가
     private List<Choice> getChoicesForScene(int scNum) {
-        String sql = "SELECT * FROM CHOICE WHERE SC_NUM = ?";
+        // 씬에서 초이스 가져올 때 순서 뒤집힘 처리
+        // AS-IS) 1-2, 1-1
+        // TO-BE) 1-1, 1-2
+    	// ORDER BY 처리
+        String sql = "SELECT * FROM CHOICE WHERE SC_NUM = ? ORDER BY CHOICE_NUM ASC";
         return jdbcTemplate.query(sql, new Object[]{scNum}, new ChoiceRowMapper());
     }
 
@@ -87,4 +109,9 @@ public class SceneDao {
         String sql = "DELETE FROM SCENE WHERE ST_NUM = ?";
         return jdbcTemplate.update(sql, stNum);
     }
+
+	public List<Scene> getSceneByStNum(Integer stNum) {
+		 String sql = "SELECT * FROM SCENE WHERE ST_NUM = ?";
+	     return jdbcTemplate.query(sql, new Object[]{stNum}, new SceneRowMapper());
+	}
 }

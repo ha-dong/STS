@@ -199,6 +199,7 @@ public class StoryService {
                 scene.setStNum(stNum);
                 scene.setScNum(sceneNum);
                 scene.setScLevel(1);
+                scene.setScIllus(allParams.get("sceneImageFileName_" + sceneNumStr));
                 scene.setScText(allParams.get(key));
 
                 // 부모 장면 번호 설정
