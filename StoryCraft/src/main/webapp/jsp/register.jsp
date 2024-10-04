@@ -14,7 +14,7 @@
     <!-- 로고를 오른쪽 위로 이동 -->
     <div class="logo-container">
         <a href="main">
-            <img src="/StoryCraft/resources/img/logo.png" alt="로고" class="small-logo">
+            <img src="/StoryCraft/resources/img/logo.png" alt="로고" class="logo">
         </a>
     </div>
     

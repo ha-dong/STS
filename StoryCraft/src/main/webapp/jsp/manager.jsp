@@ -22,7 +22,7 @@
         </div>
         <nav>
 			<ul>
-				<li><a href="#">스토리 관리</a></li>
+				<li><a href="${pageContext.request.contextPath}/admin/stories">스토리 관리</a></li>
 				<li><a href="${pageContext.request.contextPath}/adminUser">유저관리</a></li>
 				<li><a href="${pageContext.request.contextPath}/notice">공지관리</a></li>
 				<li><a href="${pageContext.request.contextPath}/adminInquiryList">문의관리</a></li>
