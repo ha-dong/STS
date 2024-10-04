@@ -27,16 +27,13 @@ body {
     position: relative; /* 로고 위치 조정을 위해 상대 위치 설정 */
 }
 
-/* 로고 스타일을 왼쪽 위로 이동 */
-.logo-container {
-    position: absolute;
-    top: 20px;
-    left: 20px; /* 로고를 왼쪽으로 이동 */
-}
-
-.logo-container img {
-    width: 40px; /* 로고 크기 조정 */
-    height: auto;
+.logo {
+    height: 100px;
+    cursor: pointer;
+    margin-left: 40px;
+    position: absolute; /* 절대 위치 지정 */
+    top: 20px;          /* 상단에서 20px 떨어짐 */
+    left: -20px;            /* 왼쪽 끝에 위치 */
 }
 
 .container {
@@ -49,10 +46,13 @@ body {
   animation: fadeIn 1s ease-out;
 }
 
+/* 제목 */
 h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #ffffff;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #f5f5f5; /* 더 진한 색상 */
+  font-size: 24px;
+  font-weight: bold;
 }
 
 /* 인풋 필드 스타일 */
@@ -67,18 +67,29 @@ h2 {
     color: #777;
 }
 
+/* 인풋 필드 스타일 */
 .form-control {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    transition: border-color 0.3s;
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 20px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+  color: #ffffff; /* 글자 색상을 흰색으로 변경 */
+  background-color: rgba(255, 255, 255, 0.1); /* 인풋 필드 배경 투명도 */
 }
 
 .form-control:focus {
-    border-color: #6de2f7;
-    outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+  outline: none;
+}
+
+.form-control::placeholder {
+    color: #cccccc; /* 밝은 회색 placeholder */
+    opacity: 1;
 }
 
 /* 버튼 스타일 */
@@ -88,7 +99,7 @@ h2 {
     padding: 12px;
     background-color: #400080;
     color: white;
-    font-size: 18px;
+    font-size: 14px;
     border: none;
     border-radius: 5px;
     cursor: pointer;

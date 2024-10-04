@@ -1,85 +1,148 @@
-/* 전체적인 레이아웃을 위한 기본 스타일 */
-body {
-    font-family: Arial, sans-serif;
+/* storyList.css */
+
+/* 전역 box-sizing 설정 */
+*, *::before, *::after {
+    box-sizing: border-box;
 }
 
-.container {
-    width: 90%;
-    margin: 0 auto;
+/* 기본 스타일 설정 */
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #121212;  /* 배경을 검은색으로 설정 */
+    color: #e0e0e0;  /* 기본 텍스트 색상은 밝은 회색 */
+    background: url('/StoryCraft/resources/img/background.jpg') no-repeat center center fixed;
 }
 
 /* 헤더 스타일 */
 .header {
-    display: flex;
-    justify-content: space-between; /* 로고는 왼쪽, 로그인 박스는 오른쪽 */
-    align-items: center;
-    padding: 10px 20px;
     width: 100%;
+    display: flex;
+    align-items: center; /* 수정: 아이템들을 수직 중앙 정렬 */
+    justify-content: flex-end;
+    padding: 20px;
+    top: 0;
+    right: 0;
 }
 
 .logo {
-    height: 50px; /* 로고 크기 조정 */
+    height: 100px;
     cursor: pointer;
-    margin-left: 0;
+    margin-right: auto;
 }
 
-/* 로그인 및 로그아웃 박스 */
-.login-box {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    flex-grow: 1; /* 빈 공간을 차지해서 오른쪽 끝으로 밀어냄 */
-    margin-right: 130px; /* 오른쪽 끝으로부터 약간의 여백 추가 */
-}
-
-.login-box span {
-    margin-right: 3px; /* 사용자 이름과 로그아웃 버튼 간격 */
-}
-
-.login-button {
-    padding: 5px 10px;
-    margin-left: 10px;
-    border: 1px solid #333;
-    background-color: white;
-    cursor: pointer;
+.header button {
+    padding: 15px 25px;
+    margin: 10px;
+    border: none;
     border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.7);
+    color: #333;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    transition: background-color 0.3s;
 }
 
-.login-button:hover {
-    background-color: #f0f0f0;
+.header button:hover {
+    background-color: rgba(255, 255, 255, 255);
 }
 
-/* 스토리 목록 스타일 */
-.story-list {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 가로 4개 배치 */
-    gap: 20px; /* 스토리 간격 */
-    justify-items: center; /* 그리드 내 아이템을 중앙에 배치 */
+/* 컨테이너 스타일 */
+.container {
+    width: 90%;
+    max-width: 1200px; /* 최대 너비 조정 */
+    margin: 0 auto;  /* 화면 가운데 정렬 */
+    padding: 30px;
+    background-color: rgba(0, 0, 0, 0.5); /* 더 낮은 투명도 */
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7); /* 어두운 그림자 */
 }
+
+/* 제목 스타일 */
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #ffffff; /* 밝은 텍스트 */
+    font-size: 36px; /* 폰트 크기 증가 */
+    font-weight: 700; /* 폰트 두께 증가 */
+}
+
+/* 드롭다운 메뉴 스타일링 */
+.row.mb-3 {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.row.mb-3 .col-md-6 {
+    width: 48%;
+}
+
+.row.mb-3 select {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 1px solid #444444; /* 테두리 색상 변경 */
+    border-radius: 5px;
+    background-color: #3a3a3a; /* 배경색 어둡게 설정 */
+    color: #f0f0f0; /* 텍스트 색상 밝게 설정 */
+    transition: border-color 0.3s, box-shadow 0.3s;
+    min-width: 200px; /* 최소 너비 증가 */
+    /* overflow: hidden; 제거 */
+    /* text-overflow: ellipsis; 제거 */
+    white-space: normal; /* 텍스트가 줄바꿈 되도록 설정 */
+    /* 필요 시 font-size 또는 padding 조정 */
+    /* 예시: font-size 줄이기 */
+    /* font-size: 14px; */
+    height: 50px; /* 원하는 높이로 설정 */
+}
+
+.row.mb-3 select option {
+    white-space: nowrap; /* 옵션 텍스트가 줄바꿈 되지 않도록 설정 */
+}
+
+/* 드롭다운 메뉴 호버 및 포커스 스타일링 유지 */
+.row.mb-3 select:focus {
+    border-color: #1e90ff; /* 포커스 시 테두리 색상 변경 */
+    box-shadow: 0 0 10px rgba(30, 144, 255, 0.5); /* 포커스 시 그림자 추가 */
+    outline: none;
+}
+
 
 .story-item {
     width: 100%; /* 카드의 가로 너비를 부모 그리드 셀에 맞춤 */
     max-width: 300px; /* 카드의 최대 너비 */
-    border: 1px solid #ccc;
+    background-color: #3a3a3a; /* 카드 배경색을 어둡게 설정 */
+    border: 1px solid #555555; /* 테두리 색상 변경 */
     border-radius: 10px;
     overflow: hidden;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* 어두운 그림자 */
+    transition: transform 0.3s, box-shadow 0.3s;
     cursor: pointer;
+}
+
+.story-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7); /* 호버 시 그림자 강화 */
 }
 
 .story-item img {
     width: 100%;
     height: auto;
-    aspect-ratio: 1 / 1; /* 정사각형 비율 유지 */
+    aspect-ratio: 16 / 9; /* 비율 유지 */
     object-fit: cover; /* 이미지가 요소 크기에 맞게 잘리지 않도록 */
     display: block;
+    border-bottom: 2px solid #1e90ff; /* 이미지 하단에 라인 추가 */
 }
-
 
 /* 제목과 버튼 스타일 */
 .story-item .card-body {
     padding: 15px;
+}
+
+.card-title {
+   color: #2c2c2c;
 }
 
 .story-item .card-title {
@@ -116,20 +179,235 @@ h1 {
 
 /* 모달 스타일 */
 .modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #2c2c2c; /* 모달 배경색 어둡게 설정 */
+    color: #f0f0f0; /* 모달 텍스트 색상 밝게 설정 */
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7); /* 어두운 그림자 */
 }
 
 .modal-header, .modal-footer {
+    border: none; /* 기본 테두리 제거 */
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.modal-header .close {
+    color: #f0f0f0; /* 닫기 버튼 색상 변경 */
+    opacity: 1;
 }
 
 .modal-body img {
     max-width: 100%;
     height: auto;
     margin-bottom: 20px;
+    border-radius: 5px;
+    border: 2px solid #1e90ff; /* 이미지 테두리 추가 */
+}
+
+.modal-body p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.modal-footer button {
+    margin-right: 10px;
+    padding: 10px 15px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: 600; /* 폰트 두께 증가 */
+}
+
+.modal-footer .edit-btn {
+    background-color: #28a745; /* 초록색 */
+    color: #ffffff;
+}
+
+.modal-footer .edit-btn:hover {
+    background-color: #218838;
+}
+
+.modal-footer .delete-btn {
+    background-color: #dc3545; /* 빨간색 */
+    color: #ffffff;
+}
+
+.modal-footer .delete-btn:hover {
+    background-color: #c82333;
+}
+
+.modal-footer .report-btn {
+    background-color: #ffc107; /* 노란색 */
+    color: #212529;
+}
+
+.modal-footer .report-btn:hover {
+    background-color: #e0a800;
+}
+
+.modal-footer .recommend-btn {
+    background-color: #17a2b8; /* 청록색 */
+    color: #ffffff;
+}
+
+.modal-footer .recommend-btn:hover {
+    background-color: #138496;
+}
+
+.modal-footer .play-btn {
+    background-color: #007bff; /* 파란색 */
+    color: #ffffff;
+}
+
+.modal-footer .play-btn:hover {
+    background-color: #0069d9;
+}
+
+/* 추가 스타일 */
+h1 {
+    text-align: center;
+    margin-top: 30px;
+    color: #ffffff; /* 밝은 텍스트 */
+    font-size: 36px; /* 폰트 크기 증가 */
+    font-weight: 700; /* 폰트 두께 증가 */
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+    .story-list {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .story-item {
+        max-width: 280px;
+    }
+
+    .story-item .card-title {
+        font-size: 20px;
+    }
+
+    .story-item .card-text {
+        font-size: 14px;
+    }
+
+    .story-item button {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
+    .modal-footer button {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 992px) {
+    .container {
+        width: 95%;
+        max-width: 1000px;
+        padding: 20px;
+    }
+
+    .story-list {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+    }
+
+    .story-item {
+        max-width: 250px;
+    }
+
+    .story-item .card-title {
+        font-size: 18px;
+    }
+
+    .story-item .card-text {
+        font-size: 13px;
+    }
+
+    .story-item button {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+
+    .modal-footer button {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        padding: 15px 20px;
+    }
+
+    .container {
+        margin-top: 80px; /* 고정 헤더와의 간격 조정 */
+    }
+
+    .story-list {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 10px;
+    }
+
+    .story-item {
+        max-width: 220px;
+    }
+
+    .story-item .card-title {
+        font-size: 16px;
+    }
+
+    .story-item .card-text {
+        font-size: 12px;
+    }
+
+    .story-item button {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .modal-footer button {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 576px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .login-box {
+        margin-right: 0;
+        margin-top: 10px;
+    }
+
+    .story-list {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+    }
+
+    .story-item {
+        max-width: 100%;
+    }
+
+    .story-item img {
+        aspect-ratio: 4 / 3; /* 비율 조정 */
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    .login-button {
+        padding: 8px 14px;
+        font-size: 14px;
+    }
 }
