@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // 카카오 로그인 함수
     function kakaoLogin() {
         Kakao.Auth.authorize({
-            redirectUri: 'https://0b98-123-142-55-115.ngrok-free.app/StoryCraft/callback'  // 새로운 ngrok URL로 수정
+            redirectUri: 'https://6cb4-123-142-55-115.ngrok-free.app/StoryCraft/callback'  // 새로운 ngrok URL로 수정
         });
     }
 

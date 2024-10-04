@@ -1,3 +1,5 @@
+//register.js
+
 document.addEventListener('DOMContentLoaded', function () {
     const registerForm = document.getElementById('register-form');
     const checkButton = document.querySelector('.btn-check-userid');

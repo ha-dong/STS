@@ -503,7 +503,7 @@ function toggleMute(sliderId) {
 // 카카오 로그인 함수
 function kakaoLogin() {
     Kakao.Auth.authorize({
-        redirectUri: 'https://68ea-123-142-55-115.ngrok-free.app/StoryCraft/callback'  // 실제 배포 시점에 맞게 수정
+        redirectUri: 'https://6cb4-123-142-55-115.ngrok-free.app/StoryCraft/callback'  // 실제 배포 시점에 맞게 수정
     });
 }
 
@@ -621,12 +621,14 @@ function enableUserStoryButton() {
 // 사용자 스토리 모달 열기 함수
 function openUserStoryModal() {
     const modal = document.createElement('div');
-    modal.className = 'modal';
+    modal.className = 'user-story-modal';  // 고유한 클래스명 추가
     modal.innerHTML = `
-        <div class="modal-content">
+        <div class="user-story-modal-overlay"></div>
+        <div class="user-story-modal-content animated fadeIn">
             <span class="close" onclick="closeModal(this)">&times;</span>
-            <button id="createStoryButton">스토리 제작</button>
-            <button id="storyListButton">스토리 목록</button>
+            <h2 class="modal-title">사용자 스토리</h2>
+            <button id="createStoryButton" class="button-primary">스토리 제작</button>
+            <button id="storyListButton" class="button-secondary">스토리 목록</button>
         </div>
     `;
     document.body.appendChild(modal);
@@ -651,11 +653,13 @@ function openUserStoryModal() {
 
 // 모달 닫기 함수
 function closeModal(element) {
-    const modal = element.closest('.modal');
+    const modal = element.closest('.user-story-modal');  // 고유한 클래스명으로 검색
     if (modal) {
-        modal.remove();
+        modal.classList.add('fadeOut');
+        setTimeout(() => modal.remove(), 500); // 부드럽게 닫히도록 약간의 지연을 줌
     }
 }
+
 
 // 설정 모달 열기 함수
 function openSettingsModal() {

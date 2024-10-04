@@ -1,3 +1,16 @@
+// 클릭 시 사운드 재생
+function playClickSound() {
+    const clickSound = document.getElementById("clickSound");
+    if (clickSound) {
+        clickSound.play();
+    }
+}
+
+// 페이지 로드 시 전체 클릭 이벤트에 사운드 연결
+window.onload = function() {
+    document.addEventListener("click", playClickSound);
+    addSkipButton(); // Skip 버튼 추가
+};
 const storyData = {
     start: {
         text: "강준호 형사는 오랜 세월 동안 쌓아온 경험과 예리한 직감을 바탕으로, 이번에 접수한 살인사건 현장으로 신속하게 발걸음을 옮긴다. 사건은 늦은 저녁, 조용하고 평화로운 주택가의 한 아파트에서 발생했으며, 피해자는 동네에서 평범하게 알려진 신뢰받는 회사원으로, 동료들과 이웃들 사이에서도 호감을 받고 있었다. 방 안은 깔끔하게 정돈되어 있었지만, 한 곳에서는 미세한 어긋남이 눈에 띄었다. 형사는 이 미세한 흔적들이 사건의 실마리를 제공할 것이라 확신하며, 범인이 철저하게 계획된 범죄를 저질렀음을 직감한다. 주변을 둘러싼 분위기는 긴장감으로 가득 차 있었고, 형사는 이 사건이 단순한 우발적 사고가 아님을 확신한다. 형사는 현장의 모든 요소를 면밀히 분석하며, 작은 디테일 하나하나가 사건 해결의 열쇠가 될 것임을 알고 있었다. 그는 사건의 배경과 피해자의 삶을 깊이 이해하기 위해 추가적인 조사를 계획한다.",
@@ -556,14 +569,34 @@ function displayStory(part) {
     let textIndex = 0;
     const textSpeed = 30; // 텍스트 타이핑 속도를 조정 (밀리초 단위)
     const text = story.text;
+    
+    let isSkipping = false; // 스킵 여부를 확인하는 변수
+    
+    // 클릭 시 전체 텍스트 표시
+    function skipTyping() {
+        isSkipping = true;
+    }
+
+    // 클릭 이벤트 리스너 추가
+    storyContainer.addEventListener('click', skipTyping);
 
     // 타이핑 효과 함수
     function typeWriter() {
-        if (textIndex < text.length) {
+        if (isSkipping) {
+            // 남은 텍스트를 한꺼번에 출력
+            storyText.innerHTML = text;
+            // 클릭 이벤트 리스너 제거
+            storyContainer.removeEventListener('click', skipTyping);
+            // 선택지 표시
+            displayChoices(story);
+        } else if (textIndex < text.length) {
             storyText.innerHTML += text.charAt(textIndex);
             textIndex++;
             setTimeout(typeWriter, textSpeed);
         } else {
+            // 클릭 이벤트 리스너 제거
+            storyContainer.removeEventListener('click', skipTyping);
+            // 선택지 표시
             displayChoices(story);
         }
     }
@@ -638,11 +671,6 @@ function showEnding(story) {
         });
     };
 }
-
-// 페이지 로드 시 Skip 버튼 추가
-window.onload = function() {
-    addSkipButton(); // Skip 버튼 추가
-};
 
 // Skip 버튼을 누르면 메인 스토리 스킵 처리
 function addSkipButton() {

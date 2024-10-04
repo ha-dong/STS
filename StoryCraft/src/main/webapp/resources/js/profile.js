@@ -51,10 +51,21 @@ window.onload = function () {
             if (profileImageElement) {
                 if (data.profileImage) {
                     profileImageElement.src = `${contextPath}${data.profileImage}?t=${new Date().getTime()}`;
+                    profileImageElement.style.display = 'inline-block';
                 } else {
                     profileImageElement.src = `${contextPath}/resources/img/default_profile.png`;
+                    profileImageElement.style.display = 'inline-block';
                 }
-                profileImageElement.style.display = 'inline-block';
+            }
+            // 프로필 이미지 placeholder 업데이트
+            if (profileImagePlaceholder) {
+                if (data.profileImage) {
+                    profileImagePlaceholder.style.backgroundImage = `url(${contextPath}${data.profileImage}?t=${new Date().getTime()})`;
+                    profileImagePlaceholder.classList.add('image-uploaded');
+                } else {
+                    profileImagePlaceholder.style.backgroundImage = `url(${contextPath}/resources/img/default_profile.png)`;
+                    profileImagePlaceholder.classList.remove('image-uploaded');
+                }
             }
             // 기타 처리...
             if (logoutButton) {
@@ -210,6 +221,7 @@ function updateProfileImage(url) {
     const profileImageElement = document.getElementById('profileImage');
     if (profileImageElement) {
         profileImageElement.src = `${url}?t=${new Date().getTime()}`;
+        profileImageElement.style.display = 'inline-block';
     }
 
     const profileImagePlaceholder = document.getElementById('profileImagePlaceholder');
@@ -217,12 +229,7 @@ function updateProfileImage(url) {
         profileImagePlaceholder.style.backgroundImage = `url(${url})`;
         profileImagePlaceholder.style.backgroundSize = 'cover';
         profileImagePlaceholder.style.backgroundPosition = 'center';
-        profileImagePlaceholder.classList.add('image-uploaded');
-
-        const span = profileImagePlaceholder.querySelector('span');
-        if (span) {
-            span.style.display = 'none';
-        }
+        profileImagePlaceholder.classList.add('image-uploaded'); // 클래스 한 번만 추가
     }
 }
 
@@ -264,7 +271,21 @@ function handleLoggedOutState() {
         profileImageElement.src = `${contextPath}/resources/img/default_profile.png`;
         profileImageElement.style.display = 'none';
     }
+
+    const profileImagePlaceholder = document.getElementById('profileImagePlaceholder');
+    if (profileImagePlaceholder) {
+        profileImagePlaceholder.style.backgroundImage = `url(${contextPath}/resources/img/default_profile.png)`;
+        profileImagePlaceholder.classList.remove('image-uploaded');
+    }
 }
+
+// 카카오 로그인 함수
+   function kakaoLogin() {
+       Kakao.Auth.authorize({
+            redirectUri: 'https://6cb4-123-142-55-115.ngrok-free.app/StoryCraft/callback'  // 새로운 ngrok URL로 수정
+      });
+  }
+
 
 // 추가적인 이벤트 리스너 설정 함수
 function addEventListeners() {
@@ -287,7 +308,7 @@ function addEventListeners() {
     };
 
     // 설정 모달 내부 닫기 버튼 클릭 시 모달 닫기
-    const closeSettingsButton = document.getElementById('closeSettingsButton');
+    const closeSettingsButton = document.querySelector('#settingsModal .close');
     if (closeSettingsButton) {
         closeSettingsButton.addEventListener('click', closeSettingsModal);
     }
@@ -296,6 +317,12 @@ function addEventListeners() {
     const closeDeleteAccountButton = document.querySelector('#deleteAccountModal .close');
     if (closeDeleteAccountButton) {
         closeDeleteAccountButton.addEventListener('click', closeDeleteAccountModal);
+    }
+
+    // 설정 아이콘 클릭 시 설정 모달 열기
+    const settingsIcon = document.getElementById('settingsIcon');
+    if (settingsIcon) {
+        settingsIcon.addEventListener('click', showSettingsModal);
     }
 }
 

@@ -1,10 +1,11 @@
+// storyCreate.js
+
 let sceneCounter = 1; // 장면 번호를 관리하는 변수
 
 const choiceNames = {};     // 선택지 이름을 저장하는 객체
 const choiceContents = {};  // 선택지 내용을 저장하는 객체
 const choiceMoney = {};     // 선택지 돈 변화량을 저장하는 객체
 const choiceHP = {};        // 선택지 체력 변화량을 저장하는 객체
-const nextSceneNums = {};   // 선택지의 다음 장면 번호를 저장하는 객체
 
 // 이미지 미리보기 함수
 function previewImage(input, previewId) {
@@ -44,15 +45,13 @@ function addChoice(sceneNum) {
         
         <label>선택지 내용:</label>
         <textarea name="choiceContent_scene_${sceneNum}_choice_${choiceNum}" required></textarea>
-        
-        
+
         <label>돈 변화량:</label>
         <input type="number" name="choiceMoney_scene_${sceneNum}_choice_${choiceNum}" value="0">
 
         <label>체력 변화량:</label>
         <input type="number" name="choiceHP_scene_${sceneNum}_choice_${choiceNum}" value="0">
-		
-		
+
         <!-- 선택지 저장 버튼 -->
         <button type="button" onclick="saveChoice(${sceneNum}, ${choiceNum})">선택지 저장</button>
 
@@ -96,9 +95,6 @@ function saveChoice(sceneNum, choiceNum) {
     choiceMoney[choiceKey] = money;
     choiceHP[choiceKey] = hp;
 
-    // 다음 장면 번호는 아직 생성되지 않았으므로 임시로 -1로 설정
-    nextSceneNums[choiceKey] = nextSceneNums[choiceKey] || -1;
-
     alert('선택지가 저장되었습니다.');
 }
 
@@ -117,9 +113,14 @@ function createScene(parentSceneNum, choiceNum) {
     newSceneDiv.setAttribute('data-scene-num', sceneCounter);
     newSceneDiv.setAttribute('data-parent-scene-num', parentSceneNum);
 
-    // 부모 장면 번호를 폼 데이터에 포함하기 위한 hidden input 추가
-    newSceneDiv.innerHTML = `
-        <input type="hidden" name="parentSceneNum_${sceneCounter}" value="${parentSceneNum}">
+    // 부모 장면 번호를 폼 데이터에 포함하기 위해 hidden input 추가
+    const parentSceneInput = document.createElement('input');
+    parentSceneInput.type = 'hidden';
+    parentSceneInput.name = `parentSceneNum_${sceneCounter}`;
+    parentSceneInput.value = parentSceneNum;
+    newSceneDiv.appendChild(parentSceneInput);
+
+    newSceneDiv.innerHTML += `
         <h2>장면 ${sceneCounter} (이전 선택지: ${choiceName})</h2>
         <label for="sceneText_${sceneCounter}">스토리 내용:</label>
         <textarea id="sceneText_${sceneCounter}" name="sceneText_${sceneCounter}" required></textarea>
@@ -137,11 +138,7 @@ function createScene(parentSceneNum, choiceNum) {
         </div>
     `;
 
-    // 장면을 폼 요소 내에 추가
     sceneEditor.appendChild(newSceneDiv);
-
-    // 선택지와 연결된 다음 장면 번호를 현재 장면 번호로 설정
-    nextSceneNums[choiceKey] = sceneCounter;
 }
 
 // 저장 버튼 클릭 시 호출되는 함수
@@ -158,12 +155,11 @@ function resetForm() {
         const sceneEditor = document.getElementById('sceneEditor');
         sceneEditor.innerHTML = '';
         sceneCounter = 1;
-        // 선택지 데이터 초기화
+        // 선택지 이름 및 내용 초기화
         Object.keys(choiceNames).forEach(key => delete choiceNames[key]);
         Object.keys(choiceContents).forEach(key => delete choiceContents[key]);
         Object.keys(choiceMoney).forEach(key => delete choiceMoney[key]);
         Object.keys(choiceHP).forEach(key => delete choiceHP[key]);
-        Object.keys(nextSceneNums).forEach(key => delete nextSceneNums[key]);
         // 루트 장면 다시 추가
         sceneEditor.innerHTML = `
             <!-- 루트 장면 -->
@@ -175,9 +171,6 @@ function resetForm() {
                 <label for="sceneImage_1">삽화 이미지:</label>
                 <input type="file" id="sceneImage_1" name="sceneImage_1" accept="image/*" onchange="previewImage(this, 'sceneImagePreview_1')">
                 <img id="sceneImagePreview_1" src="#" alt="이미지 미리보기" style="display:none; width:200px; height:200px; object-fit:cover;">
-
-                <!-- 부모 장면 번호를 폼 데이터에 포함하기 위한 hidden input 추가 -->
-                <input type="hidden" name="parentSceneNum_1" value="0">
 
                 <!-- 선택지 추가 버튼 -->
                 <button type="button" class="add-choice-btn" onclick="addChoice(1)">선택지 추가</button>
@@ -202,20 +195,14 @@ function submitStory(isEdit) {
         for (const key in choiceNames) {
             formData.append(`choiceName_${key}`, choiceNames[key]);
             formData.append(`choiceContent_${key}`, choiceContents[key]);
-            
-            <!-- -------------------------------------------------------------------------------------------------------- -->
-            // 나중에 주석 풀어야 함
             formData.append(`choiceMoney_${key}`, choiceMoney[key] || '0');
             formData.append(`choiceHP_${key}`, choiceHP[key] || '0');
-            
-            formData.append(`nextSceneNum_${key}`, nextSceneNums[key] || '-1'); // nextSceneNum 기본값을 '-1'로 설정
         }
 
-        const url = isEdit ? `${contextPath}story/update` : `${contextPath}story/save`;
-
-        fetch(url, {
+        fetch(`${contextPath}story/save`, {
             method: 'POST',
             body: formData
+            // credentials 옵션 제거 또는 그대로 둬도 무방
         })
         .then(response => {
             if (!response.ok) {
@@ -235,5 +222,5 @@ function submitStory(isEdit) {
             console.error('스토리 제출 중 오류 발생:', error);
             alert(`스토리 ${isEdit ? '수정' : '제출'} 중 오류가 발생했습니다. (${error.message})`);
         });
-    }
+	}
 }

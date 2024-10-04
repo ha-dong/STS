@@ -1,3 +1,5 @@
+//find.js
+
 document.addEventListener('DOMContentLoaded', function () {
 // 아이디 찾기 폼 처리
     document.getElementById('find-id-form').addEventListener('submit', async function (e) {
