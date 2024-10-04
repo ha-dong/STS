@@ -21,11 +21,10 @@ public class SceneDao {
     @Autowired
     private ChoiceDao choiceDao;
 
-    // 장면 저장
     public int insertScene(Scene scene) {
         String sql = "INSERT INTO SCENE (SC_NUM, ST_NUM, PARENT_SC_NUM, SC_LEVEL, SC_TEXT, SC_ILLUS, MONEY, HP) " +
                      "VALUES (SEQ_SCENE.NEXTVAL, ?, ?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql,
+        return jdbcTemplate.update(sql,
                 scene.getStNum(),
                 scene.getParentScNum(),
                 scene.getScLevel(),
@@ -34,16 +33,6 @@ public class SceneDao {
                 scene.getMoney(),
                 scene.getHp()
         );
-
-        // 방금 삽입된 SC_NUM 가져오기
-        int scNum = jdbcTemplate.queryForObject("SELECT SEQ_SCENE.CURRVAL FROM DUAL", Integer.class);
-
-        // 선택지 저장
-        for (Choice choice : scene.getChoices()) {
-            choiceDao.insertChoice(choice, scNum, scene.getStNum(), scene.getParentScNum(), scene.getScLevel());
-        }
-
-        return 1;
     }
     
     public List<Scene> getNextSceneList(int stNum, int parentScNum) {
@@ -54,8 +43,8 @@ public class SceneDao {
     }
     
     public Scene getFirstScene(int stNum) {
-        String sql = "SELECT * FROM SCENE WHERE ST_NUM = ? AND PARENT_SC_NUM = 0 ORDER BY SC_LEVEL ASC";
-        Scene scene = jdbcTemplate.queryForObject(sql, new Object[]{stNum}, new SceneRowMapper());
+    	 String sql = "SELECT * FROM (SELECT * FROM SCENE WHERE ST_NUM = ? AND PARENT_SC_NUM = 0 ORDER BY SC_LEVEL ASC) WHERE ROWNUM = 1";
+    	    Scene scene = jdbcTemplate.queryForObject(sql, new Object[]{stNum}, new SceneRowMapper());
         
         // 다음 씬 조회
         List<Scene> scenes = getNextSceneList(scene.getScNum(), scene.getParentScNum());
@@ -114,4 +103,10 @@ public class SceneDao {
 		 String sql = "SELECT * FROM SCENE WHERE ST_NUM = ?";
 	     return jdbcTemplate.query(sql, new Object[]{stNum}, new SceneRowMapper());
 	}
+	
+	public int getLastInsertedScNum() {
+	    String sql = "SELECT SEQ_SCENE.CURRVAL FROM DUAL";
+	    return jdbcTemplate.queryForObject(sql, Integer.class);
+	}
+
 }

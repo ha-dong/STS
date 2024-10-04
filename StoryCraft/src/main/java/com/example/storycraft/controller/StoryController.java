@@ -35,39 +35,39 @@ public class StoryController {
 
     @Autowired
     private StoryService storyService;
-    
+
     @Autowired
     private SceneService sceneService;
-    
+
     @Autowired
     private ChoiceService choiceService;
-    
-//     스토리 제작 페이지 이동 (추가: editMode 파라미터)
+
+    // 스토리 제작 페이지 이동 (추가: editMode 파라미터)
     @GetMapping({"/create", "/edit"})
     public String showStoryCreatePage(@RequestParam(value = "stNum", required = false) Integer stNum, Model model) {
-    	if (stNum != null) {
-    		// 수정일 때
+        if (stNum != null) {
+            // 수정일 때
             // 스토리 조회
-    		Story story = storyService.getStoryById(stNum);
-            
-    		// 씬 조회
+            Story story = storyService.getStoryById(stNum);
+
+            // 씬 조회
             List<Scene> scenes = sceneService.getSceneByStNum(stNum);
-            
+
             // 초이스 조회
-            for (Scene scene : scenes) {				
-            	List<Choice> choices = choiceService.getChoicesByScNum(scene.getScNum());
-            	scene.setChoices(choices);
-			}
-            
+            for (Scene scene : scenes) {
+                List<Choice> choices = choiceService.getChoicesByScNum(scene.getScNum());
+                scene.setChoices(choices);
+            }
+
             // 스토리객체에 씬, 초이스 세팅
             story.setScenes(scenes);
-            
+
             if (story != null) {
                 model.addAttribute("story", story);
                 model.addAttribute("editMode", true);
             }
         }
-        // Assuming genreList is fetched from service or defined elsewhere
+        // 장르 목록 추가
         model.addAttribute("genreList", storyService.getGenreList());
         return "storyCreate";
     }
@@ -112,22 +112,7 @@ public class StoryController {
         Map<String, Object> response = new HashMap<>();
 
         // 로그인된 사용자 ID 가져오기
-        String userId = (String) session.getAttribute("user"); // "userId" -> "user"
-        if (userId == null) {
-            // 쿠키에서 userId 가져오기 (선택 사항)
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if ("U_ID".equals(cookie.getName())) {
-                        userId = cookie.getValue();
-                        break;
-                    }
-                }
-            }
-            if (userId == null) {
-                userId = "subo"; // 쿠키에도 없으면 "subo"로 설정
-            }
-        }
+        String userId = getUserIdFromSessionOrCookie(session, request);
 
         try {
             // 스토리 기본 정보 추출
@@ -174,7 +159,6 @@ public class StoryController {
                 }
             }
 
-
             // 삽화 이미지 파일 저장 처리
             for (String key : files.keySet()) {
                 if (key.startsWith("sceneImage_")) {
@@ -206,7 +190,6 @@ public class StoryController {
                     }
                 }
             }
-
 
             boolean isSaved;
             if (stNum == null) {
@@ -332,6 +315,22 @@ public class StoryController {
         return userId;
     }
 
+    @PostMapping("/incrementViewCount")
+    @ResponseBody
+    public Map<String, Object> incrementViewCount(@RequestParam("stNum") int stNum) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            storyService.incrementViewCount(stNum);
+            response.put("success", true);
+        } catch (Exception e) {
+            logger.error("조회수 증가 중 오류 발생", e);
+            response.put("success", false);
+            response.put("message", "조회수 증가 중 오류가 발생했습니다.");
+        }
+        return response;
+    }
+
+    
     // 신고 처리
     @PostMapping("/report")
     @ResponseBody
@@ -393,18 +392,19 @@ public class StoryController {
     @GetMapping("/play")
     public String playStory(@RequestParam("stNum") int stNum, Model model) {
         Scene firstScene = sceneService.getFirstSceneByStory(stNum);
+        List<Choice> choices = choiceService.getChoicesByScNum(firstScene.getScNum()); // 선택지 가져오기
         model.addAttribute("story", storyService.getStoryById(stNum));
         model.addAttribute("scene", firstScene);
+        model.addAttribute("choices", choices); // 선택지 추가
         return "storyPlay";
     }
-
 
     @PostMapping("/nextScene")
     @ResponseBody
     public Map<String, Object> getNextScene(@RequestBody Map<String, Integer> requestParams) {
         Map<String, Object> response = new HashMap<>();
         try {
-            int choiceNum = requestParams.get("scNum");
+            int choiceNum = requestParams.get("choiceNum");
 
             // 선택한 선택지의 NEXT_SC_NUM 가져오기
             Integer nextScNum = choiceService.getNextSceneNum(choiceNum);
