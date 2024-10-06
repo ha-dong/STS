@@ -26,10 +26,25 @@
 	<!-- 오디오 파일 추가 -->
 	<audio id="clickSound" src="${pageContext.request.contextPath}/resources/audio/Storyclick.mp3"></audio>
 	
+	<!-- 언어 선택 드롭다운 -->
+	<div class="language-selector">
+	    <label for="language-select">언어 선택:</label>
+	    <select id="language-select" onchange="changeLanguage(this.value)">
+	        <option value="ko" selected>한국어</option>
+	        <option value="en">English</option>
+	        <!-- 추가 언어는 여기서 선택 -->
+	    </select>
+	</div>
+	
+	<!-- TTS 버튼 추가 -->
+	<button class="tts-button" onclick="toggleTTS()">
+	    <i class="fas fa-volume-up"></i> 음성 읽기
+	</button>
+	
     <!-- 제목 및 시작 버튼 컨테이너 -->
     <div class="title-container" id="title-container">
-        <h1 id="story-title">완벽한 범죄</h1>
-        <p class="story-text">강준호 형사는 베테랑으로, 완벽하게 계획된 살인사건 현장에서 단서를 추적해 나간다. 처음엔 완벽해 보였던 범죄 속에서 그는 숨겨진 진실과 반전을 발견하게 된다.</p>
+        <h1 id="story-title"></h1>
+        <p class="story-text"></p>
         <button class="choice" onclick="startStory()">
             <i class="fas fa-play"></i> 시작하기
         </button>

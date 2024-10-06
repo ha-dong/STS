@@ -11,12 +11,12 @@
     <link rel="stylesheet" href="/StoryCraft/resources/css/find.css">
 </head>
 <body>
-    <!-- 로고를 오른쪽 위로 이동 -->
-   <div class="logo-container">
-      <a href="main"> <img src="/StoryCraft/resources/img/logo.png"
-         alt="로고" class="logo">
-      </a>
-   </div>
+    <!-- 로고를 왼쪽 위로 이동 -->
+    <div class="logo-container">
+        <a href="main">
+            <img src="/StoryCraft/resources/img/logo.png" alt="로고">
+        </a>
+    </div>
 
     <div class="container">
         <div class="form-container">

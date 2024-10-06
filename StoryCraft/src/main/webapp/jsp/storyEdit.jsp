@@ -6,7 +6,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>스토리 수정</title>
+    <title>스토리 제작</title>
     <link rel="stylesheet" href="<c:url value='/resources/css/storyCreate.css'/>">
     <script src="<c:url value='/resources/js/storyCreate.js'/>"></script>
     <!-- 컨텍스트 경로를 JavaScript 변수으로 설정 -->
@@ -26,7 +26,7 @@
     <!-- 헤더 부분 끝 -->
 
     <div class="container">
-        <h1>${editMode ? '스토리 수정' : '스토리 수정'}</h1>
+        <h1>${editMode ? '스토리 수정' : '스토리 제작'}</h1>
         
         <div class="login-box">
                 <c:choose>

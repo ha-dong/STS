@@ -14,7 +14,7 @@
 </head>
 <body>
     <div class="header">
-        <a href="${contextPath}/StoryCraft/main">
+    	<a href="${contextPath}/StoryCraft/main">
             <img src="${pageContext.request.contextPath}/resources/img/logo.png" alt="로고" class="logo" id="logo">
         </a>
     </div>
@@ -24,9 +24,7 @@
         <!-- 스토리 제목과 장면 이미지 -->
         <div id="storyDetails" class="story-item">
             <h2 id="storyTitle">${story.stTitle}</h2>
-            <c:if test="${not empty scene.scIllus}">
-                <img id="sceneImage" src="<c:url value='/uploads/${scene.scIllus}'/>" alt="장면 이미지" class="card-img-top">
-            </c:if>
+            <img id="sceneImage" src="<c:url value='/uploads/${scene.scIllus}'/>" alt="장면 이미지" class="card-img-top">
         </div>
 
         <!-- 장면 텍스트 -->
@@ -36,9 +34,9 @@
 
         <!-- 선택지 목록 -->
         <div id="choices" class="choice-buttons">
-            <c:forEach var="choice" items="${choices}">
-			    <button class="choice-btn" data-choice-num="${choice.choiceNum}">${choice.choiceContent}</button>
-			</c:forEach>
+            <c:forEach var="choice" items="${scene.choices}">
+                <button class="choice-btn" data-choice-num="${choice.choiceNum}">${choice.choiceName}</button>
+            </c:forEach>
         </div>
     </div>
 </body>
