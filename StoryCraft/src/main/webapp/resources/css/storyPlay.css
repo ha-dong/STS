@@ -1,7 +1,8 @@
 /* 전체적인 레이아웃을 위한 기본 스타일 */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #111; /* 배경을 조금 더 밝게 */
+    color: #f0f0f0; /* 텍스트 색상을 약간 밝게 */
 }
 
 .container {
@@ -20,7 +21,7 @@ body {
 }
 
 .logo {
-    height: 50px; /* 로고 크기를 줄이기 위한 값 조정 */
+    height: 70px; /* 로고 크기를 줄이기 위한 값 조정 */
     cursor: pointer;
     margin-left: 0;
 }
@@ -31,16 +32,18 @@ body {
     max-width: 600px;
     margin: 0 auto;
     text-align: center;
-    border: 1px solid #ccc;
+    border: 1px solid #444; /* 테두리를 약간 밝게 */
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #222; /* 아이템 배경색을 밝게 */
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1); /* 밝은 그림자 효과 */
     overflow: hidden;
 }
 
 .story-item h2 {
     font-size: 1.8em;
     margin: 20px 0;
-    color: #333;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 텍스트 그림자 추가 */
 }
 
 .story-item img {
@@ -54,7 +57,7 @@ body {
     margin: 20px auto;
     max-width: 600px;
     font-size: 1.2em;
-    color: #555;
+    color: #e0e0e0; /* 텍스트 색상을 약간 밝게 */
     line-height: 1.6;
     text-align: center;
 }
@@ -69,21 +72,22 @@ body {
 }
 
 .choice-buttons button {
-    background-color: #007bff;
-    color: white;
-    border: none;
+    background-color: #666; /* 버튼 색상을 더 밝게 변경 */
+    color: #f0f0f0; /* 버튼 텍스트 색상을 밝게 */
+    border: 1px solid #888; /* 버튼 테두리를 밝게 */
     padding: 15px;
     font-size: 1.1em;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.1s ease;
     width: 100%; /* 버튼이 그리드 셀을 채움 */
 }
 
 .choice-buttons button:hover {
-    background-color: #0056b3;
+    background-color: #777;
 }
 
 .choice-buttons button:active {
-    background-color: #003f7f;
+    background-color: #888;
+    transform: scale(0.98); /* 클릭 시 살짝 작아지는 효과 */
 }

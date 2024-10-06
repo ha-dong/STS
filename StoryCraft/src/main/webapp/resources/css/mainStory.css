@@ -1,15 +1,15 @@
-/* 기본 설정 */
+/* 湲곕낯 �꽕�젙 */
 body {
-    font-family: 'Noto Serif KR', serif; /* 고급진 세리프 폰트로 변경 */
+    font-family: 'Noto Serif KR', serif; /* 怨좉툒吏� �꽭由ы봽 �룿�듃濡� 蹂�寃� */
     margin: 0;
     padding: 0;
     height: 100vh;
-    overflow: hidden; /* 화면 넘침 방지 */
-    background-color: #121212; /* 전체 배경을 더욱 어두운 색으로 설정 */
-    color: #e0e0e0; /* 기본 텍스트 색상 */
+    overflow: hidden; /* �솕硫� �꽆移� 諛⑹� */
+    background-color: #121212; /* �쟾泥� 諛곌꼍�쓣 �뜑�슧 �뼱�몢�슫 �깋�쑝濡� �꽕�젙 */
+    color: #e0e0e0; /* 湲곕낯 �뀓�뒪�듃 �깋�긽 */
 }
 
-/* 제목 및 시작 버튼 컨테이너 */
+/* �젣紐� 諛� �떆�옉 踰꾪듉 而⑦뀒�씠�꼫 */
 .title-container {
     position: fixed;
     top: 50%;
@@ -17,12 +17,12 @@ body {
     transform: translate(-50%, -50%);
     text-align: center;
     z-index: 2;
-    color: #e0e0e0; /* 밝은 회색 텍스트 */
-    background: rgba(20, 20, 20, 0.85); /* 배경을 반투명하게 설정 */
+    color: #e0e0e0; /* 諛앹� �쉶�깋 �뀓�뒪�듃 */
+    background: rgba(20, 20, 20, 0.85); /* 諛곌꼍�쓣 諛섑닾紐낇븯寃� �꽕�젙 */
     padding: 40px;
     border-radius: 15px;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7); /* 고급진 그림자 효과 */
-    animation: fadeInOpacity 1.5s ease forwards; /* 수정된 애니메이션 */
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7); /* 怨좉툒吏� 洹몃┝�옄 �슚怨� */
+    animation: fadeInOpacity 1.5s ease forwards; /* �닔�젙�맂 �븷�땲硫붿씠�뀡 */
 }
 
 .title-description {
@@ -32,27 +32,77 @@ body {
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
-/* 스토리 컨테이너: 배경 이미지를 설정하여 화면에 꽉 차게 설정 */
+/* �뒪�넗由� 而⑦뀒�씠�꼫: 諛곌꼍 �씠誘몄�瑜� �꽕�젙�븯�뿬 �솕硫댁뿉 苑� 李④쾶 �꽕�젙 */
 .story-container {
-    position: fixed; /* 고정 위치로 설정 */
+    position: fixed; /* 怨좎젙 �쐞移섎줈 �꽕�젙 */
     top: 0;
     left: 0;
     width: 100%;
-    height: 100vh; /* 화면 전체 높이 */
-    background-size: cover; /* 배경 이미지가 화면을 꽉 채우도록 설정 */
-    background-position: center; /* 이미지 중앙 정렬 */
+    height: 100vh; /* �솕硫� �쟾泥� �넂�씠 */
+    background-size: cover; /* 諛곌꼍 �씠誘몄�媛� �솕硫댁쓣 苑� 梨꾩슦�룄濡� �꽕�젙 */
+    background-position: center; /* �씠誘몄� 以묒븰 �젙�젹 */
     background-repeat: no-repeat;
     display: flex;
-    flex-direction: column; /* 세로 방향으로 정렬 */
+    flex-direction: column; /* �꽭濡� 諛⑺뼢�쑝濡� �젙�젹 */
     justify-content: center;
     align-items: center;
     text-align: center;
-    transition: background-image 0.5s ease; /* 배경 이미지 전환 애니메이션 */
-    filter: brightness(0.6); /* 배경 이미지를 더욱 어둡게 조정하여 텍스트 가독성 향상 */
-    animation: fadeInOpacity 1.5s ease forwards; /* 수정된 애니메이션 */
+    transition: background-image 0.5s ease; /* 諛곌꼍 �씠誘몄� �쟾�솚 �븷�땲硫붿씠�뀡 */
+    filter: brightness(0.6); /* 諛곌꼍 �씠誘몄�瑜� �뜑�슧 �뼱�몼寃� 議곗젙�븯�뿬 �뀓�뒪�듃 媛��룆�꽦 �뼢�긽 */
+    animation: fadeInOpacity 1.5s ease forwards; /* �닔�젙�맂 �븷�땲硫붿씠�뀡 */
 }
 
-/* 배경 오버레이 추가 */
+/* 언어 선택 드롭다운 스타일 */
+.language-selector {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    background: rgba(20, 20, 20, 0.85);
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* TTS 버튼 스타일 */
+.tts-button {
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+    padding: 10px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+    z-index: 10000;
+}
+
+.tts-button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+
+.language-selector label {
+    margin-right: 10px;
+    color: #e0e0e0;
+    font-weight: bold;
+}
+
+.language-selector select {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+
+/* 諛곌꼍 �삤踰꾨젅�씠 異붽� */
 .story-container::before {
     content: '';
     position: absolute;
@@ -60,46 +110,46 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6); /* 더욱 어두운 오버레이 */
+    background: rgba(0, 0, 0, 0.6); /* �뜑�슧 �뼱�몢�슫 �삤踰꾨젅�씠 */
     z-index: 1;
 }
 
-/* 텍스트 컨테이너: 이미지 위에 텍스트를 표시 */
+/* �뀓�뒪�듃 而⑦뀒�씠�꼫: �씠誘몄� �쐞�뿉 �뀓�뒪�듃瑜� �몴�떆 */
 .story-content {
     position: relative;
-    z-index: 2; /* 텍스트를 배경 이미지 위에 표시 */
-    color: #e0e0e0; /* 밝은 회색 텍스트 */
-    background: rgba(20, 20, 20, 0.85); /* 텍스트 배경을 더 어둡고 반투명하게 설정 */
+    z-index: 2; /* �뀓�뒪�듃瑜� 諛곌꼍 �씠誘몄� �쐞�뿉 �몴�떆 */
+    color: #e0e0e0; /* 諛앹� �쉶�깋 �뀓�뒪�듃 */
+    background: rgba(20, 20, 20, 0.85); /* �뀓�뒪�듃 諛곌꼍�쓣 �뜑 �뼱�몼怨� 諛섑닾紐낇븯寃� �꽕�젙 */
     padding: 40px;
     border-radius: 15px;
-    width: 90%; /* 너비를 증가시켜 버튼이 더 넓게 표시되도록 함 */
-    max-width: 900px; /* 최대 너비를 900px로 증가 */
+    width: 90%; /* �꼫鍮꾨�� 利앷��떆耳� 踰꾪듉�씠 �뜑 �꼻寃� �몴�떆�릺�룄濡� �븿 */
+    max-width: 900px; /* 理쒕� �꼫鍮꾨�� 900px濡� 利앷� */
     box-sizing: border-box;
-    display: flex; /* Flexbox 적용 */
-    flex-direction: column; /* 세로 방향으로 정렬 */
-    align-items: center; /* 중앙 정렬 */
-    animation: fadeInUp 1.5s ease forwards; /* 새로운 애니메이션 */
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7); /* 고급진 그림자 효과 */
+    display: flex; /* Flexbox �쟻�슜 */
+    flex-direction: column; /* �꽭濡� 諛⑺뼢�쑝濡� �젙�젹 */
+    align-items: center; /* 以묒븰 �젙�젹 */
+    animation: fadeInUp 1.5s ease forwards; /* �깉濡쒖슫 �븷�땲硫붿씠�뀡 */
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7); /* 怨좉툒吏� 洹몃┝�옄 �슚怨� */
 }
 
-/* 제목 스타일 */
+/* �젣紐� �뒪���씪 */
 #story-title {
     font-size: 3.5em;
-    color: #c0c0c0; /* 밝은 회색으로 변경 */
+    color: #c0c0c0; /* 諛앹� �쉶�깋�쑝濡� 蹂�寃� */
     text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
-    margin-bottom: 20px; /* 간격 조정 */
+    margin-bottom: 20px; /* 媛꾧꺽 議곗젙 */
     animation: titleFadeIn 2s ease;
     letter-spacing: 3px;
     transition: transform 0.3s ease, opacity 0.3s ease;
-    font-family: 'Cinzel', serif; /* 추가 폰트 사용 */
+    font-family: 'Cinzel', serif; /* 異붽� �룿�듃 �궗�슜 */
 }
 
-/* 제목 숨김 클래스 */
+/* �젣紐� �닲源� �겢�옒�뒪 */
 .hidden {
     display: none;
 }
 
-/* 스토리 내용 텍스트 스타일 */
+/* �뒪�넗由� �궡�슜 �뀓�뒪�듃 �뒪���씪 */
 .story-text, .ending {
     font-size: 1.4em;
     line-height: 1.8;
@@ -109,12 +159,12 @@ body {
     animation: textFadeIn 1s forwards;
 }
 
-/* 선택지 버튼 스타일 */
-/* 수정된 스타일 */
+/* �꽑�깮吏� 踰꾪듉 �뒪���씪 */
+/* �닔�젙�맂 �뒪���씪 */
 .choice, .next-button, .main-button {
-    padding: 12px 30px; /* 패딩 약간 줄이기 */
-    font-size: 1em; /* 글씨 크기 줄이기 */
-    /* 나머지 스타일은 그대로 유지 */
+    padding: 12px 30px; /* �뙣�뵫 �빟媛� 以꾩씠湲� */
+    font-size: 1em; /* 湲��뵪 �겕湲� 以꾩씠湲� */
+    /* �굹癒몄� �뒪���씪�� 洹몃�濡� �쑀吏� */
     border: none;
     border-radius: 50px;
     cursor: pointer;
@@ -129,21 +179,21 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    min-width: 150px; /* 최소 너비 줄이기 */
+    min-width: 150px; /* 理쒖냼 �꼫鍮� 以꾩씠湲� */
 }
 
-/* 엔딩으로 버튼 스타일 */
+/* �뿏�뵫�쑝濡� 踰꾪듉 �뒪���씪 */
 .next-button {
-    /* 필요한 경우 별도의 스타일 추가 가능 */
+    /* �븘�슂�븳 寃쎌슦 蹂꾨룄�쓽 �뒪���씪 異붽� 媛��뒫 */
 }
 
-/* 선택지 버튼 호버 효과 */
+/* �꽑�깮吏� 踰꾪듉 �샇踰� �슚怨� */
 .choice:hover, .next-button:hover, .main-button:hover {
     transform: scale(1.05);
-    background: linear-gradient(135deg, #2c3e50, #8e44ad); /* 색상 반전 */
+    background: linear-gradient(135deg, #2c3e50, #8e44ad); /* �깋�긽 諛섏쟾 */
 }
 
-/* 엔딩 텍스트 스타일 */
+/* �뿏�뵫 �뀓�뒪�듃 �뒪���씪 */
 .ending {
     font-size: 1.6em;
     line-height: 1.8;
@@ -153,28 +203,28 @@ body {
     animation: textFadeIn 1s forwards;
 }
 
-/* 메인으로 버튼 스타일 */
+/* 硫붿씤�쑝濡� 踰꾪듉 �뒪���씪 */
 .main-button {
-    background: linear-gradient(135deg, #3a3a3a, #1e1e1e); /* 어두운 그라데이션으로 변경 */
+    background: linear-gradient(135deg, #3a3a3a, #1e1e1e); /* �뼱�몢�슫 洹몃씪�뜲�씠�뀡�쑝濡� 蹂�寃� */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     animation: buttonPulse 2s infinite;
-    white-space: nowrap; /* 텍스트 줄 바꿈 방지 */
-    overflow: hidden; /* 넘치는 텍스트 숨김 */
-    text-overflow: ellipsis; /* 넘치는 텍스트에 생략 부호 추가 */
-    min-width: 200px; /* 필요에 따라 조정 */
+    white-space: nowrap; /* �뀓�뒪�듃 以� 諛붽퓞 諛⑹� */
+    overflow: hidden; /* �꽆移섎뒗 �뀓�뒪�듃 �닲源� */
+    text-overflow: ellipsis; /* �꽆移섎뒗 �뀓�뒪�듃�뿉 �깮�왂 遺��샇 異붽� */
+    min-width: 200px; /* �븘�슂�뿉 �뵲�씪 議곗젙 */
 }
 
-/* 메인으로 버튼 호버 효과 */
+/* 硫붿씤�쑝濡� 踰꾪듉 �샇踰� �슚怨� */
 .main-button:hover {
     transform: scale(1.05);
-    background: linear-gradient(135deg, #1e1e1e, #3a3a3a); /* 색상 반전 */
+    background: linear-gradient(135deg, #1e1e1e, #3a3a3a); /* �깋�긽 諛섏쟾 */
 }
 
-/* Skip 버튼 스타일 */
-/* 수정된 스타일 */
+/* Skip 踰꾪듉 �뒪���씪 */
+/* �닔�젙�맂 �뒪���씪 */
 .skip-button {
-    font-size: 0.9em; /* 글씨 크기 줄이기 */
-    padding: 10px 30px; /* 패딩 약간 줄이기 */
+    font-size: 0.9em; /* 湲��뵪 �겕湲� 以꾩씠湲� */
+    padding: 10px 30px; /* �뙣�뵫 �빟媛� 以꾩씠湲� */
     background: linear-gradient(45deg, #2c3e50, #34495e);
     color: #fff;
     border: none;
@@ -214,7 +264,7 @@ body {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
 }
 
-/* 반응형 디자인 */
+/* 諛섏쓳�삎 �뵒�옄�씤 */
 @media (max-width: 768px) {
     #story-title {
         font-size: 2.5em;
@@ -223,14 +273,14 @@ body {
         font-size: 1.0em;
     }
     .choice, .next-button, .main-button, .skip-button {
-        padding: 10px 25px; /* 패딩 약간 더 줄이기 */
-        font-size: 0.9em; /* 글씨 크기 줄이기 */
-        /* 최대 너비 제거 */
+        padding: 10px 25px; /* �뙣�뵫 �빟媛� �뜑 以꾩씠湲� */
+        font-size: 0.9em; /* 湲��뵪 �겕湲� 以꾩씠湲� */
+        /* 理쒕� �꼫鍮� �젣嫄� */
         /* max-width: 90%; */
-        white-space: nowrap; /* 텍스트 줄 바꿈 방지 */
-        text-overflow: ellipsis; /* 넘치는 텍스트에 생략 부호 추가 */
-        /* 최소 너비 조정 */
-        min-width: 130px; /* 최소 너비 더 줄이기 */
+        white-space: nowrap; /* �뀓�뒪�듃 以� 諛붽퓞 諛⑹� */
+        text-overflow: ellipsis; /* �꽆移섎뒗 �뀓�뒪�듃�뿉 �깮�왂 遺��샇 異붽� */
+        /* 理쒖냼 �꼫鍮� 議곗젙 */
+        min-width: 130px; /* 理쒖냼 �꼫鍮� �뜑 以꾩씠湲� */
     }
     .story-content {
         width: 90%;
@@ -238,7 +288,7 @@ body {
     }
 }
 
-/* 애니메이션 */
+/* �븷�땲硫붿씠�뀡 */
 @keyframes fadeInOpacity {
     from {
         opacity: 0;
@@ -291,7 +341,7 @@ body {
     }
 }
 
-/* 새로운 애니메이션 */
+/* �깉濡쒖슫 �븷�땲硫붿씠�뀡 */
 @keyframes storyFadeInUp {
     from {
         opacity: 0;

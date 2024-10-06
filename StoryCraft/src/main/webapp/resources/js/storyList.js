@@ -14,7 +14,7 @@ function openStoryModal(button) {
     const viewNum = storyItem.data('viewnum');
     const sugNum = storyItem.data('sugnum');
     const crDate = storyItem.data('crdate');
-    const genreName = storyItem.data('genre-name');
+    const genre = storyItem.data('genre');
 
     // 본인이 작성한 스토리인지 확인
     const isOwner = userId === uId;
@@ -22,7 +22,7 @@ function openStoryModal(button) {
     // 모달 내용 설정
     $('#storyModal .modal-title').text(title);
     $('#storyModal .modal-body img').attr('src', contextPath + 'uploads/' + cover);
-    $('#storyModal .modal-body .genre').text('장르: ' + genreName);
+    $('#storyModal .modal-body .genre').text('장르: ' + genre);
     $('#storyModal .modal-body .uId').text('작성자: ' + uId);
     $('#storyModal .modal-body .viewNum').text('조회수: ' + viewNum);
     $('#storyModal .modal-body .sugNum').text('추천수: ' + sugNum);
@@ -50,31 +50,6 @@ function openStoryModal(button) {
 
     // 모달 열기
     $('#storyModal').modal('show');
-
-    // 조회수 증가 요청 보내기
-    incrementViewCount(stNum);
-}
-
-// 조회수 증가 함수
-function incrementViewCount(stNum) {
-    $.ajax({
-        url: contextPath + 'story/incrementViewCount',
-        method: 'POST',
-        data: { stNum: stNum },
-        success: function(data) {
-            if (data.success) {
-                // 조회수 증가 성공 시 화면에 조회수 갱신
-                const viewNumElement = $('#storyModal .modal-body .viewNum');
-                const currentViewNum = parseInt(viewNumElement.text().replace(/[^0-9]/g, '')) + 1;
-                viewNumElement.text('조회수: ' + currentViewNum);
-            } else {
-                console.error('조회수 증가 실패:', data.message);
-            }
-        },
-        error: function(error) {
-            console.error('조회수 증가 중 오류 발생:', error);
-        }
-    });
 }
 
 // 이미 추천했는지 확인하는 함수 (추가적인 로직이 필요할 수 있음)
@@ -221,5 +196,5 @@ function playStory(stNum) {
 function filterAndSort() {
     const genre = document.getElementById('categorySelect').value;
     const sort = document.getElementById('sortSelect').value;
-    window.location.href = contextPath + 'story/list?genre=' + encodeURIComponent(genre) + '&sort=' + encodeURIComponent(sort);
+    window.location.href = `${contextPath}story/list?genre=${encodeURIComponent(genre)}&sort=${encodeURIComponent(sort)}`;
 }
