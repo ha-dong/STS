@@ -10,15 +10,13 @@ public class Choice {
     private String choiceContent;
     private int money;
     private int hp;
-    private Integer nextScNum;
-    
+    private int nextScNum;
 
     public Choice() {
     }
 
-
 	public Choice(int choiceNum, int scNum, int stNum, int parentScNum, int scLevel, String choiceName,
-			String choiceContent, int money, int hp, Integer nextScNum) {
+			String choiceContent, int money, int hp, int nextScNum) {
 		super();
 		this.choiceNum = choiceNum;
 		this.scNum = scNum;
@@ -32,106 +30,85 @@ public class Choice {
 		this.nextScNum = nextScNum;
 	}
 
-
 	public int getChoiceNum() {
 		return choiceNum;
 	}
-
 
 	public void setChoiceNum(int choiceNum) {
 		this.choiceNum = choiceNum;
 	}
 
-
 	public int getScNum() {
 		return scNum;
 	}
-
 
 	public void setScNum(int scNum) {
 		this.scNum = scNum;
 	}
 
-
 	public int getStNum() {
 		return stNum;
 	}
-
 
 	public void setStNum(int stNum) {
 		this.stNum = stNum;
 	}
 
-
 	public int getParentScNum() {
 		return parentScNum;
 	}
-
 
 	public void setParentScNum(int parentScNum) {
 		this.parentScNum = parentScNum;
 	}
 
-
 	public int getScLevel() {
 		return scLevel;
 	}
-
 
 	public void setScLevel(int scLevel) {
 		this.scLevel = scLevel;
 	}
 
-
 	public String getChoiceName() {
 		return choiceName;
 	}
-
 
 	public void setChoiceName(String choiceName) {
 		this.choiceName = choiceName;
 	}
 
-
 	public String getChoiceContent() {
 		return choiceContent;
 	}
-
 
 	public void setChoiceContent(String choiceContent) {
 		this.choiceContent = choiceContent;
 	}
 
-
 	public int getMoney() {
 		return money;
 	}
-
 
 	public void setMoney(int money) {
 		this.money = money;
 	}
 
-
 	public int getHp() {
 		return hp;
 	}
-
 
 	public void setHp(int hp) {
 		this.hp = hp;
 	}
 
-
-	public Integer getNextScNum() {
+	public int getNextScNum() {
 		return nextScNum;
 	}
 
-
-	public void setNextScNum(Integer nextScNum) {
+	public void setNextScNum(int nextScNum) {
 		this.nextScNum = nextScNum;
 	}
-
 
 	@Override
 	public String toString() {

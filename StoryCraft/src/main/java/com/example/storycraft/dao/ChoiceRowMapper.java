@@ -20,7 +20,6 @@ public class ChoiceRowMapper implements RowMapper<Choice> {
         choice.setChoiceContent(rs.getString("CHOICE_CONTENT"));
         choice.setMoney(rs.getInt("MONEY"));
         choice.setHp(rs.getInt("HP"));
-        choice.setNextScNum(rs.getObject("NEXT_SC_NUM", Integer.class));
         return choice;
     }
 }

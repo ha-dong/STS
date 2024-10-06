@@ -22,5 +22,4 @@ public class ChoiceService {
     public Integer getNextSceneNum(int choiceNum) {
         return choiceDao.getNextSceneNum(choiceNum);
     }
-
 }
