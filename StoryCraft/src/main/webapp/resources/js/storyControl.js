@@ -503,7 +503,7 @@ function toggleMute(sliderId) {
 // 카카오 로그인 함수
 function kakaoLogin() {
     Kakao.Auth.authorize({
-        redirectUri: 'https://6cb4-123-142-55-115.ngrok-free.app/StoryCraft/callback'  // 실제 배포 시점에 맞게 수정
+        redirectUri: 'https://a16f-123-142-55-115.ngrok-free.app/StoryCraft/callback'  // 실제 배포 시점에 맞게 수정
     });
 }
 

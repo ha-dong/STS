@@ -45,12 +45,13 @@ body {
     background-repeat: no-repeat;
 }
 
-/* 로고를 오른쪽 위로 배치 */
 .logo {
-    position: relative;
-    top: 20px;
-    width: 100px;
+    height: 100px;
     cursor: pointer;
+    margin-left: 40px;
+    position: absolute; /* 절대 위치 지정 */
+    top: 20px;          /* 상단에서 20px 떨어짐 */
+    left: -20px;            /* 왼쪽 끝에 위치 */
 }
 
 /* 버튼을 아래쪽으로 길고 크게 배치 */

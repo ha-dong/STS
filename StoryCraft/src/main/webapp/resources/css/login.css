@@ -3,13 +3,6 @@
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
-/* 로고 애니메이션 */
-@keyframes logoSpin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 /* 배경 흐림 효과 */
 body {
   background-image: url('/StoryCraft/resources/img/tree.png');
@@ -34,7 +27,7 @@ body {
 }
 
 .small-logo {
-  width: 40px;
+  width: 100px;
   height: auto;
   animation: logoSpin 5s infinite linear; /* 로고 스핀 애니메이션 */
 }
