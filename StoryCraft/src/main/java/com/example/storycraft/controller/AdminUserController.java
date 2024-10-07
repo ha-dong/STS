@@ -25,32 +25,32 @@ public class AdminUserController {
     @Autowired
     private UserService userService;
 
-    // °ü¸®ÀÚ¿ë »ç¿ëÀÚ ¸ñ·Ï ÆäÀÌÁö ·Îµù
+    // ê´€ë¦¬ììš© ì‚¬ìš©ì ëª©ë¡ í˜ì´ì§€ ë§¤í•‘
     @GetMapping("/adminUser")
     public String viewUserManagementPage(HttpSession session, Model model) {
         String username = (String) session.getAttribute("user");
         if (username != null) {
             User user = userService.findUserByUsername(username);
-            if ("CU-02".equals(user.getuCode())) { // °ü¸®ÀÚ ±ÇÇÑ È®ÀÎ
+            if ("CU-02".equals(user.getuCode())) { // ê´€ë¦¬ì ê¶Œí•œ í™•ì¸
                 List<User> users = adminUserService.getAllUsers();
                 model.addAttribute("users", users);
-                return "adminUserManagement"; // adminUserManagement.jsp·Î ÀÌµ¿
+                return "adminUserManagement"; // adminUserManagement.jspë¡œ ì´ë™
             }
         }
-        return "redirect:/StoryCraft/login"; // ±ÇÇÑÀÌ ¾øÀ¸¸é ·Î±×ÀÎ ÆäÀÌÁö·Î ¸®´ÙÀÌ·ºÆ®
+        return "redirect:/StoryCraft/login"; // ê¶Œí•œì´ ì—†ìœ¼ë©´ ë¡œê·¸ì¸ í˜ì´ì§€ë¡œ ë¦¬ë‹¤ì´ë ‰íŠ¸
     }
 
-    // »ç¿ëÀÚ ºñÈ°¼ºÈ­ API
+ // ì‚¬ìš©ì ë¹„í™œì„±í™” API
     @PostMapping("/adminUser/api/users/deactivate")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deactivateUser(@RequestBody Map<String, String> request, HttpSession session) {
         String username = (String) session.getAttribute("user");
         if (username == null) {
-            return ResponseEntity.status(401).build(); // ·Î±×ÀÎµÇÁö ¾ÊÀº °æ¿ì
+            return ResponseEntity.status(401).build(); // ë¡œê·¸ì¸ë˜ì§€ ì•Šì€ ê²½ìš°
         }
         User adminUser = userService.findUserByUsername(username);
         if (!"CU-02".equals(adminUser.getuCode())) {
-            return ResponseEntity.status(403).build(); // °ü¸®ÀÚ ±ÇÇÑÀÌ ¾ø´Â °æ¿ì
+            return ResponseEntity.status(403).build(); // ê´€ë¦¬ì ê¶Œí•œì´ ì—†ëŠ” ê²½ìš°
         }
 
         String userId = request.get("userId");
@@ -60,33 +60,34 @@ public class AdminUserController {
 
         if (userId == null || reason == null || reason.trim().isEmpty()) {
             response.put("success", false);
-            response.put("message", "À¯È¿ÇÏÁö ¾ÊÀº ¿äÃ»ÀÔ´Ï´Ù.");
+            response.put("message", "ìœ íš¨í•˜ì§€ ì•Šì€ ìš”ì²­ì…ë‹ˆë‹¤.");
             return ResponseEntity.badRequest().body(response);
         }
 
         boolean success = adminUserService.deactivateUser(userId, reason);
         if (success) {
             response.put("success", true);
-            response.put("message", "»ç¿ëÀÚ°¡ ¼º°øÀûÀ¸·Î ºñÈ°¼ºÈ­µÇ¾ú½À´Ï´Ù.");
+            response.put("message", "ì‚¬ìš©ìê°€ ì„±ê³µì ìœ¼ë¡œ ë¹„í™œì„±í™”ë˜ì—ˆìŠµë‹ˆë‹¤.");
             return ResponseEntity.ok(response);
         } else {
             response.put("success", false);
-            response.put("message", "»ç¿ëÀÚ ºñÈ°¼ºÈ­¿¡ ½ÇÆĞÇß½À´Ï´Ù.");
+            response.put("message", "ì‚¬ìš©ì ë¹„í™œì„±í™”ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
             return ResponseEntity.status(500).body(response);
         }
     }
 
-    // »ç¿ëÀÚ È°¼ºÈ­ API
+
+    // ì‚¬ìš©ì í™œì„±í™” API
     @PostMapping("/adminUser/api/users/activate")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> activateUser(@RequestBody Map<String, String> request, HttpSession session) {
         String username = (String) session.getAttribute("user");
         if (username == null) {
-            return ResponseEntity.status(401).build(); // ·Î±×ÀÎµÇÁö ¾ÊÀº °æ¿ì
+            return ResponseEntity.status(401).build(); // ë¡œê·¸ì¸ë˜ì§€ ì•Šì€ ê²½ìš°
         }
         User adminUser = userService.findUserByUsername(username);
         if (!"CU-02".equals(adminUser.getuCode())) {
-            return ResponseEntity.status(403).build(); // °ü¸®ÀÚ ±ÇÇÑÀÌ ¾ø´Â °æ¿ì
+            return ResponseEntity.status(403).build(); // ê´€ë¦¬ì ê¶Œí•œì´ ì—†ëŠ” ê²½ìš°
         }
 
         String userId = request.get("userId");
@@ -95,21 +96,21 @@ public class AdminUserController {
 
         if (userId == null) {
             response.put("success", false);
-            response.put("message", "À¯È¿ÇÏÁö ¾ÊÀº ¿äÃ»ÀÔ´Ï´Ù.");
+            response.put("message", "ìœ íš¨í•˜ì§€ ì•Šì€ ìš”ì²­ì…ë‹ˆë‹¤.");
             return ResponseEntity.badRequest().body(response);
         }
 
         boolean success = adminUserService.activateUser(userId);
         if (success) {
             response.put("success", true);
-            response.put("message", "»ç¿ëÀÚ°¡ ¼º°øÀûÀ¸·Î È°¼ºÈ­µÇ¾ú½À´Ï´Ù.");
+            response.put("message", "ì‚¬ìš©ìê°€ ì„±ê³µì ìœ¼ë¡œ í™œì„±í™”ë˜ì—ˆìŠµë‹ˆë‹¤.");
             return ResponseEntity.ok(response);
         } else {
             response.put("success", false);
-            response.put("message", "»ç¿ëÀÚ È°¼ºÈ­¿¡ ½ÇÆĞÇß½À´Ï´Ù.");
+            response.put("message", "ì‚¬ìš©ì í™œì„±í™”ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
             return ResponseEntity.status(500).body(response);
         }
     }
 
-    // Ãß°¡ÀûÀÎ °ü¸®ÀÚ Àü¿ë API¸¦ ¿©±â¿¡ ÀÛ¼º
+    // ì¶”ê°€ì ì¸ ê´€ë¦¬ì ì „ìš© APIë¥¼ ì—¬ê¸°ì— ì‘ì„±
 }

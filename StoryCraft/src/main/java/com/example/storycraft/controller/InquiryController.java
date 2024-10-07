@@ -193,25 +193,20 @@ public class InquiryController {
  // 문의 삭제 API (REST 스타일로 경로 수정)
     @DeleteMapping("/api/inquiry/delete/{inqNum}")
     @ResponseBody
-    public Map<String, Object> deleteInquiry(@PathVariable("inqNum") int inqNum, HttpSession session) {
+    public Map<String, Object> deleteInquiry(@PathVariable("inqNum") int inqNum) {
         Map<String, Object> response = new HashMap<>();
 
-        String userId = (String) session.getAttribute("user");
-        if (userId == null) {
-            response.put("success", false);
-            response.put("message", "로그인이 필요합니다.");
-            return response;
-        }
-
         Inquiry inquiry = inquiryService.getInquiryDetail(inqNum);
-        if (inquiry == null || !inquiry.getUserId().equals(userId)) {
+        if (inquiry == null) {
             response.put("success", false);
-            response.put("message", "삭제 권한이 없습니다.");
+            response.put("message", "해당 문의를 찾을 수 없습니다.");
             return response;
         }
 
-        inquiryService.deleteCommentsByInquiry(inqNum); // 댓글 먼저 삭제
-        inquiryService.hardDeleteInquiry(inqNum); // 문의 삭제
+        // 댓글 먼저 삭제
+        inquiryService.deleteCommentsByInquiry(inqNum);
+        // 문의 삭제
+        inquiryService.hardDeleteInquiry(inqNum);
 
         response.put("success", true);
         response.put("message", "삭제되었습니다.");

@@ -3,6 +3,7 @@
 package com.example.storycraft.dao;
 
 import com.example.storycraft.model.Choice;
+import com.example.storycraft.model.Scene;
 
 import java.util.List;
 
@@ -35,31 +36,22 @@ public class ChoiceDao {
     
     public List<Choice> getChoicesByScNum(int scNum) {
         String sql = "SELECT * FROM CHOICE WHERE SC_NUM = ?";
-        return jdbcTemplate.query(sql, new Object[]{scNum}, new ChoiceRowMapper());  // SC_NUM으로 선택지 가져오기
+        return jdbcTemplate.query(sql, new Object[]{scNum}, new ChoiceRowMapper());
     }
 
-    // 선택지 저장 (NEXT_SC_NUM이 0으로 저장되지 않도록 수정)
-    public int insertChoice(Choice choice, int scNum, int stNum, int parentScNum, int scLevel) {
+    public int insertChoice(Choice choice, Scene scene) {
         String sql = "INSERT INTO CHOICE (CHOICE_NUM, SC_NUM, ST_NUM, PARENT_SC_NUM, SC_LEVEL, CHOICE_NAME, CHOICE_CONTENT, MONEY, HP, NEXT_SC_NUM) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        // NEXT_SC_NUM이 없을 경우 자동으로 다음 장면 번호를 설정하거나 null로 저장
-        Integer nextScNum = choice.getNextScNum();
-        if (nextScNum == null || nextScNum == 0) {
-            nextScNum = null;  // 0으로 들어가는 것을 방지
-        }
-
+                     "VALUES (SEQ_CHOICE.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         return jdbcTemplate.update(sql,
-            choice.getChoiceNum(),
-            scNum,
-            stNum,
-            parentScNum,
-            scLevel,
+            scene.getScNum(),
+            scene.getStNum(),
+            scene.getParentScNum(),
+            scene.getScLevel(),
             choice.getChoiceName(),
             choice.getChoiceContent(),
-            choice.getMoney(),
-            choice.getHp(),
-            nextScNum  // 0으로 저장되지 않도록 수정된 로직
+            choice.getMoney(), // NULL 값 허용
+            choice.getHp(),    // NULL 값 허용
+            choice.getNextScNum()
         );
     }
 }

@@ -1,5 +1,3 @@
-//StoryDao.java
-
 package com.example.storycraft.dao;
 
 import com.example.storycraft.model.Story;
@@ -18,15 +16,17 @@ public class StoryDao {
     // 스토리 저장
     public int insertStory(Story story) {
         String sql = "INSERT INTO STORY (ST_NUM, ST_TITLE, ST_CRDATE, ST_EDDATE, ST_VIEWNUM, ST_TYPECODE, ST_GENRECODE, " +
-                "ST_SUGNUM, ST_COVER, ST_DSTATUS, U_ID, END_CODE) " +
-                "VALUES (SEQ_STORY.NEXTVAL, ?, SYSDATE, NULL, 0, ?, ?, 0, ?, 'N', ?, ?)";
+                "ST_SUGNUM, ST_COVER, ST_DSTATUS, U_ID, END_CODE, INITIAL_MONEY, INITIAL_HP) " +
+                "VALUES (SEQ_STORY.NEXTVAL, ?, SYSDATE, NULL, 0, ?, ?, 0, ?, 'N', ?, ?, ?, ?)";
         return jdbcTemplate.update(sql,
                 story.getStTitle(),
                 story.getStTypecode(),
                 story.getStGenrecode(),
                 story.getStCover(),
                 story.getuId(),
-                story.getEndCode()
+                story.getEndCode(),
+                story.getInitialMoney(),
+                story.getInitialHP()
         );
     }
 
@@ -43,8 +43,10 @@ public class StoryDao {
             params.add(story.getStCover());
         }
 
-        sqlBuilder.append("END_CODE = ? WHERE ST_NUM = ?");
+        sqlBuilder.append("END_CODE = ?, INITIAL_MONEY = ?, INITIAL_HP = ? WHERE ST_NUM = ?");
         params.add(story.getEndCode());
+        params.add(story.getInitialMoney());
+        params.add(story.getInitialHP());
         params.add(story.getStNum());
 
         return jdbcTemplate.update(sqlBuilder.toString(), params.toArray());
@@ -114,6 +116,12 @@ public class StoryDao {
         String sql = "DELETE FROM REPORT WHERE ST_NUM = ?";
         return jdbcTemplate.update(sql, stNum);
     }
+    
+    public void incrementViewCount(int stNum) {
+        String sql = "UPDATE STORY SET ST_VIEWNUM = NVL(ST_VIEWNUM, 0) + 1 WHERE ST_NUM = ?";
+        jdbcTemplate.update(sql, stNum);
+    }
+
 
     // 스토리 삭제 (모든 종속 데이터 삭제 후)
     public int deleteStory(int stNum) {
@@ -131,12 +139,36 @@ public class StoryDao {
         return deleteStory(stNum) > 0; // 성공 시 true 반환
     }
     
+    // 모든 스토리 가져오기 (관리자용)
+    public List<Story> getAllStoriesForAdmin(String orderBy, String orderDirection) {
+        String sql = "SELECT * FROM STORY ORDER BY " + orderBy + " " + orderDirection;
+        return jdbcTemplate.query(sql, (rs, rowNum) -> mapStory(rs));
+    }
+    
+    // 신고 수 기준으로 스토리 검색
+    public List<Story> getStoriesByReportCount(int minReports, int maxReports) {
+        String sql = "SELECT * FROM STORY WHERE ST_RENUM BETWEEN ? AND ?";
+        return jdbcTemplate.query(sql, new Object[]{minReports, maxReports}, (rs, rowNum) -> mapStory(rs));
+    }
+    
+    // 스토리 삭제 (관리자용)
+    public int deleteStoryByAdmin(int stNum) {
+        String sql = "DELETE FROM STORY WHERE ST_NUM = ?";
+        return jdbcTemplate.update(sql, stNum);
+    }
+
+    // 신고 수 증가 메서드
+    public void incrementReportCount(int stNum) {
+        String sql = "UPDATE STORY SET ST_RENUM = NVL(ST_RENUM, 0) + 1 WHERE ST_NUM = ?";
+        jdbcTemplate.update(sql, stNum);
+    }
+
     // 추천 수 증가 메서드 추가
     public void incrementRecommendation(int stNum) {
         String sql = "UPDATE STORY SET ST_SUGNUM = ST_SUGNUM + 1 WHERE ST_NUM = ?";
         jdbcTemplate.update(sql, stNum);
     }
-    
+
     // Story 객체로 매핑하는 메서드
     private Story mapStory(ResultSet rs) throws SQLException {
         Story story = new Story();
@@ -154,6 +186,9 @@ public class StoryDao {
         story.setStDdate(rs.getTimestamp("ST_DDATE"));
         story.setuId(rs.getString("U_ID"));
         story.setEndCode(rs.getString("END_CODE")); // 엔딩 코드 설정
+        story.setInitialMoney(rs.getInt("INITIAL_MONEY")); // 초기 돈 설정
+        story.setInitialHP(rs.getInt("INITIAL_HP"));       // 초기 체력 설정
+        story.setStRenum(rs.getInt("ST_RENUM")); // 신고 수 설정 추가
 
         return story;
     }

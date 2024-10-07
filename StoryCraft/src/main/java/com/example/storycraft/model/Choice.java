@@ -8,15 +8,15 @@ public class Choice {
     private int scLevel;
     private String choiceName;
     private String choiceContent;
-    private int money;
-    private int hp;
-    private int nextScNum;
-
+    private Integer money;
+    private Integer hp;
+    private Integer nextScNum;
+    
     public Choice() {
     }
 
 	public Choice(int choiceNum, int scNum, int stNum, int parentScNum, int scLevel, String choiceName,
-			String choiceContent, int money, int hp, int nextScNum) {
+			String choiceContent, Integer money, Integer hp, Integer nextScNum) {
 		super();
 		this.choiceNum = choiceNum;
 		this.scNum = scNum;
@@ -86,27 +86,27 @@ public class Choice {
 		this.choiceContent = choiceContent;
 	}
 
-	public int getMoney() {
+	public Integer getMoney() {
 		return money;
 	}
 
-	public void setMoney(int money) {
+	public void setMoney(Integer money) {
 		this.money = money;
 	}
 
-	public int getHp() {
+	public Integer getHp() {
 		return hp;
 	}
 
-	public void setHp(int hp) {
+	public void setHp(Integer hp) {
 		this.hp = hp;
 	}
 
-	public int getNextScNum() {
+	public Integer getNextScNum() {
 		return nextScNum;
 	}
 
-	public void setNextScNum(int nextScNum) {
+	public void setNextScNum(Integer nextScNum) {
 		this.nextScNum = nextScNum;
 	}
 

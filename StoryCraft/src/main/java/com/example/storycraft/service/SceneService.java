@@ -74,4 +74,8 @@ public class SceneService {
 
         return choices;
     }
+
+	public List<Scene> getSceneByStNum(Integer stNum) {
+		return sceneDao.getSceneByStNum(stNum);
+	}
 }
