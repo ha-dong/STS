@@ -40,6 +40,14 @@
 			<p>
 				<strong>작성일:</strong> ${inquiry.inqCrdate}
 			</p>
+				<!-- 첨부 파일이 있을 경우 표시 -->
+	<c:if test="${not empty inquiry.inqFile}">
+		<p>
+			<a href="${pageContext.request.contextPath}/uploads/${inquiry.inqFile}">첨부 파일</a>
+		</p>
+	</c:if>
+			
+			
 		</div>
 
 		<!-- 문의 내용 -->
@@ -47,16 +55,6 @@
 			<p>${inquiry.inqText}</p>
 		</div>
 	</div>
-
-
-	<!-- 첨부 파일이 있을 경우 표시 -->
-	<c:if test="${not empty inquiry.inqFile}">
-		<p>
-			<strong>첨부 파일:</strong> <a
-				href="${pageContext.request.contextPath}/uploads/${inquiry.inqFile}">${inquiry.inqFile}</a>
-		</p>
-	</c:if>
-
 
 
 	<!-- 댓글 섹션 -->

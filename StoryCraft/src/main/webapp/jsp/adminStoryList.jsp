@@ -52,7 +52,7 @@
 			<div class="form-group mr-2">
 				<label for="orderBy" class="mr-2">정렬 기준:</label> <select
 					name="orderBy" id="orderBy" class="form-control">
-					<option value="ST_NUM" ${orderBy == 'ST_NUM' ? 'selected' : ''}>ST_NUM</option>
+					<option value="ST_NUM" ${orderBy == 'ST_NUM' ? 'selected' : ''}>스토리 번호</option>
 					<option value="ST_RENUM" ${orderBy == 'ST_RENUM' ? 'selected' : ''}>신고
 						수</option>
 					<option value="ST_SUGNUM"

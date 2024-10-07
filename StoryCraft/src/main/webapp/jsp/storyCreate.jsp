@@ -13,12 +13,21 @@
 
     <script src="<c:url value='/resources/js/storyCreate.js'/>"></script>
     
-    <!-- 컨텍스트 경로를 JavaScript 변수으로 설정 -->
+    <!-- 컨텍스트 경로를 JavaScript 변수로 설정 -->
     <script>
         let contextPath = '<c:url value="/" />';
-        let editMode = ${editMode != null ? editMode : false};
-        let stNum = '<c:out value="${story != null ? story.stNum : ''}" />';
-        stNum = stNum !== '' ? parseInt(stNum) : null;
+        <c:if test="${not empty editMode}">
+            let editMode = true;
+        </c:if>
+        <c:if test="${empty editMode}">
+            let editMode = false;
+        </c:if>
+        <c:if test="${not empty story}">
+            let stNum = ${story.stNum};
+        </c:if>
+        <c:if test="${empty story}">
+            let stNum = null;
+        </c:if>
 
         // 색상 변경 함수 - CSS 파일을 동적으로 변경
         function changeTheme() {
@@ -44,7 +53,7 @@
 <body>
     <!-- 헤더 부분 시작 -->
     <div class="header">
-    	<a href="${contextPath}/StoryCraft/main">
+        <a href="${contextPath}/StoryCraft/main">
             <img src="${pageContext.request.contextPath}/resources/img/logo.png" alt="로고" class="logo" id="logo">
         </a>
         <!-- 테마 변경 버튼 추가 -->
@@ -56,7 +65,12 @@
     <!-- 헤더 부분 끝 -->
 
     <div class="container">
-        <h1>${editMode ? '스토리 수정' : '스토리 제작'}</h1>
+        <!-- 페이지 제목 설정 -->
+        <c:set var="pageTitle" value="스토리 제작" />
+        <c:if test="${editMode}">
+            <c:set var="pageTitle" value="스토리 수정" />
+        </c:if>
+        <h1>${pageTitle}</h1>
         
         <div class="login-box">
             <c:choose>
@@ -77,81 +91,86 @@
             <!-- 스토리 기본 정보 -->
             <div class="story-info">
                 <label for="title">제목:</label>
-                <input type="text" id="title" name="title" required value="${editMode ? story.stTitle : ''}">
+                <input type="text" id="title" name="title" required value="<c:out value='${editMode ? story.stTitle : ""}'/>">
 
                 <label for="cover">표지 이미지:</label>
                 <input type="file" id="cover" name="cover" accept="image/*" onchange="previewImage(this, 'coverPreview')">
-                <img id="coverPreview" src="${editMode && story.stCover != null ? '/uploads/' + story.stCover : '#'}" alt="이미지 미리보기" style="display:${editMode && story.stCover != null ? 'block' : 'none'}; width:200px; height:200px; object-fit:cover;">
+                
+                <!-- 이미지 미리보기 설정 -->
+                <c:set var="coverPreviewSrc" value="#" />
+                <c:set var="coverPreviewDisplay" value="none" />
+                <c:if test="${editMode and not empty story.stCover}">
+                    <c:set var="coverPreviewSrc" value="/StoryCraft/uploads/${story.stCover}" />
+                    <c:set var="coverPreviewDisplay" value="block" />
+                </c:if>
+                <img id="coverPreview" src="${coverPreviewSrc}" alt="이미지 미리보기" style="display:${coverPreviewDisplay}; width:200px; height:200px; object-fit:cover;">
 
                 <label for="genre">장르:</label>
                 <select id="genre" name="genre" required>
                     <option value="">선택하세요</option>
                     <c:forEach var="code" items="${genreList}">
-                        <option value="${code.CODE}" <c:if test="${editMode && code.CODE == story.stGenrecode}">selected</c:if>>${code.CODE_NAME}</option>
+                        <option value="${code.CODE}" <c:if test="${editMode and code.CODE == story.stGenrecode}">selected</c:if>>${code.CODE_NAME}</option>
                     </c:forEach>
                 </select>
-
-                <label for="initialMoney">초기 돈 설정 (0~50):</label>
-                <input type="number" id="initialMoney" name="initialMoney" min="0" max="50" value="${editMode ? story.stSugnum : 0}" required>
-
-                <label for="initialHP">초기 체력 설정 (10~100):</label>
-                <input type="number" id="initialHP" name="initialHP" min="10" max="100" value="${editMode ? story.initialHP : 100}" required>
-
-                <!-- 엔딩 코드 선택 -->
-                <label for="endCode">엔딩 코드:</label>
-                <select id="endCode" name="endCode">
-                    <option value="">선택하세요</option>
-                    <option value="CE-01" <c:if test="${editMode && 'CE-01' == story.endCode}">selected</c:if>>해피엔딩</option>
-                    <option value="CE-02" <c:if test="${editMode && 'CE-02' == story.endCode}">selected</c:if>>새드엔딩</option>
-                    <option value="CE-03" <c:if test="${editMode && 'CE-03' == story.endCode}">selected</c:if>>열린결말</option>
-                </select>
+             
             </div>
 
             <!-- 스토리 내용 및 선택지 -->
             <div class="scene-editor" id="sceneEditor">
                 <c:if test="${editMode}">
                     <c:forEach var="scene" items="${story.scenes}">
-                        <div class="scene" data-scene-num="${scene.scNum}" data-parent-scene-num="${scene.parentScNum}">
-                            <h2>장면 ${scene.scNum}</h2>
-                            <label for="sceneText_${scene.scNum}">스토리 내용:</label>
-                            <textarea id="sceneText_${scene.scNum}" name="sceneText_${scene.scNum}" required>${scene.scText}</textarea>
+                        <div class="scene" data-scene-num="${scene.tempSceneNum}" data-parent-scene-num="${scene.parentScNum}">
+                            <h2>장면 ${scene.tempSceneNum}</h2>
+                            <label for="sceneText_${scene.tempSceneNum}">스토리 내용:</label>
+                            <textarea id="sceneText_${scene.tempSceneNum}" name="sceneText_${scene.tempSceneNum}" required>${scene.scText}</textarea>
 
-                            <label for="sceneImage_${scene.scNum}">삽화 이미지:</label>
-                            <input type="file" id="sceneImage_${scene.scNum}" name="sceneImage_${scene.scNum}" accept="image/*" onchange="previewImage(this, 'sceneImagePreview_${scene.scNum}')">
-                            <img id="sceneImagePreview_${scene.scNum}" src="${scene.scIllus != null ? '/uploads/' + scene.scIllus : '#'}" alt="이미지 미리보기" style="display:${scene.scIllus != null ? 'block' : 'none'}; width:200px; height:200px; object-fit:cover;">
+                            <label for="sceneImage_${scene.tempSceneNum}">삽화 이미지:</label>
+                            <input type="file" id="sceneImage_${scene.tempSceneNum}" name="sceneImage_${scene.tempSceneNum}" accept="image/*" onchange="previewImage(this, 'sceneImagePreview_${scene.tempSceneNum}')">
+                            
+                            <!-- 장면 이미지 미리보기 설정 -->
+                            <c:set var="sceneImageSrc" value="#" />
+                            <c:set var="sceneImageDisplay" value="none" />
+                            <c:if test="${not empty scene.scIllus}">
+                                <c:set var="sceneImageSrc" value="/uploads/${scene.scIllus}" />
+                                <c:set var="sceneImageDisplay" value="block" />
+                            </c:if>
+                            <img id="sceneImagePreview_${scene.tempSceneNum}" src="${sceneImageSrc}" alt="이미지 미리보기" style="display:${sceneImageDisplay}; width:200px; height:200px; object-fit:cover;">
+
+                            <!-- 부모 장면 번호를 폼 데이터에 포함하기 위한 hidden input 추가 -->
+                            <input type="hidden" name="parentSceneNum_${scene.tempSceneNum}" value="${scene.parentScNum}">
 
                             <!-- 선택지 추가 버튼 -->
-                            <button type="button" class="add-choice-btn" onclick="addChoice(${scene.scNum})">선택지 추가</button>
+                            <button type="button" class="add-choice-btn" onclick="addChoice(${scene.tempSceneNum})">선택지 추가</button>
 
                             <!-- 선택지 목록 -->
-                            <div class="choices" id="choices_${scene.scNum}">
+                            <div class="choices" id="choices_${scene.tempSceneNum}">
                                 <c:forEach var="choice" items="${scene.choices}">
                                     <div class="choice" data-choice-num="${choice.choiceNum}">
                                         <h3>선택지 ${choice.choiceNum}</h3>
                                         <label>선택지 이름:</label>
-                                        <input type="text" name="choiceName_scene_${scene.scNum}_choice_${choice.choiceNum}" required value="${choice.choiceName}">
+                                        <input type="text" name="choiceName_scene_${scene.tempSceneNum}_choice_${choice.choiceNum}" required value="${choice.choiceName}">
                                         
                                         <label>선택지 내용:</label>
-                                        <textarea name="choiceContent_scene_${scene.scNum}_choice_${choice.choiceNum}" required>${choice.choiceContent}</textarea>
+                                        <textarea name="choiceContent_scene_${scene.tempSceneNum}_choice_${choice.choiceNum}" required>${choice.choiceContent}</textarea>
 
-                                        <label>돈 변화량:</label>
-                                        <input type="number" name="choiceMoney_scene_${scene.scNum}_choice_${choice.choiceNum}" value="${choice.money}">
-
-                                        <label>체력 변화량:</label>
-                                        <input type="number" name="choiceHP_scene_${scene.scNum}_choice_${choice.choiceNum}" value="${choice.hp}">
+                                        <!-- 선택지 돈 변화량 및 체력 변화량 필드 제거 -->
 
                                         <!-- 선택지 저장 버튼 -->
-                                        <button type="button" onclick="saveChoice(${scene.scNum}, ${choice.choiceNum})">선택지 저장</button>
+                                        <button type="button" onclick="saveChoice(${scene.tempSceneNum}, ${choice.choiceNum})">선택지 저장</button>
 
                                         <!-- 선택지에 따른 스토리 작성 버튼 -->
-                                        <button type="button" id="createSceneBtn_${scene.scNum}_${choice.choiceNum}" style="display: ${choice.nextSceneNum != null ? 'inline-block' : 'none'}" onclick="createScene(${scene.scNum}, ${choice.choiceNum})">${choice.choiceName} 선택지에 따른 스토리 작성</button>
+                                        <c:set var="createSceneBtnDisplay" value="none" />
+                                        <c:if test="${choice.nextScNum != null}">
+                                            <c:set var="createSceneBtnDisplay" value="inline-block" />
+                                        </c:if>
+                                        <button type="button" id="createSceneBtn_${scene.tempSceneNum}_${choice.choiceNum}" style="display: ${createSceneBtnDisplay};" onclick="createScene(${scene.tempSceneNum}, ${choice.choiceNum})">${choice.choiceName} 선택지에 따른 스토리 작성</button>
                                     </div>
                                 </c:forEach>
                             </div>
                         </div>
                     </c:forEach>
                 </c:if>
-                <c:if test="${!editMode}">
+                <c:if test="${not editMode}">
                     <!-- 루트 장면 -->
                     <div class="scene" data-scene-num="1" data-parent-scene-num="0">
                         <h2>장면 1</h2>
@@ -161,6 +180,9 @@
                         <label for="sceneImage_1">삽화 이미지:</label>
                         <input type="file" id="sceneImage_1" name="sceneImage_1" accept="image/*" onchange="previewImage(this, 'sceneImagePreview_1')">
                         <img id="sceneImagePreview_1" src="#" alt="이미지 미리보기" style="display:none; width:200px; height:200px; object-fit:cover;">
+
+                        <!-- 부모 장면 번호를 폼 데이터에 포함하기 위한 hidden input 추가 -->
+                        <input type="hidden" name="parentSceneNum_1" value="0">
 
                         <!-- 선택지 추가 버튼 -->
                         <button type="button" class="add-choice-btn" onclick="addChoice(1)">선택지 추가</button>

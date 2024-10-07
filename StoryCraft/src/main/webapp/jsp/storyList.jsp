@@ -1,5 +1,3 @@
-<!-- storyList.jsp -->
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -18,7 +16,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- 컨텍스트 경로 및 userId 설정 -->
     <script>
-        var contextPath = '<c:url value="/" />';
+        var contextPath = '${pageContext.request.contextPath}/';
         var userId = "${userId != null ? fn:replace(userId, '\"', '\\\"') : 'subo'}";
         console.log("User ID:", userId); // 디버깅용 로그
     </script>
@@ -67,7 +65,14 @@
         <!-- 스토리 목록 -->
         <div class="story-list row">
             <c:forEach var="story" items="${storyList}">
-                <div class="story-item col-md-3 mb-4" data-genre="${story.stGenrecode}" data-stnum="${story.stNum}"
+                <!-- 장르 이름 추출 -->
+                <c:set var="genreName" value="" />
+                <c:forEach var="code" items="${genreList}">
+                    <c:if test="${code.CODE == story.stGenrecode}">
+                        <c:set var="genreName" value="${code.CODE_NAME}" />
+                    </c:if>
+                </c:forEach>
+                <div class="story-item col-md-3 mb-4" data-genre="${story.stGenrecode}" data-genre-name="${genreName}" data-stnum="${story.stNum}"
                      data-title="${story.stTitle}" data-cover="${story.stCover}" data-uid="${story.uId}"
                      data-viewnum="${story.stViewnum}" data-sugnum="${story.stSugnum}" data-crdate="${story.stCrdate}">
                     <div class="card">
@@ -142,11 +147,11 @@
         }
 
         // 필터링 및 정렬 함수
-        function filterAndSort() {
-            const genre = document.getElementById('categorySelect').value;
-            const sort = document.getElementById('sortSelect').value;
-            window.location.href = `${contextPath}story/list?genre=${genre}&sort=${sort}`;
-        }
+      function filterAndSort() {
+          const genre = document.getElementById('categorySelect').value;
+          const sort = document.getElementById('sortSelect').value;
+          window.location.href = contextPath + 'story/list?genre=' + encodeURIComponent(genre) + '&sort=' + encodeURIComponent(sort);
+      }
     </script>
 </body>
 </html>

@@ -1,3 +1,5 @@
+<!-- adminInquiryList.jsp -->
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
@@ -18,7 +20,7 @@
         </div>
         <nav>
             <ul>
-                <li><a href="#">스토리 관리</a></li>
+                <li><a href="${pageContext.request.contextPath}/admin/stories">스토리 관리</a></li>
                 <li><a href="${pageContext.request.contextPath}/adminUser">유저 관리</a></li>
                 <li><a href="${pageContext.request.contextPath}/notice">공지
                         관리</a></li>
@@ -131,7 +133,7 @@
                     .then(data => {
                         if (data.success) {
                             alert('문의가 성공적으로 삭제되었습니다.');
-                            location.href = '/StoryCraft/inquiry';
+                            location.href = '/StoryCraft/adminInquiryList';
                         } else {
                             alert('문의 삭제 실패: ' + data.message);
                         }
